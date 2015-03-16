@@ -1,0 +1,287 @@
+.banniere{
+	margin-left: 5px;
+	margin-right: 10px;
+}
+
+header{
+	position: relative;
+	height: 90px;
+	background-color: rgb(25, 65, 100);
+	padding:15px;
+	text-align: bottom;
+}
+
+.navigation1{
+	color: white;
+    font-weight: 700;
+    font-family: Avenir Next,sans-serif;
+    font-size: 15px;
+    text-align: center;
+    padding:40px 0px;
+    margin-left: 49%;
+    position: absolute;
+}
+
+.navigation1:hover{
+    color:rgb(20, 205, 170);
+}
+
+.navigation2{
+	color: white;
+    font-weight: 700;
+    font-family: Avenir Next,sans-serif;
+    font-size: 15px;
+    text-align: center;
+    padding:40px 0px;
+    margin-left: 58%;
+    position: absolute;
+}
+
+.navigation2:hover{
+    color:rgb(20, 205, 170);
+}
+
+.navigation3{
+	color: white;
+    font-weight: 700;
+    font-family: Avenir Next,sans-serif;
+    font-size: 15px;
+    text-align: center;
+    padding:40px 0px;
+    margin-left: 71%;
+    position: absolute;
+}
+
+.navigation3:hover{
+    color:rgb(20, 205, 170);
+}
+
+.navigation4{
+	color: white;
+    font-weight: 700;
+    font-family: Avenir Next,sans-serif;
+    font-size: 15px;
+    text-align: center;
+    padding:40px 0px;
+    margin-left: 80%;
+    position: absolute;
+}
+
+.navigation4:hover{
+    color:rgb(20, 205, 170);
+}
+
+.navigation5{
+	color: white;
+    font-weight: 700;
+    font-family: Avenir Next,sans-serif;
+    font-size: 15px;
+    text-align: center;
+    padding:40px 0px;
+    margin-left: 88%;
+    position: absolute;
+}
+
+.navigation5:hover{
+    color:rgb(20, 205, 170);
+}
+
+
+.nom{
+	color: white;
+    font-family: Avenir Next,sans-serif;
+    font-weight: 700;
+    font-size: 35px;
+    padding:25px 0px;
+    margin-left: 5%;
+    position:absolute;
+}
+
+.nom:hover{
+    color: white;
+}
+
+body{
+	background-color: white;
+	margin: 0px 0px 0px 0px;
+}
+
+.bonjour{
+    width: 100%;
+	background-color: rgb(20, 205, 170);
+}
+
+.tete{
+    margin-top: -4em;
+	max-width: 200px;
+	height: auto;
+    align-content: center;
+}
+
+h1{
+    margin-top: -0.7em;
+    font-size: 140px;
+    text-align: center;
+    color: white;
+    font-family: Avenir Next,sans-serif;
+}
+
+h2{
+    margin-top: -2em;
+    font-size: 50px;
+    text-align: center;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.trait{
+    margin-top: -1.6em;
+}
+
+h3{
+    font-size: 14px;
+    text-align: center;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.presentation{
+    width: 100%;
+	background-color: rgba(45, 62, 90, 0.12);
+}
+
+
+h11{
+    font-weight: 400;
+    margin-top: -0.7em;
+    margin-top: -5em;
+    font-size: 40px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.titreidentite{
+    width: auto;
+    height: auto;
+border: medium solid rgb(25, 65, 100);
+border-collapse: collapse;
+width: 210px;
+padding: 10px;
+}
+
+
+h12{
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+h14{
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.interet{
+border-collapse: collapse;
+width: 500px;
+padding: 5px;
+}
+
+h15{
+    font-weight: 300;
+    font-size: 35px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+
+.connaissances{
+    width: 100%;
+	background-color: rgba(25, 190, 140, 0.13);
+}
+
+
+h21{
+    font-weight: 400;
+    margin-top: -0.7em;
+    margin-top: -5em;
+    font-size: 40px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.titreCONNAISSANCES{
+        width: auto;
+    height: auto;
+margin-bottom: 3em;
+border: medium solid rgb(25, 65, 100);
+border-collapse: collapse;
+width: 380px;
+padding: 10px;
+}
+
+h22{
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+h24{
+    margin-top: -5em;
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.logo{
+width: 90px;
+}
+
+.postbac{
+    width: 100%;
+	background-color: rgba(115, 118, 50, 0.16);
+}
+
+
+h31{
+    font-weight: 400;
+    margin-top: -0.7em;
+    margin-top: -5em;
+    font-size: 40px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.titrepostbac{
+        width: auto;
+    height: auto;
+margin-bottom: 3em;
+border: medium solid rgb(25, 65, 100);
+border-collapse: collapse;
+width: 250px;
+padding: 10px;
+}
+
+h32{
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+h34{
+    margin-top: -5em;
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(25, 65, 100);
+    font-family: Avenir Next,sans-serif;
+}
+
+.logo{
+width: 90px;
+}
