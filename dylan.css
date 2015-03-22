@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "avenir";
+    src: url('avenir next.ttc');
+}
+
 .banniere{
 	margin-left: 5px;
 	margin-right: 10px;
@@ -14,7 +19,7 @@ header{
 .navigation1{
 	color: white;
     font-weight: 700;
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir,sans-serif;
     font-size: 15px;
     text-align: center;
     padding:40px 0px;
@@ -29,7 +34,7 @@ header{
 .navigation2{
 	color: white;
     font-weight: 700;
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
     font-size: 15px;
     text-align: center;
     padding:40px 0px;
@@ -44,7 +49,7 @@ header{
 .navigation3{
 	color: white;
     font-weight: 700;
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
     font-size: 15px;
     text-align: center;
     padding:40px 0px;
@@ -59,7 +64,7 @@ header{
 .navigation4{
 	color: white;
     font-weight: 700;
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
     font-size: 15px;
     text-align: center;
     padding:40px 0px;
@@ -74,7 +79,7 @@ header{
 .navigation5{
 	color: white;
     font-weight: 700;
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir,  sans-serif;
     font-size: 15px;
     text-align: center;
     padding:40px 0px;
@@ -89,7 +94,7 @@ header{
 
 .nom{
 	color: white;
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
     font-weight: 700;
     font-size: 35px;
     padding:25px 0px;
@@ -142,7 +147,7 @@ h3{
     font-size: 14px;
     text-align: center;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 .presentation{
@@ -157,7 +162,7 @@ h11{
     margin-top: -5em;
     font-size: 40px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 .titreidentite{
@@ -174,27 +179,27 @@ h12{
     font-weight: 400;
     font-size: 20px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 h14{
     font-weight: 400;
     font-size: 20px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 .interet{
 border-collapse: collapse;
-width: 500px;
+width: 600px;
 padding: 5px;
 }
 
 h15{
     font-weight: 300;
-    font-size: 35px;
+    font-size: 40px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 
@@ -210,7 +215,7 @@ h21{
     margin-top: -5em;
     font-size: 40px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 .titreCONNAISSANCES{
@@ -227,15 +232,14 @@ h22{
     font-weight: 400;
     font-size: 20px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
-h24{
-    margin-top: -5em;
-    font-weight: 400;
-    font-size: 20px;
+h25{
+    font-weight: 300;
+    font-size: 40px;
     color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+    font-family: Avenir Next, avenir, sans-serif;
 }
 
 .logo{
@@ -248,15 +252,6 @@ width: 90px;
 }
 
 
-h31{
-    font-weight: 400;
-    margin-top: -0.7em;
-    margin-top: -5em;
-    font-size: 40px;
-    color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
-}
-
 .titrepostbac{
         width: auto;
     height: auto;
@@ -267,21 +262,54 @@ width: 250px;
 padding: 10px;
 }
 
-h32{
+p32{
     font-weight: 400;
     font-size: 20px;
     color: rgb(25, 65, 100);
     font-family: Avenir Next,sans-serif;
 }
 
-h34{
-    margin-top: -5em;
-    font-weight: 400;
-    font-size: 20px;
-    color: rgb(25, 65, 100);
-    font-family: Avenir Next,sans-serif;
+
+.titretravail{
+        width: auto;
+    height: auto;
+margin-bottom: 3em;
+border: medium solid rgb(25, 65, 100);
+border-collapse: collapse;
+width: 250px;
+padding: 10px;
 }
 
-.logo{
-width: 90px;
+.travail{
+    width: 100%;
+	background-color: rgba(32, 123, 190, 0.17);
+}
+
+.titrecontact{
+width: auto;
+    height: auto;
+margin-bottom: 2em;
+border: medium solid rgb(141, 194, 234);
+border-collapse: collapse;
+width: 100%;
+padding: 4px;
+}
+
+.CONTACT{
+    width: 100%;
+	background-color: rgb(0, 0, 0);
+}
+
+h41{
+    font-weight: 400;
+    font-size: 30px;
+    color: rgb(141, 194, 234);
+    font-family: Avenir Next, avenir, sans-serif;
+}
+
+p42{
+    font-weight: 400;
+    font-size: 20px;
+    color: rgb(141, 194, 234);
+    font-family: Avenir Next,sans-serif;
 }
