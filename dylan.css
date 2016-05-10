@@ -1,3 +1,18 @@
+@font-face {
+    font-family: "SanFran";
+    src: url('SanFranciscoDisplay-Regular.otf');
+}
+
+@font-face {
+    font-family: "SanFranBold";
+    src: url('SanFranciscoDisplay-Bold.otf');
+}
+
+@font-face {
+    font-family: "Myriad";
+    src: url('myriadpro-regular.otf');
+}
+
 body {
     background-color: rgba(248,248,248, 0.50);
     padding-top: 20px; 
@@ -15,7 +30,7 @@ body {
 .container-fluid{
     padding-top: 30px; 
     padding-bottom: 30px;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'SanFran', sans-serif;
     font-size: 15pt;
 }
 
@@ -38,7 +53,7 @@ p2{
 .othercontainer{
     padding-top: 20pt;
     padding-bottom: 20pt;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'Myriad', sans-serif;
     padding-bottom: 30pt;
 }
 
@@ -78,8 +93,9 @@ h11{
     font-size: 40px;
     width: 210px;
     margin-top: 50pt;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'SanFranBold', sans-serif;
     color: black;
+    letter-spacing: 2pt;
 }
 
 btn{
@@ -96,14 +112,17 @@ btn{
 }
 
 table{
+    background-color: rgba(255, 255, 255, 0.37);
     border-collapse: separate;
     border-spacing:25px; 
     border-width:5px; 
     margin-top: 35px;
+    margin-bottom: 20px;
     border-style:solid; 
     border-color:#ffffff;
     width:95%;
     table-layout:fixed;
+    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
 }
 
 
@@ -112,8 +131,9 @@ h12{
     font-size: 40px;
     width: 100%;
     margin-top: 50pt;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'SanFranBold', sans-serif;
         color: black;
+    letter-spacing: 2pt;
 }
 
 .cont3{
@@ -130,8 +150,9 @@ h13{
     font-size: 40px;
     width: 210px;
     margin-top: 50pt;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'SanFranBold', sans-serif;
         color: black;
+    letter-spacing: 2pt;
 }
 
 .cont4{
@@ -139,7 +160,7 @@ h13{
     margin-right: auto;
     width:100%;
     margin-top: -10pt;
-    background-color: #cedae2;
+    background-color: rgba(168, 144, 41, 0.34);
    
 }
 
@@ -148,10 +169,15 @@ h14{
     font-size: 40px;
     width: 100%;
     margin-top: 50pt;
-    font-family: 'Exo 2', sans-serif;
+    font-family: 'SanFranBold', sans-serif;
         color: black;
+    letter-spacing: 2pt;
 }
 
 .selection-section {
   background: #FDDC00;
+}
+
+.ombre{
+    box-shadow: -1px 2px 5px 1px rgba(0, 0, 0, 0.7);
 }
