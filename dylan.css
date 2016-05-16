@@ -50,6 +50,12 @@ p2{
     font-size: 12pt;
 }
 
+p3{
+    margin-top: 18pt;
+    text-align: justify;
+    font-size: 14pt;
+}
+
 .othercontainer{
     padding-top: 20pt;
     padding-bottom: 20pt;
