@@ -17,7 +17,22 @@ function recupFI3() {
     ouvrir("http://radiofrance-podcast.net/podcast09/rss_14089.xml", 0);
 }
 
+function recupFInter1() {
+    ouvrir("http://radiofrance-podcast.net/podcast09/rss_13970.xml", 0);
+}
+
+function recupFInter2() {
+    ouvrir("http://radiofrance-podcast.net/podcast09/rss_10241.xml", 0);
+}
+
+function recupFInter3() {
+    ouvrir("http://radiofrance-podcast.net/podcast09/rss_14522.xml", 0);
+}
+
+
 function ouvrir(link, valueOK) {
+    var div = document.getElementById("laDiv"); //pour montrer panel
+    div.style.display = "block";
 
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -27,7 +42,7 @@ function ouvrir(link, valueOK) {
             myFunction(this);
         }
     };
-    if (valueOK === 1) { //parce que le link.value ne fonctionne qu'avec le get
+    if (valueOK === 1) { //parce que le link.value ne fonctionne qu'avec le getElement
         xhttp.open("GET", link.value, true);
         xhttp.send();
     } else if (valueOK === 0) {
@@ -42,27 +57,20 @@ function myFunction(xml) {
     var x = xmlDoc.getElementsByTagName("title");
     var y = xmlDoc.getElementsByTagName("description");
     var z = xmlDoc.getElementsByTagName("generator");
+    var a = xmlDoc.getElementsByTagName("enclosure");
+    var compt = 2;
     document.getElementById("titrePodcast").innerHTML = x[0].childNodes[0].nodeValue;
     document.getElementById("descriptionPodcast").innerHTML = y[0].childNodes[0].nodeValue;
     document.getElementById("nomradioPodcast").innerHTML = z[0].childNodes[0].nodeValue;
 
-    var a, b, titreitem, c, d, descriptionitem;
-    titreitem = "";
-    descriptionitem = "";
-    a = xmlDoc.getElementsByTagName("title");
-    c = xmlDoc.getElementsByTagName("description");
-    for (b = 2; b < a.length; b++) {
-        titreitem += a[b].childNodes[0].nodeValue + "<br>";
-    }
-    document.getElementById("titreitem").innerHTML = titreitem;
-
-    var c, d, descriptionitem;
-    descriptionitem = "";
-    c = xmlDoc.getElementsByTagName("description");
-    for (d = 1; d < c.length; d++) {
-        descriptionitem += c[d].childNodes[0].nodeValue + "<br>";
-    }
-    document.getElementById("descriptionitem").innerHTML = descriptionitem;
-    
+    do {
+        var table = document.getElementById("panel");
+        var row = table.insertRow();
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        cell1.innerHTML = "<h6>" + x[compt].childNodes[0].nodeValue + "</h6> <p2>" + y[compt - 1].childNodes[0].nodeValue + "</p2>";
+        cell2.innerHTML = "<BUTTON >LIRE >></BUTTON>";
+        compt = compt + 1;
+    } while (compt < x.length);
 
 }

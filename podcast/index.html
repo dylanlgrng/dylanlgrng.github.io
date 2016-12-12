@@ -4,7 +4,6 @@
 <head>
     <title>Baladodiffuseur</title>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
@@ -14,7 +13,7 @@
 
 <body>
 
-    <script src="podcast/podcastjs.js" type="text/javascript"></script>
+    <script src="podcastjs.js" type="text/javascript"></script>
     <xml id="fichierxml" src="simple.xml"></xml>
 
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -72,17 +71,16 @@
                     <li><a onclick="recupFI1()">8h30 Aphatie</a></li>
                     <li><a onclick="recupFI2()">A toutes saveurs</a></li>
                     <li><a onclick="recupFI3()">En direct du monde</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#">Afficher tout</a></li>
+
                 </ul>
             </li>
             <li role="presentation" class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><input type=image src="logo-franceinter.png" height="40"><span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">inter.1</a></li>
-                    <li><a href="#">inter.2</a></li>
-                    <li><a href="#">inter.3</a></li>
+                    <li><a onclick="recupFInter1()">Le coup de coeur des voix d'Inter</a></li>
+                    <li><a onclick="recupFInter2()">Le 7/9</a></li>
+                    <li><a onclick="recupFInter3()">Drole d'humeur de Nora Hamzawi</a></li>
                 </ul>
             </li>
             <li role="presentation" class="dropdown">
@@ -118,31 +116,24 @@
         </ul>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default" id="laDiv" style="display:none;">
         <div class="panel-heading"><span class="label label-success">PRET A  LA LECTURE</span>
             <h4 id="nomradioPodcast">**nomradio**</h4>
             <h1 class="titreradio" id="titrePodcast">**titre**</h1>
         </div>
+
         <div class="panel-body">
             <h5 id="descriptionPodcast">**description**</h5>
         </div>
 
         <table class="table" id="panel">
-            <tr>
-                <td>
-                    <h6 id="titreitem">**Ancienne ligne1 en haut**</h6>
-                    <p2 id="descriptionitem">**Ancienne ligne2 en haut**</p2>
-                </td>
-                <td>
-                    <BUTTON>LIRE >></BUTTON>
-                </td>
-            </tr>
+
+
 
         </table>
+
     </div>
 
-    <!--    <p1 id="titreitem"></p1>-->
-    <!--    <p2 id="descriptionitem"></p2>-->
 
 </body>
 
