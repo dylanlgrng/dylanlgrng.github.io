@@ -74,3 +74,4 @@ function myFunction(xml) {
     } while (compt < x.length);
 
 }
+
