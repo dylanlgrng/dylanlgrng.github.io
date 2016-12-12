@@ -1,0 +1,36 @@
+body {
+    font-size: 0.925em;
+    padding: 3%;
+}
+
+.starter-template {
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.row {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+p1 {
+    font-size: 12pt;
+}
+
+.nav {
+    font-size: 150%;
+}
+
+.titreradio{
+    margin-top: -10px;
+    font-weight: bolder;
+}
+
+.panel-default > .panel-heading {
+    padding-top: 15pt;
+  background-color: rgba(0, 0, 0, 0.29);
+}
+
+.label-success{
+    font-size: 10pt;
+}
