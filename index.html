@@ -1,56 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Dylan Lagrange</title>
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="accueil.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Starter Template for Bootstrap</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="css.css">
+
 </head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Rock+Salt');
+
+    @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+</style>
 
 <body>
 
-    <div class="site-wrapper">
 
-        <div class="site-wrapper-inner">
-
-            <div class="cover-container">
-
-                <div class="masthead clearfix">
-                    <div class="inner">
-                        <h3 class="masthead-brand">DL.</h3>
-                        <nav>
-                            <ul class="nav masthead-nav">
-                                <li class="active"><a href="#">Accueil</a></li>
-                                <li><a href="dylan.html">Curriculum vitae</a></li>
-                                <li><a href="podcast/podcast.html">Baladodiffuseur</a></li>
-                                <li><a href="http://pablojeandylan.free.fr">pablojeandylan.free.fr</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-
-                <div class="inner cover">
-                    <h1 class="cover-heading">Bienvenue.</h1>
-                    <p class="lead">blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla blabla</p>
-                    <p class="lead">
-                        <a HREF="mailto:lagrangedylan@gmail.com" class="btn btn-lg btn-default">blabla?</a>
-                    </p>
-                </div>
-
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <nav class="nav flex-column">
+                    <a class="nav-link grostitre" onclick="home()" href="#">Dylan Lagrange</a>
+                    <a class="nav-link premiernav">RÉALIASATIONS</a>
+                    <a class="nav-link secondnav" onclick="pablojeandylan()" href="#">pablojeandylan</a>
+                    <a class="nav-link secondnav" href="#" onclick="digicode()">digicode</a>
+                    <a class="nav-link secondnav" href="#">baladodifuseur</a>
+                    <a class="nav-link secondnav" href="#">majordome</a>
+                    <a class="nav-link secondnav" href="#">samplus</a>
+                    <a class="nav-link secondnav" href="#">prison de nantes</a>
+                    <a class="nav-link premiernav" href="#" onclick="home()">PHOTOS</a>
+                    <a class="nav-link premiernav" href="#">INFOS</a>
+                </nav>
             </div>
-
+            <div class="col">
+                <ul id="imagetovideo">
+                    <img class="imghome" id="theimage" />
+                    <video class="videohome" controls="controls" style="display:none;" id="thevideo" />
+                </ul>
+                <ul>
+                    <p1 class="legendereal" id="thelegende"></p1>
+                </ul>
+            </div>
         </div>
-
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script>
-        window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')
+
+    <script language="javascript">
+        var images = [
+            'photos/london.jpeg',
+            'photos/easyjet.jpeg',
+            'photos/fromtate.jpeg',
+            'photos/brighton.jpeg',
+            'photos/vannes.jpeg',
+            'photos/pau.jpeg',
+            'photos/escaliertate.jpeg',
+            'photos/horse.jpeg',
+            'photos/neartate.jpeg',
+            'photos/londondancing.jpeg',
+            'photos/poitou.jpeg',
+            'photos/soho.jpeg',
+            'photos/oxfordrue.jpeg',
+            'photos/morbihan.jpeg',
+            'photos/granderoue.jpeg',
+            'photos/greenish.jpeg',
+            'photos/nationalgal.jpeg',
+            'photos/oxford.jpeg'
+        ]
+
+        var which = Math.floor(Math.random() * images.length);
+        var img = document.getElementById('theimage');
+        img.src = images[which];
+        img.title = images[which];
+
+        function home() {
+            var images = [
+                'photos/london.jpeg',
+                'photos/easyjet.jpeg',
+                'photos/fromtate.jpeg',
+                'photos/brighton.jpeg',
+                'photos/vannes.jpeg',
+                'photos/pau.jpeg',
+                'photos/escaliertate.jpeg',
+                'photos/horse.jpeg',
+                'photos/neartate.jpeg',
+                'photos/londondancing.jpeg',
+                'photos/poitou.jpeg',
+                'photos/soho.jpeg',
+                'photos/oxfordrue.jpeg',
+                'photos/morbihan.jpeg',
+                'photos/granderoue.jpeg',
+                'photos/greenish.jpeg',
+                'photos/nationalgal.jpeg',
+                'photos/oxford.jpeg'
+            ]
+
+            var which = Math.floor(Math.random() * images.length);
+            var img = document.getElementById('theimage');
+            img.src = images[which];
+            img.title = images[which];
+
+            document.getElementById('theimage').style = "display:block;";
+            document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('thelegende').innerHTML = '';
+        }
+
+        function pablojeandylan() {
+            document.getElementById('theimage').style = "display:block;";
+            document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('theimage').src = "reals/pablojeandylan.jpeg";
+            document.getElementById('thelegende').innerHTML = "<span>ce ci est la legende de <a href='http://pablojeandylan.free.fr'>pablojeandylan</a></span>";
+        }
+
+        function digicode() {
+            document.getElementById('theimage').style = "display:none;";
+            document.getElementById('thevideo').style = "display:block;";
+            document.getElementById("thevideo").width = "500";
+            document.getElementById('thevideo').src = "reals/digicode.mp4";
+
+            document.getElementById('thelegende').innerHTML = 'ceci est la legende du digicode';
+        }
+
     </script>
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
 </body>
+
 </html>
