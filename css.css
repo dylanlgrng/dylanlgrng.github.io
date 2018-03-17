@@ -4,6 +4,8 @@ body {
 
 .menubar{
     position: fixed;
+    top: 100px;
+    left: 100px;
 }
 
 .grostitre {
