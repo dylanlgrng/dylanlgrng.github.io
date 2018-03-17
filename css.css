@@ -2,6 +2,10 @@ body {
     margin-top: 100px;
 }
 
+.menubar{
+    position: fixed;
+}
+
 .grostitre {
     padding-left: 0;
     width: 280px;
