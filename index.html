@@ -35,7 +35,7 @@
                     <a class="nav-link secondnav" onclick="samplus()" href="#">samplus</a>
                     <a class="nav-link secondnav" onclick="prisondenantes()" href="#">prison de nantes</a>
                     <a class="nav-link premiernav" href="#" onclick="home()">PHOTOS</a>
-                    <a class="nav-link premiernav" href="#">INFOS</a>
+                    <a class="nav-link premiernav" onclick="infos()" href="#">INFOS</a>
                 </nav>
             </div>
             <div class="col">
@@ -154,6 +154,13 @@
             document.getElementById('thevideo').src = "reals/prisondenantes.mp4";
 
             document.getElementById('thelegende').innerHTML = "projet de L3, portant sur l'utilisation de JAVA, JAVAFX et bases de données";
+        }
+
+        function infos() {
+            document.getElementById('theimage').style = "display:block;";
+            document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('theimage').src = "photos/pau.jpeg";
+            document.getElementById('thelegende').innerHTML = "<span> mon <a href='reals/cv.pdf'>curriculum vitae</a></span>";
         }
 
     </script>
