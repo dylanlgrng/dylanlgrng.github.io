@@ -16,6 +16,7 @@
     @import url('https://fonts.googleapis.com/css?family=Rock+Salt');
 
     @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 </style>
 
 <body>
@@ -29,10 +30,10 @@
                     <a class="nav-link premiernav">RÉALIASATIONS</a>
                     <a class="nav-link secondnav" onclick="pablojeandylan()" href="#">pablojeandylan</a>
                     <a class="nav-link secondnav" href="#" onclick="digicode()">digicode</a>
-                    <a class="nav-link secondnav" href="podcast/podcast.html">baladodifuseur</a>
-                    <a class="nav-link secondnav" href="#">majordome</a>
-                    <a class="nav-link secondnav" href="#">samplus</a>
-                    <a class="nav-link secondnav" href="#">prison de nantes</a>
+                    <a class="nav-link secondnav" onclick="baladodifuseur()" href="#">baladodifuseur</a>
+                    <a class="nav-link secondnav" onclick="majordome()" href="#">majordome</a>
+                    <a class="nav-link secondnav" onclick="samplus()" href="#">samplus</a>
+                    <a class="nav-link secondnav" onclick="prisondenantes()" href="#">prison de nantes</a>
                     <a class="nav-link premiernav" href="#" onclick="home()">PHOTOS</a>
                     <a class="nav-link premiernav" href="#">INFOS</a>
                 </nav>
@@ -113,7 +114,7 @@
             document.getElementById('theimage').style = "display:block;";
             document.getElementById('thevideo').style = "display:none;";
             document.getElementById('theimage').src = "reals/pablojeandylan.jpeg";
-            document.getElementById('thelegende').innerHTML = "<span>ce ci est la legende de <a href='http://pablojeandylan.free.fr'>pablojeandylan</a></span>";
+            document.getElementById('thelegende').innerHTML = "<span>lien vers le <a href='http://pablojeandylan.free.fr'>pablojeandylan</a></span>";
         }
 
         function digicode() {
@@ -122,8 +123,39 @@
             document.getElementById("thevideo").width = "500";
             document.getElementById('thevideo').src = "reals/digicode.mp4";
 
-            document.getElementById('thelegende').innerHTML = 'ceci est la legende du digicode';
+            document.getElementById('thelegende').innerHTML = "<span>documentation du <a href='reals/digicode.pdf'>digicode</a>, projet</span>";
         }
+
+        function baladodifuseur() {
+            document.getElementById('theimage').style = "display:block;";
+            document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('theimage').src = "reals/baladodifuseur.jpeg";
+            document.getElementById('thelegende').innerHTML = "<span>lien vers le <a href='podcast/podcast.html'>baladodiffuseur</a>, projet de L2 portant sur JSON et JAVASCRIPT.</span>";
+        }
+
+        function majordome() {
+            document.getElementById('theimage').style = "display:block;";
+            document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('theimage').src = "reals/majordome.jpeg";
+            document.getElementById('thelegende').innerHTML = "projet de L1, portant sur la création d'interface mobile";
+        }
+
+        function samplus() {
+            document.getElementById('theimage').style = "display:block;";
+            document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('theimage').src = "reals/samplus.jpeg";
+            document.getElementById('thelegende').innerHTML = "<span>documentation de <a href='reals/SAMplus.pdf'>SAMplus</a>, projet pour le hackaton LA NUIT DE L'INFO</span>";
+        }
+
+        function prisondenantes() {
+            document.getElementById('theimage').style = "display:none;";
+            document.getElementById('thevideo').style = "display:block;";
+            document.getElementById("thevideo").width = "500";
+            document.getElementById('thevideo').src = "reals/prisondenantes.mp4";
+
+            document.getElementById('thelegende').innerHTML = "projet de L3, portant sur l'utilisation de JAVAFX et bases de données JAVA";
+        }
+
     </script>
 
 
