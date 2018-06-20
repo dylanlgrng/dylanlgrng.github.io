@@ -1,3 +1,13 @@
+@font-face {
+    font-family: SFB;
+    src: url("SFText-Bold.otf") format("opentype");
+}
+
+@font-face {
+    font-family: SFR;
+    src: url("SFText-Regular.otf") format("opentype");
+}
+
 body {
     margin-top: 100px;
 }
@@ -11,8 +21,8 @@ body {
 
 .grostitre {
     padding-left: 0;
-    width: 280px;
-    font-size: 25px;
+    width: 400px;
+    font-size: 30px;
     font-family: 'Rock Salt', cursive;
     color: black;
 }
@@ -22,10 +32,12 @@ body {
 }
 
 .premiernav {
-    font-size: 12px;
+    font-size: 15px;
     margin-bottom: -10px;
+    padding-left: 0px;
     color: black;
-    font-family: 'Montserrat', sans-serif;
+    font-family: SFB, 'Montserrat', sans-serif;
+    letter-spacing: 1px;
 }
 
 .premiernav:hover {
@@ -34,11 +46,13 @@ body {
 
 
 .secondnav {
-    font-size: 12px;
+    font-size: 13px;
     padding: 0px;
     margin-left: 50px;
     color: grey;
-    font-family: 'Montserrat', sans-serif;
+    font-family: SFR, 'Montserrat', sans-serif;
+    letter-spacing: 0.5px;
+    
 }
 
 .secondnav:hover {
@@ -52,7 +66,7 @@ body {
 .legendereal {
     font-size: 12px;
     color: black;
-    font-family: 'Montserrat', sans-serif;
+    font-family: SFR, 'Montserrat', sans-serif;
 }
 
 .navinfoslast {
