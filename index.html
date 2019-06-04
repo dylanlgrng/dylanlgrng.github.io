@@ -13,6 +13,7 @@
         gtag('js', new Date());
 
         gtag('config', 'UA-121098500-1');
+
     </script>
 
 
@@ -32,6 +33,7 @@
     @import url('https://fonts.googleapis.com/css?family=Rock+Salt');
 
     @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
 </style>
 
 
@@ -73,6 +75,15 @@
 
 
     <script language="javascript">
+        window.onload = function() {
+            var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
+            if (mobile) {
+                alert("Please, open this website on a computer.");
+            } else {
+
+            }
+        }
+
         var images = [
             'photos/london.jpeg',
             'photos/easyjet.jpeg',
@@ -126,49 +137,49 @@
 
         function home() {
             var images = [
-         'photos/london.jpeg',
-            'photos/easyjet.jpeg',
-            'photos/fromtate.jpeg',
-            'photos/brighton.jpeg',
-            'photos/vannes.jpeg',
-            'photos/pau.jpeg',
-            'photos/escaliertate.jpeg',
-            'photos/horse.jpeg',
-            'photos/neartate.jpeg',
-            'photos/londondancing.jpeg',
-            'photos/poitou.jpeg',
-            'photos/soho.jpeg',
-            'photos/oxfordrue.jpeg',
-            'photos/morbihan.jpeg',
-            'photos/granderoue.jpeg',
-            'photos/greenish.jpeg',
-            'photos/nationalgal.jpeg',
-            'photos/oxford.jpeg',
-            'photos/new1.jpeg',
-            'photos/new2.jpeg',
-            'photos/new3.jpeg',
-            'photos/new4.jpeg',
-            'photos/new5.jpeg',
-            'photos/new6.jpeg',
-            'photos/new7.jpeg',
-            'photos/new8.jpeg',
-            'photos/new9.jpeg',
-            'photos/new10.jpeg',
-            'photos/new11.jpeg',
-            'photos/new12.jpeg',
-            'photos/new13.jpeg',
-            'photos/new14.jpeg',
-            'photos/new15.jpeg',
-            'photos/new16.jpeg',
-            'photos/new17.jpeg',
-            'photos/new18.jpeg',
-            'photos/new19.jpeg',
-            'photos/new20.jpeg',
-            'photos/new21.jpeg',
-            'photos/new22.jpeg',
-            'photos/new23.jpeg',
-            'photos/new24.jpeg',
-            'photos/new25.jpeg'
+                'photos/london.jpeg',
+                'photos/easyjet.jpeg',
+                'photos/fromtate.jpeg',
+                'photos/brighton.jpeg',
+                'photos/vannes.jpeg',
+                'photos/pau.jpeg',
+                'photos/escaliertate.jpeg',
+                'photos/horse.jpeg',
+                'photos/neartate.jpeg',
+                'photos/londondancing.jpeg',
+                'photos/poitou.jpeg',
+                'photos/soho.jpeg',
+                'photos/oxfordrue.jpeg',
+                'photos/morbihan.jpeg',
+                'photos/granderoue.jpeg',
+                'photos/greenish.jpeg',
+                'photos/nationalgal.jpeg',
+                'photos/oxford.jpeg',
+                'photos/new1.jpeg',
+                'photos/new2.jpeg',
+                'photos/new3.jpeg',
+                'photos/new4.jpeg',
+                'photos/new5.jpeg',
+                'photos/new6.jpeg',
+                'photos/new7.jpeg',
+                'photos/new8.jpeg',
+                'photos/new9.jpeg',
+                'photos/new10.jpeg',
+                'photos/new11.jpeg',
+                'photos/new12.jpeg',
+                'photos/new13.jpeg',
+                'photos/new14.jpeg',
+                'photos/new15.jpeg',
+                'photos/new16.jpeg',
+                'photos/new17.jpeg',
+                'photos/new18.jpeg',
+                'photos/new19.jpeg',
+                'photos/new20.jpeg',
+                'photos/new21.jpeg',
+                'photos/new22.jpeg',
+                'photos/new23.jpeg',
+                'photos/new24.jpeg',
+                'photos/new25.jpeg'
             ]
 
             var which = Math.floor(Math.random() * images.length);
@@ -241,6 +252,7 @@
             document.getElementById('thelegende').innerHTML = "<span> mon <a href='reals/cv.pdf'>curriculum vitae</a> </span>";
             document.getElementById('prelegende').innerHTML = '';
         }
+
     </script>
 
 
