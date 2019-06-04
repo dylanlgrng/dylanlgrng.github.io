@@ -57,6 +57,9 @@
                 </nav>
             </div>
             <div class="col">
+                <ul>
+                    <p1 class="prelegende" id="prelegende"></p1>
+                </ul>
                 <ul id="imagetovideo">
                     <img class="imghome" id="theimage" />
                     <video class="videohome" controls="controls" style="display:none;" id="thevideo" />
@@ -88,7 +91,32 @@
             'photos/granderoue.jpeg',
             'photos/greenish.jpeg',
             'photos/nationalgal.jpeg',
-            'photos/oxford.jpeg'
+            'photos/oxford.jpeg',
+            'photos/new1.jpeg',
+            'photos/new2.jpeg',
+            'photos/new3.jpeg',
+            'photos/new4.jpeg',
+            'photos/new5.jpeg',
+            'photos/new6.jpeg',
+            'photos/new7.jpeg',
+            'photos/new8.jpeg',
+            'photos/new9.jpeg',
+            'photos/new10.jpeg',
+            'photos/new11.jpeg',
+            'photos/new12.jpeg',
+            'photos/new13.jpeg',
+            'photos/new14.jpeg',
+            'photos/new15.jpeg',
+            'photos/new16.jpeg',
+            'photos/new17.jpeg',
+            'photos/new18.jpeg',
+            'photos/new19.jpeg',
+            'photos/new20.jpeg',
+            'photos/new21.jpeg',
+            'photos/new22.jpeg',
+            'photos/new23.jpeg',
+            'photos/new24.jpeg',
+            'photos/new25.jpeg'
         ]
 
         var which = Math.floor(Math.random() * images.length);
@@ -98,24 +126,49 @@
 
         function home() {
             var images = [
-                'photos/london.jpeg',
-                'photos/easyjet.jpeg',
-                'photos/fromtate.jpeg',
-                'photos/brighton.jpeg',
-                'photos/vannes.jpeg',
-                'photos/pau.jpeg',
-                'photos/escaliertate.jpeg',
-                'photos/horse.jpeg',
-                'photos/neartate.jpeg',
-                'photos/londondancing.jpeg',
-                'photos/poitou.jpeg',
-                'photos/soho.jpeg',
-                'photos/oxfordrue.jpeg',
-                'photos/morbihan.jpeg',
-                'photos/granderoue.jpeg',
-                'photos/greenish.jpeg',
-                'photos/nationalgal.jpeg',
-                'photos/oxford.jpeg'
+         'photos/london.jpeg',
+            'photos/easyjet.jpeg',
+            'photos/fromtate.jpeg',
+            'photos/brighton.jpeg',
+            'photos/vannes.jpeg',
+            'photos/pau.jpeg',
+            'photos/escaliertate.jpeg',
+            'photos/horse.jpeg',
+            'photos/neartate.jpeg',
+            'photos/londondancing.jpeg',
+            'photos/poitou.jpeg',
+            'photos/soho.jpeg',
+            'photos/oxfordrue.jpeg',
+            'photos/morbihan.jpeg',
+            'photos/granderoue.jpeg',
+            'photos/greenish.jpeg',
+            'photos/nationalgal.jpeg',
+            'photos/oxford.jpeg',
+            'photos/new1.jpeg',
+            'photos/new2.jpeg',
+            'photos/new3.jpeg',
+            'photos/new4.jpeg',
+            'photos/new5.jpeg',
+            'photos/new6.jpeg',
+            'photos/new7.jpeg',
+            'photos/new8.jpeg',
+            'photos/new9.jpeg',
+            'photos/new10.jpeg',
+            'photos/new11.jpeg',
+            'photos/new12.jpeg',
+            'photos/new13.jpeg',
+            'photos/new14.jpeg',
+            'photos/new15.jpeg',
+            'photos/new16.jpeg',
+            'photos/new17.jpeg',
+            'photos/new18.jpeg',
+            'photos/new19.jpeg',
+            'photos/new20.jpeg',
+            'photos/new21.jpeg',
+            'photos/new22.jpeg',
+            'photos/new23.jpeg',
+            'photos/new24.jpeg',
+            'photos/new25.jpeg'
             ]
 
             var which = Math.floor(Math.random() * images.length);
@@ -125,6 +178,7 @@
 
             document.getElementById('theimage').style = "display:block;";
             document.getElementById('thevideo').style = "display:none;";
+            document.getElementById('prelegende').innerHTML = "<span><a href='#' onclick='home()'>>></a></span>";
             document.getElementById('thelegende').innerHTML = '';
         }
 
@@ -133,6 +187,7 @@
             document.getElementById('thevideo').style = "display:none;";
             document.getElementById('theimage').src = "reals/pablojeandylan.jpeg";
             document.getElementById('thelegende').innerHTML = "<span>lien vers <a href='http://pablojeandylan.free.fr'>pablojeandylan</a>, projet d'isn, création d'un premier site web - 2015</span>";
+            document.getElementById('prelegende').innerHTML = '';
         }
 
         function digicode() {
@@ -142,6 +197,7 @@
             document.getElementById('thevideo').src = "reals/digicode.mp4";
 
             document.getElementById('thelegende').innerHTML = "<span>documentation du <a href='reals/Digicode.pdf'>digicode</a>, projet d'isn - 2015</span>";
+            document.getElementById('prelegende').innerHTML = '';
         }
 
         function baladodifuseur() {
@@ -149,6 +205,7 @@
             document.getElementById('thevideo').style = "display:none;";
             document.getElementById('theimage').src = "reals/baladodifuseur.jpeg";
             document.getElementById('thelegende').innerHTML = "<span>lien vers le <a href='podcast/podcast.html'>baladodiffuseur</a>, projet de L2 portant sur JSON et JAVASCRIPT - 2017</span>";
+            document.getElementById('prelegende').innerHTML = '';
         }
 
         function majordome() {
@@ -156,6 +213,7 @@
             document.getElementById('thevideo').style = "display:none;";
             document.getElementById('theimage').src = "reals/majordome.jpeg";
             document.getElementById('thelegende').innerHTML = "projet de L1, portant sur la création d'interface mobile - 2016";
+            document.getElementById('prelegende').innerHTML = '';
         }
 
         function samplus() {
@@ -163,6 +221,7 @@
             document.getElementById('thevideo').style = "display:none;";
             document.getElementById('theimage').src = "reals/samplus.jpeg";
             document.getElementById('thelegende').innerHTML = "<span>documentation de <a href='reals/SAMplus.pdf'>SAMplus</a>, projet pour le hackaton <a href='https://www.nuitdelinfo.com/'>LA NUIT DE L'INFO</a> - 2017</span>";
+            document.getElementById('prelegende').innerHTML = '';
         }
 
         function prisondenantes() {
@@ -172,6 +231,7 @@
             document.getElementById('thevideo').src = "reals/prisondenantes.mp4";
 
             document.getElementById('thelegende').innerHTML = "projet de L3, enseignement technologie orientée objet, portant sur l'utilisation de JAVA, JAVAFX et bases de données - 2017";
+            document.getElementById('prelegende').innerHTML = '';
         }
 
         function infos() {
@@ -179,6 +239,7 @@
             document.getElementById('thevideo').style = "display:none;";
             document.getElementById('theimage').src = "photos/pau.jpeg";
             document.getElementById('thelegende').innerHTML = "<span> mon <a href='reals/cv.pdf'>curriculum vitae</a> </span>";
+            document.getElementById('prelegende').innerHTML = '';
         }
     </script>
 
