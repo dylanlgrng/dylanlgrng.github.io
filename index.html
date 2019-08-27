@@ -46,7 +46,6 @@
                 <nav class="nav flex-column menubar">
                     <a class="nav-link grostitre" onclick="home()" href="#">Dylan Lagrange</a>
                     <a class="nav-link premiernav">RÉALISATIONS</a>
-                    <a class="nav-link secondnav" onclick="pablojeandylan()" href="#">pablojeandylan</a>
                     <a class="nav-link secondnav" href="#" onclick="digicode()">digicode</a>
                     <a class="nav-link secondnav" onclick="baladodifuseur()" href="#">baladodifuseur</a>
                     <a class="nav-link secondnav" onclick="majordome()" href="#">majordome</a>
@@ -192,13 +191,7 @@
             document.getElementById('thelegende').innerHTML = '';
         }
 
-        function pablojeandylan() {
-            document.getElementById('theimage').style = "display:block;";
-            document.getElementById('thevideo').style = "display:none;";
-            document.getElementById('theimage').src = "reals/pablojeandylan.jpeg";
-            document.getElementById('thelegende').innerHTML = "<span>lien vers <a href='http://pablojeandylan.free.fr'>pablojeandylan</a>, projet d'isn, création d'un premier site web - 2015</span>";
-            document.getElementById('prelegende').innerHTML = '';
-        }
+        
 
         function digicode() {
             document.getElementById('theimage').style = "display:none;";
