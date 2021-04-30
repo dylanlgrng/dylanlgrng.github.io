@@ -1,257 +1,79 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en" dir="ltr">
 
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-121098500-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+  <meta charset="utf-8">
+  <title>Document</title>
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-121098500-1');
-
-    </script>
-
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <title>Dylan</title>
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="css.css">
-    <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
-
+  <link rel="stylesheet" href="reset.css">
+  <link rel="stylesheet" href="style.css">
 
 </head>
 
-<style>
-    @import url('https://fonts.googleapis.com/css?family=Rock+Salt');
-
-    @import url('https://fonts.googleapis.com/css?family=Montserrat');
-
-</style>
-
-
 <body>
 
+  <div class="wrapper">
+    <header class="header">
+      <h2>hi there, <br>
+        i'm <b>Dylan Lagrange</b>,<br>
+        i design and prototype new user-centered interfaces.<br> <br>
+        <a href="medias/DylanLagrange_CV.pdf">About me</a>
+        <a href="https://www.linkedin.com/in/dylanlgrng/">linkedin</a> 
+        <a href="https://twitter.com/dylanlgrng">twitter</a> 
+        <a href="https://www.instagram.com/dylanlgrng/">instagram</a> 
+        <A HREF="mailto:lagrangedylan@gmail.com">email</A>
+    </header>
+    <aside class="aside aside-1"><img alt="CV" draggable="false" src="medias/CV(1).png"></aside>
+    <aside class="aside aside-2"><img alt="CV" draggable="false" src="medias/CV(2).jpeg"></aside>
+    <aside class="aside aside-3"><img alt="CV" draggable="false" src="medias/CV(3).jpeg"></aside>
+    <aside class="aside aside-4"><img alt="CV" draggable="false" src="medias/CV(4).jpg"></aside>
+    <footer class="footer footer-1">
+      <h2>Currently working as a digital project manager at <a href="https://www.crus-vintages.com/en/">Crus &
+          Vintages</a>.</h2>
+      <h2>Implementation of a new ERP. Design of an e-commerce site. Brand image.</h2>
+    </footer>
+  </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <nav class="nav flex-column menubar">
-                    <a class="nav-link grostitre" onclick="home()" href="#">Dylan Lagrange</a>
-                    <a class="nav-link premiernav">RÉALISATIONS</a>
-                    <a class="nav-link secondnav" href="#" onclick="digicode()">digicode</a>
-                    <a class="nav-link secondnav" onclick="baladodifuseur()" href="#">baladodifuseur</a>
-                    <a class="nav-link secondnav" onclick="majordome()" href="#">majordome</a>
-                    <a class="nav-link secondnav" onclick="samplus()" href="#">samplus</a>
-                    <a class="nav-link secondnav" onclick="prisondenantes()" href="#">prison de nantes</a>
-                    <a class="nav-link premiernav" href="#" onclick="home()">PHOTOS</a>
-                    <a class="nav-link premiernav navinfoslast" onclick="infos()" href="#">À PROPOS</a>
-                    <div class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="fr_FR" data-type="horizontal" data-theme="light" data-vanity="dylanlgrng"><a class="LI-simple-link" href='https://fr.linkedin.com/in/dylanlgrng?trk=profile-badge'>Dylan Lagrange</a></div>
-                </nav>
-            </div>
-            <div class="col">
-                <ul>
-                    <p1 class="prelegende" id="prelegende"></p1>
-                </ul>
-                <ul id="imagetovideo">
-                    <img class="imghome" id="theimage" />
-                    <video class="videohome" controls="controls" style="display:none;" id="thevideo" />
-                </ul>
-                <ul>
-                    <p1 class="legendereal" id="thelegende"></p1>
-                </ul>
-            </div>
-        </div>
-    </div>
+  <hr>
 
+  <div class="wrapper wrapper-2">
+    <aside class="aside aside-1"><img alt="hypperplanning" draggable="false" src="medias/hypperplanning(1).png"></aside>
+    <aside class="aside aside-2"><video autoplay loop play inline type="video/mp4" src="medias/hypperplanning(2).mov"></video></aside>
+    <aside class="aside aside-3"><img alt="hypperplanning" draggable="false" src="medias/hypperplanning(4).png"></aside>
+    <aside class="aside aside-4"><video autoplay loop play inline type="video/mp4" src="medias/hypperplanning(3).mov"></video></aside>
+    <footer class="footer">
+      <h2>Hypperplanning, 2021</h2>
+      <h2>Interface redesign. User-research. Design System.</h2>
+    </footer>
+  </div>
 
-    <script language="javascript">
-        window.onload = function() {
-            var mobile = (/iphone|ipad|ipod|android|blackberry|mini|windows\sce|palm/i.test(navigator.userAgent.toLowerCase()));
-            if (mobile) {
-                alert("Please, open this website on a computer.");
-            } else {
+  <hr>
 
-            }
-        }
+  <div class="wrapper wrapper-2">
+    <aside class="aside aside-1"><img alt="heycook" draggable="false" src="medias/heycook(1).png"></aside>
+    <aside class="aside aside-2"><video autoplay loop play inline type="video/mp4" src="medias/heycook(4).mov"></video></aside>
+    <aside class="aside aside-3"><img alt="heycook" draggable="false" src="medias/heycook(2).jpeg"></aside>
+    <aside class="aside aside-4"><img alt="heycook" draggable="false" src="medias/heycook(3).jpeg"></aside>
+    <footer class="footer">
+      <h2>Hey Cook, 2021</h2>
+      <h2>Find a problem. Think about a solution. User-research to validate ideas. Prototyping. Teamwork with
+        developers.</h2>
+    </footer>
+  </div>
 
-        var images = [
-            'photos/london.jpeg',
-            'photos/easyjet.jpeg',
-            'photos/fromtate.jpeg',
-            'photos/brighton.jpeg',
-            'photos/vannes.jpeg',
-            'photos/pau.jpeg',
-            'photos/escaliertate.jpeg',
-            'photos/horse.jpeg',
-            'photos/neartate.jpeg',
-            'photos/londondancing.jpeg',
-            'photos/poitou.jpeg',
-            'photos/soho.jpeg',
-            'photos/oxfordrue.jpeg',
-            'photos/morbihan.jpeg',
-            'photos/granderoue.jpeg',
-            'photos/greenish.jpeg',
-            'photos/nationalgal.jpeg',
-            'photos/oxford.jpeg',
-            'photos/new1.jpeg',
-            'photos/new2.jpeg',
-            'photos/new3.jpeg',
-            'photos/new4.jpeg',
-            'photos/new5.jpeg',
-            'photos/new6.jpeg',
-            'photos/new7.jpeg',
-            'photos/new8.jpeg',
-            'photos/new9.jpeg',
-            'photos/new10.jpeg',
-            'photos/new11.jpeg',
-            'photos/new12.jpeg',
-            'photos/new13.jpeg',
-            'photos/new14.jpeg',
-            'photos/new15.jpeg',
-            'photos/new16.jpeg',
-            'photos/new17.jpeg',
-            'photos/new18.jpeg',
-            'photos/new19.jpeg',
-            'photos/new20.jpeg',
-            'photos/new21.jpeg',
-            'photos/new22.jpeg',
-            'photos/new23.jpeg',
-            'photos/new24.jpeg',
-            'photos/new25.jpeg'
-        ]
+  <hr>
 
-        var which = Math.floor(Math.random() * images.length);
-        var img = document.getElementById('theimage');
-        img.src = images[which];
-        img.title = images[which];
-
-        function home() {
-            var images = [
-                'photos/london.jpeg',
-                'photos/easyjet.jpeg',
-                'photos/fromtate.jpeg',
-                'photos/brighton.jpeg',
-                'photos/vannes.jpeg',
-                'photos/pau.jpeg',
-                'photos/escaliertate.jpeg',
-                'photos/horse.jpeg',
-                'photos/neartate.jpeg',
-                'photos/londondancing.jpeg',
-                'photos/poitou.jpeg',
-                'photos/soho.jpeg',
-                'photos/oxfordrue.jpeg',
-                'photos/morbihan.jpeg',
-                'photos/granderoue.jpeg',
-                'photos/greenish.jpeg',
-                'photos/nationalgal.jpeg',
-                'photos/oxford.jpeg',
-                'photos/new1.jpeg',
-                'photos/new2.jpeg',
-                'photos/new3.jpeg',
-                'photos/new4.jpeg',
-                'photos/new5.jpeg',
-                'photos/new6.jpeg',
-                'photos/new7.jpeg',
-                'photos/new8.jpeg',
-                'photos/new9.jpeg',
-                'photos/new10.jpeg',
-                'photos/new11.jpeg',
-                'photos/new12.jpeg',
-                'photos/new13.jpeg',
-                'photos/new14.jpeg',
-                'photos/new15.jpeg',
-                'photos/new16.jpeg',
-                'photos/new17.jpeg',
-                'photos/new18.jpeg',
-                'photos/new19.jpeg',
-                'photos/new20.jpeg',
-                'photos/new21.jpeg',
-                'photos/new22.jpeg',
-                'photos/new23.jpeg',
-                'photos/new24.jpeg',
-                'photos/new25.jpeg'
-            ]
-
-            var which = Math.floor(Math.random() * images.length);
-            var img = document.getElementById('theimage');
-            img.src = images[which];
-            img.title = images[which];
-
-            document.getElementById('theimage').style = "display:block;";
-            document.getElementById('thevideo').style = "display:none;";
-            document.getElementById('prelegende').innerHTML = "<span><a href='#' onclick='home()'>>></a></span>";
-            document.getElementById('thelegende').innerHTML = '';
-        }
-
-        
-
-        function digicode() {
-            document.getElementById('theimage').style = "display:none;";
-            document.getElementById('thevideo').style = "display:block;";
-            document.getElementById("thevideo").width = "500";
-            document.getElementById('thevideo').src = "reals/digicode.mp4";
-
-            document.getElementById('thelegende').innerHTML = "<span>documentation du <a href='reals/Digicode.pdf'>digicode</a>, projet d'isn - 2015</span>";
-            document.getElementById('prelegende').innerHTML = '';
-        }
-
-        function baladodifuseur() {
-            document.getElementById('theimage').style = "display:block;";
-            document.getElementById('thevideo').style = "display:none;";
-            document.getElementById('theimage').src = "reals/baladodifuseur.jpeg";
-            document.getElementById('thelegende').innerHTML = "<span>lien vers le <a href='podcast/podcast.html'>baladodiffuseur</a>, projet de L2 portant sur JSON et JAVASCRIPT - 2017</span>";
-            document.getElementById('prelegende').innerHTML = '';
-        }
-
-        function majordome() {
-            document.getElementById('theimage').style = "display:block;";
-            document.getElementById('thevideo').style = "display:none;";
-            document.getElementById('theimage').src = "reals/majordome.jpeg";
-            document.getElementById('thelegende').innerHTML = "projet de L1, portant sur la création d'interface mobile - 2016";
-            document.getElementById('prelegende').innerHTML = '';
-        }
-
-        function samplus() {
-            document.getElementById('theimage').style = "display:block;";
-            document.getElementById('thevideo').style = "display:none;";
-            document.getElementById('theimage').src = "reals/samplus.jpeg";
-            document.getElementById('thelegende').innerHTML = "<span>documentation de <a href='reals/SAMplus.pdf'>SAMplus</a>, projet pour le hackaton <a href='https://www.nuitdelinfo.com/'>LA NUIT DE L'INFO</a> - 2017</span>";
-            document.getElementById('prelegende').innerHTML = '';
-        }
-
-        function prisondenantes() {
-            document.getElementById('theimage').style = "display:none;";
-            document.getElementById('thevideo').style = "display:block;";
-            document.getElementById("thevideo").width = "500";
-            document.getElementById('thevideo').src = "reals/prisondenantes.mp4";
-
-            document.getElementById('thelegende').innerHTML = "projet de L3, enseignement technologie orientée objet, portant sur l'utilisation de JAVA, JAVAFX et bases de données - 2017";
-            document.getElementById('prelegende').innerHTML = '';
-        }
-
-        function infos() {
-            document.getElementById('theimage').style = "display:block;";
-            document.getElementById('thevideo').style = "display:none;";
-            document.getElementById('theimage').src = "photos/pau.jpeg";
-            document.getElementById('thelegende').innerHTML = "<span> mon <a href='reals/cv.pdf'>curriculum vitae</a> </span>";
-            document.getElementById('prelegende').innerHTML = '';
-        }
-
-    </script>
-
-
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <div class="wrapper wrapper-2">
+    <aside class="aside aside-1"><img alt="heycook" draggable="false" src="medias/tidy(1).png"></aside>
+    <aside class="aside aside-2"><img alt="heycook" draggable="false" src="medias/tidy(2).png"></video></aside>
+    <aside class="aside aside-3"><img alt="heycook" draggable="false" src="medias/tidy(4).jpg"></aside>
+    <aside class="aside aside-4"><video autoplay loop play inline type="video/mp4" src="medias/tidy(3).mov"></video></aside>
+    <footer class="footer">
+      <h2><a href="https://xd.adobe.com/view/1c2d20b1-e163-4b16-6249-a1e581febe72-6a1c/?fullscreen">Tidy</a>, 2020</h2>
+      <h2>Create a product to reduce digital pollution. It's a mail client for professionnal.</h2>
+    </footer>
+  </div>
+  <hr>
 
 
 </body>
