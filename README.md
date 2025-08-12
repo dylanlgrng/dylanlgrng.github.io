@@ -1,21 +1,18 @@
 # Portfolio – GitHub Pages (User Site)
-Déployez ce portfolio comme page principale : `https://<votre-username>.github.io`.
+Déployez comme page principale : `https://<votre-username>.github.io`.
 
 ## Étapes
-1. Dézippez ce dossier.
-2. Créez un dépôt **public** nommé **`<votre-username>.github.io`** sur GitHub.
-3. Poussez **tous** les fichiers (y compris `.github/workflows/deploy.yml`) sur la branche `main`.
-4. Le workflow va builder et déployer automatiquement. L’URL : `https://<votre-username>.github.io`.
+1. **Téléchargez puis dézippez** ce dossier.
+2. Créez un dépôt **public** nommé **`<votre-username>.github.io`**.
+3. Dans GitHub > *Add file* > *Upload files*, **glissez TOUT le contenu** (y compris le dossier `.github/`). **Validez le commit sur `master` ou `main`.**
+4. Le workflow *Deploy to GitHub Pages* se lancera automatiquement (sur **main** et **master**).
 
-## Développement local
+> Le workflow crée aussi un `404.html` pour le routing React.
+
+## Dev local
 ```bash
 npm install
 npm run dev
-# build:
+# puis
 npm run build
 ```
-
-## Notes
-- Vite + React 18 + Tailwind
-- Sections About / Projects; Contacts intégré dans About
-- Effet titre : **pas d’animation**. Au survol, **une** police + **une** couleur de la palette sont appliquées; on revient à la normale en sortie.
