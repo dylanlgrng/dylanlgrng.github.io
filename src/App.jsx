@@ -127,24 +127,24 @@ function Home() {
     []
   );
 
-  // Palette "tendance" (sans animation)
-  const trendyColors = useMemo(
-    () => [
-      "#0ea5e9", // sky-500
-      "#22c55e", // green-500
-      "#a78bfa", // violet-400
-      "#f43f5e", // rose-500
-      "#f59e0b", // amber-500
-      "#06b6d4", # # cyan-500
-      "#fb7185", # # rose-400
-      "#10b981", # # emerald-500
-      "#f97316", # # orange-500
-      "#14b8a6", # # teal-500
-      "#8b5cf6", # # violet-500
-      "#e11d48", # # rose-600
-    ],
-    []
-  );
+ // Palette "tendance" (sans animation)
+const trendyColors = useMemo(
+  () => [
+    "#0ea5e9", // sky-500
+    "#22c55e", // green-500
+    "#a78bfa", // violet-400
+    "#f43f5e", // rose-500
+    "#f59e0b", // amber-500
+    "#06b6d4", // cyan-500
+    "#fb7185", // rose-400
+    "#10b981", // emerald-500
+    "#f97316", // orange-500
+    "#14b8a6", // teal-500
+    "#8b5cf6", // violet-500
+    "#e11d48", // rose-600
+  ],
+  []
+);
 
   // État "une fois par survol"
   const [hoverFont, setHoverFont] = useState(undefined);
