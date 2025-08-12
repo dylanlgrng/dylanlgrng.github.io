@@ -106,26 +106,31 @@ function Home() {
   const [open, setOpen] = useState(null); // "about" | "projects" | null
   const [showAll, setShowAll] = useState(false);
 
-  // Polices (stacks système + quelques familles usuelles)
-  const fontsMaster = useMemo(
-    () => [
-      "Transducer, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif",
-      "Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial",
-      "System UI, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'",
-      "Manrope, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial",
-      "Space Grotesk, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial",
-      "Work Sans, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial",
-      "'Times New Roman', Times, serif",
-      "Georgia, serif",
-      "'Courier New', Courier, monospace",
-      "'Comic Sans MS', 'Comic Sans', cursive",
-      "'Brush Script MT', cursive",
-      "'Lucida Handwriting', cursive",
-      "'Apple Chancery', cursive",
-      "'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-    ],
-    []
-  );
+ // Polices système (Mac + Windows) – aucunes webfonts
+const fontsMaster = useMemo(
+  () => [
+    // Sans / UI
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif",
+    "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+    "'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', sans-serif",
+    "'Segoe UI', Tahoma, Verdana, Arial, sans-serif",
+    "Verdana, Geneva, Tahoma, sans-serif",
+    "'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', Arial, sans-serif",
+    "'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Arial, sans-serif",
+    // Serif
+    "'Times New Roman', Times, serif",
+    "Georgia, 'Times New Roman', serif",
+    "'Palatino Linotype', Palatino, serif",
+    "Baskerville, 'Times New Roman', Times, serif",
+    // Monospace
+    "Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
+    "'Courier New', Courier, monospace",
+    // Cursive / script (système)
+    "'Brush Script MT', cursive",
+    "'Comic Sans MS', 'Comic Sans', cursive",
+  ],
+  []
+);
 
  // Palette "tendance" (sans animation)
 const trendyColors = useMemo(
