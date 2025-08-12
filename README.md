@@ -1,18 +1,14 @@
-# Portfolio – GitHub Pages (User Site)
-Déployez comme page principale : `https://<votre-username>.github.io`.
+# Mon portfolio – GitHub Pages (v5)
 
-## Étapes
-1. **Téléchargez puis dézippez** ce dossier.
-2. Créez un dépôt **public** nommé **`<votre-username>.github.io`**.
-3. Dans GitHub > *Add file* > *Upload files*, **glissez TOUT le contenu** (y compris le dossier `.github/`). **Validez le commit sur `master` ou `main`.**
-4. Le workflow *Deploy to GitHub Pages* se lancera automatiquement (sur **main** et **master**).
+- Dynamic cycling de police/couleur **pendant le survol** (Chrome/Safari/Windows OK)
+- Polices **système uniquement** (aucune webfont) pour compatibilité
+- Contenus faciles dans `src/content/site.json`
+- Workflow Pages sur **master + main** et fallback `404.html`
 
-> Le workflow crée aussi un `404.html` pour le routing React.
+## Modifier les contenus
+- Profil / contacts / compétences / photo : `src/content/site.json` → `about`
+- Projets : dans `projects` (id, title, image, summary, description)
+- Images locales : placez-les dans `public/images/` puis référencez `images/nom.jpg`
 
-## Dev local
-```bash
-npm install
-npm run dev
-# puis
-npm run build
-```
+## Déployer
+Uploadez tout le dossier dans votre repo `<username>.github.io` (branche master ou main). L'action GitHub build et publie.
