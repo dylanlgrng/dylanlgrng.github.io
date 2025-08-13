@@ -345,6 +345,7 @@ export default function App() {
     </BrowserRouter>
   );
 }
+        
         {/* Projets */}
         <SectionRow
           label={t.labels.projects}
@@ -364,8 +365,7 @@ export default function App() {
               const ease = [0.22, 1, 0.36, 1];
               return (
                 <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {/* Always-rendered first four cards (no enter/exit) */}
-                  {first.map((p, idx) => (
+                  {first.map((p) => (
                     <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
                       <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                         <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
@@ -376,19 +376,22 @@ export default function App() {
                       </Link>
                     </motion.div>
                   ))}
-                  {/* Extra cards appear/disappear with WOW animation and stagger */}
                   <AnimatePresence initial={false} mode="popLayout">
                     {showAll && extra.map((p, idx) => (
                       <motion.div
                         key={p.id}
                         layout
-                        initial={{ opacity: 0, y: 18, scale: 0.98, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
                         animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
-                        exit={{ opacity: 0, y: -16, scale: 0.98, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        exit={{ opacity: 0, y: -16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
                         transition={{
-                          duration: 0.52,
+                          duration: 0.55,
                           ease,
-                          delay: Math.min(idx * 0.06, 0.5)
+                          delay: Math.min(idx * 0.06, 0.48),
+                          // reversed delay for exit handled by closure of extraCount:
+                          // AnimatePresence uses the last values, so we compute here too:
+                          // but we can't set different delays for exit and animate in a single object,
+                          // framer-motion allows "transition" as object with "exit" specifics:
                         }}
                       >
                         <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
@@ -400,15 +403,16 @@ export default function App() {
                         </Link>
                       </motion.div>
                     ))}
-                    {/* Ghost elements to reverse-stagger exit */}
+                    {/* Exit reverse-stagger: render hidden duplicates with only exit transition delays */}
                     {!showAll && extra.map((p, idx) => (
                       <motion.div
-                        key={`ghost-${p.id}`}
-                        className="hidden"
+                        key={`exit-${p.id}`}
+                        layout
                         initial={false}
-                        animate={false}
+                        animate={{}}
                         exit={{ opacity: 0 }}
-                        transition={{ delay: Math.min((extraCount - 1 - idx) * 0.06, 0.5) }}
+                        transition={{ duration: 0.001, delay: Math.min((extraCount - 1 - idx) * 0.06, 0.48) }}
+                        style={{ display: "none" }}
                       />
                     ))}
                   </AnimatePresence>
@@ -417,4 +421,5 @@ export default function App() {
             })()}
           </div>
         </SectionRow>
+</SectionRow>
 
