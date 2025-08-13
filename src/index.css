@@ -78,3 +78,31 @@ html, body, #root { height: 100%; }
     transform 400ms cubic-bezier(0.22,1,0.36,1) var(--dc,0ms),
     filter 400ms cubic-bezier(0.22,1,0.36,1) var(--dc,0ms);
 }
+
+/* Inner animation for accordion content for a more elegant feel */
+.accordion-inner {
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 360ms cubic-bezier(0.22,1,0.36,1),
+    transform 360ms cubic-bezier(0.22,1,0.36,1);
+}
+.accordion.open .accordion-inner {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Safer transition when content height changes after image load */
+.extras { will-change: height; }
+.accordion { will-change: height; }
+@media (prefers-reduced-motion: reduce) {
+  .accordion, .extras {
+    transition: none !important;
+    height: auto !important;
+    clip-path: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
+  .accordion-inner { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .extras-grid .card, .extras-grid.closing .card { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+}
