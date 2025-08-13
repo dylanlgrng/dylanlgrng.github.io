@@ -1,47 +1,124 @@
 {
-  "about": {
-    "name": "Dylan Lagrange",
-    "role": "Product designer",
-    "bio": [
-      "Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF. J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco-conception, intelligence artificielle)."
-    ],
-    "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop",
-    "contact": {
-      "linkedin": "https://www.linkedin.com/in/dylanlgrng",
-      "phone": "06.76.46.21.17"
+  "fr": {
+    "labels": {
+      "about": "À propos",
+      "projects": "Projets",
+      "seeAll": "Voir tout",
+      "seeLess": "Voir moins",
+      "sayHello": "Dire bonjour",
+      "previousWork": "Expériences précédentes",
+      "back": "Retour"
     },
-    "previousWork": [
-      "Kairos Agency (2021–2024) — Product designer dans une agence digitale"
+    "hero": {
+      "hello": "Bonjour je suis Dylan,",
+      "pd_before": "Product Designer chez",
+      "after": "UX Republic à Bordeaux."
+    },
+    "about": {
+      "name": "Dylan Lagrange",
+      "role": "Product designer",
+      "bio": [
+        "Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF. J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco-conception, intelligence artificielle)."
+      ],
+      "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop",
+      "contact": {
+        "linkedin": "https://www.linkedin.com/in/dylanlgrng",
+        "phone": "06.76.46.21.17"
+      },
+      "previousWork": [
+        "Kairos Agency (2021–2024) — Product designer dans une agence digitale"
+      ]
+    },
+    "projects": [
+      {
+        "id": "projet-1",
+        "title": "Projet 01",
+        "image": "https://picsum.photos/seed/dylan-1/960/600",
+        "summary": "Refonte d’un tunnel d’achat mobile, +12% de conversion.",
+        "description": "Page projet en cours de construction."
+      },
+      {
+        "id": "projet-2",
+        "title": "Projet 02",
+        "image": "https://picsum.photos/seed/dylan-2/960/600",
+        "summary": "Design system modulaire pour une app B2B.",
+        "description": "Description en cours."
+      },
+      {
+        "id": "projet-3",
+        "title": "Projet 03",
+        "image": "https://picsum.photos/seed/dylan-3/960/600",
+        "summary": "Amélioration de l’accessibilité AA.",
+        "description": "Description en cours."
+      },
+      {
+        "id": "projet-4",
+        "title": "Projet 04",
+        "image": "https://picsum.photos/seed/dylan-4/960/600",
+        "summary": "Ateliers UX & co‑création.",
+        "description": "Description en cours."
+      }
     ]
   },
-  "projects": [
-    {
-      "id": "projet-1",
-      "title": "Projet 01",
-      "image": "https://picsum.photos/seed/dylan-1/960/600",
-      "summary": "Refonte d’un tunnel d’achat mobile, +12% de conversion.",
-      "description": "Page projet en cours de construction. Ajoutez ici votre description détaillée, le contexte, la démarche, et les résultats."
+  "en": {
+    "labels": {
+      "about": "About",
+      "projects": "Projects",
+      "seeAll": "See all",
+      "seeLess": "See less",
+      "sayHello": "Say hello",
+      "previousWork": "Previous work",
+      "back": "Back"
     },
-    {
-      "id": "projet-2",
-      "title": "Projet 02",
-      "image": "https://picsum.photos/seed/dylan-2/960/600",
-      "summary": "Design system modulaire pour une app B2B.",
-      "description": "Description détaillée du projet 02."
+    "hero": {
+      "hello": "Hi, I'm Dylan,",
+      "pd_before": "Product Designer at",
+      "after": "UX Republic in Bordeaux."
     },
-    {
-      "id": "projet-3",
-      "title": "Projet 03",
-      "image": "https://picsum.photos/seed/dylan-3/960/600",
-      "summary": "Amélioration de l’accessibilité AA.",
-      "description": "Description détaillée du projet 03."
+    "about": {
+      "name": "Dylan Lagrange",
+      "role": "Product designer",
+      "bio": [
+        "Currently a Product Designer at UX Republic in Bordeaux, on assignment with MAIF’s IT department. I help evolve internal tools with project teams, contribute to the design system, and take part in discussions on our practices (accessibility, eco‑design, and AI)."
+      ],
+      "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop",
+      "contact": {
+        "linkedin": "https://www.linkedin.com/in/dylanlgrng",
+        "phone": "+33 6 76 46 21 17"
+      },
+      "previousWork": [
+        "Kairos Agency (2021–2024) — Product designer in a digital agency"
+      ]
     },
-    {
-      "id": "projet-4",
-      "title": "Projet 04",
-      "image": "https://picsum.photos/seed/dylan-4/960/600",
-      "summary": "Ateliers UX & co-création.",
-      "description": "Description détaillée du projet 04."
-    }
-  ]
+    "projects": [
+      {
+        "id": "projet-1",
+        "title": "Project 01",
+        "image": "https://picsum.photos/seed/dylan-1/960/600",
+        "summary": "Mobile checkout redesign, +12% conversion.",
+        "description": "Project page under construction."
+      },
+      {
+        "id": "projet-2",
+        "title": "Project 02",
+        "image": "https://picsum.photos/seed/dylan-2/960/600",
+        "summary": "Modular design system for a B2B app.",
+        "description": "Description coming soon."
+      },
+      {
+        "id": "projet-3",
+        "title": "Project 03",
+        "image": "https://picsum.photos/seed/dylan-3/960/600",
+        "summary": "Accessibility improvements to AA.",
+        "description": "Description coming soon."
+      },
+      {
+        "id": "projet-4",
+        "title": "Project 04",
+        "image": "https://picsum.photos/seed/dylan-4/960/600",
+        "summary": "UX workshops & co‑creation.",
+        "description": "Description coming soon."
+      }
+    ]
+  }
 }
