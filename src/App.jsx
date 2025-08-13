@@ -353,3 +353,87 @@ export default function App() {
     </HashRouter>
   );
 }
+        {/* Projets */}
+        <SectionRow
+          label={t.labels.projects}
+          rightAdornment={openVal === "projects" ? (
+            <button onClick={function(){ setShowAll(!showAllVal); }} className="text-sm underline-offset-4 hover:underline">
+              {showAllVal ? t.labels.seeLess : t.labels.seeAll}
+            </button>
+          ) : null}
+          isOpen={openVal === "projects"}
+          onToggle={function(){ setOpen(openVal === "projects" ? null : "projects"); }}
+        >
+          <div ref={projSectionRef}>
+            {function(){
+              var first = (projectsData || []).slice(0,4);
+              var extra = (projectsData || []).slice(4);
+
+              // Variants for the extras container: animate height & stagger children
+              var extrasContainer = {
+                closed: {
+                  height: 0,
+                  opacity: 0,
+                  transition: { duration: 0.4, ease: ease, when: "afterChildren", staggerChildren: 0.06, staggerDirection: -1 }
+                },
+                open: {
+                  height: "auto",
+                  opacity: 1,
+                  transition: { duration: 0.5, ease: ease, when: "beforeChildren", staggerChildren: 0.06, staggerDirection: 1 }
+                }
+              };
+
+              // Variants for each extra card
+              var cardV = {
+                closed: { opacity: 0, y: 16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)", transition: { duration: 0.35, ease: ease } },
+                open:   { opacity: 1, y: 0,  scale: 1,     filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.45, ease: ease } }
+              };
+
+              return (
+                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                  {first.map(function(p){
+                    return (
+                      <motion.div key={p.id} layout transition={{ duration: 0.45, ease: ease }}>
+                        <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                          <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
+                          <div className="flex items-center justify-between p-3">
+                            <span className="text-sm font-medium">{p.title}</span>
+                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                          </div>
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+
+                  {/* Extras in a dedicated height-animated wrapper to avoid grid jank */}
+                  <motion.div layout className="col-span-full">
+                    <motion.div
+                      layout
+                      initial={false}
+                      animate={showAllVal ? "open" : "closed"}
+                      variants={extrasContainer}
+                      style={{ overflow: "hidden" }}
+                    >
+                      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        {extra.map(function(p){
+                          return (
+                            <motion.div key={p.id} layout variants={cardV}>
+                              <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                                <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
+                                <div className="flex items-center justify-between p-3">
+                                  <span className="text-sm font-medium">{p.title}</span>
+                                  <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                                </div>
+                              </Link>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </motion.div>
+              );
+            }()}
+          </div>
+        </SectionRow>
+
