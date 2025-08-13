@@ -8,7 +8,7 @@ const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
 const openMailto = () => { try { const a = atob(EMAIL_B64); window.location.href = `mailto:${a}`; } catch {} };
 
 const getInitialLang = () => (localStorage.getItem("lang") === "en" ? "en" : "fr");
-const getInitialTheme = () => { const s = localStorage.getItem("theme"); return s === "dark" || s === "light" ? s : "light"; };
+const getInitialTheme = () => { const s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; const h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; };
 
 function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
   return (
@@ -39,7 +39,7 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
               transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="pb-8">{children}</div>
-            </motion.div>
+              </AnimatePresence>\n            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -225,7 +225,7 @@ function Home({ lang, setLang, theme, setTheme }) {
         <SectionRow label={t.labels.about} isOpen={open === "about"} onToggle={() => setOpen(open === "about" ? null : "about")}>
           <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(150px,180px)_1fr]">
             <div className="pr-4">
-              <div className="rounded-[12px] p-1 overflow-hidden">
+              <div className="polaroid overflow-hidden">
                 <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-square" />
               </div>
             </div>
@@ -264,7 +264,7 @@ function Home({ lang, setLang, theme, setTheme }) {
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
           <div ref={projSectionRef}>
-            <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">\n              <AnimatePresence initial={false} mode="popLayout">
               {(visibleProjects || []).map((p, idx) => {
                 const isNew = showAll && idx >= 4;
                 return (

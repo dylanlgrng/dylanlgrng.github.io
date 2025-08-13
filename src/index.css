@@ -18,3 +18,15 @@ html, body, #root { height: 100%; }
 /* Photo: square, no shadow, no hover */
 .photo-square { width: 150px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; }
 @media (min-width: 640px) { .photo-square { width: 180px; } }
+
+
+/* Polaroid-style frame: white card, thicker bottom */
+.polaroid {
+  display: inline-block;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.08);
+  padding: 10px 10px 26px 10px; /* thicker bottom */
+}
+/* Keep polaroid white in dark mode as a physical object */
+html.dark .polaroid { background: #ffffff; border-color: rgba(255,255,255,0.14); }
