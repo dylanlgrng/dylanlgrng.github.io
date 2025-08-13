@@ -242,7 +242,7 @@ function Home({ lang, setLang, theme, setTheme }) {
                 <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {first.map((p) => (
                     <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
-                      <Link to={"/#/projects/" + p.id.replace(/^#/, '')} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                      <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                         <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
                         <div className="flex items-center justify-between p-3">
                           <span className="text-sm font-medium">{p.title}</span>
@@ -260,7 +260,7 @@ function Home({ lang, setLang, theme, setTheme }) {
                         exit={{ opacity: 0, y: -14, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
                         transition={{ duration: 0.54, ease, delay: Math.min(i * 0.06, 0.48) }}
                       >
-                        <Link to={"/#/projects/" + p.id.replace(/^#/, '')} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                        <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                           <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
                           <div className="flex items-center justify-between p-3">
                             <span className="text-sm font-medium">{p.title}</span>
@@ -335,3 +335,74 @@ export default function App() {
     </HashRouter>
   );
 }
+        {/* Projets */}
+        <SectionRow
+          label={t.labels.projects}
+          rightAdornment={open === "projects" ? (
+            <button onClick={() => setShowAll(!showAll)} className="text-sm underline-offset-4 hover:underline">
+              {showAll ? t.labels.seeLess : t.labels.seeAll}
+            </button>
+          ) : null}
+          isOpen={open === "projects"}
+          onToggle={() => setOpen(open === "projects" ? null : "projects")}
+        >
+          <div ref={projSectionRef}>
+            {function(){
+              const first = (projectsData || []).slice(0,4);
+              const extra = (projectsData || []).slice(4);
+              const ease = [0.22, 1, 0.36, 1];
+              const stagger = 0.06;
+
+              const cardVariants = {
+                hidden: { opacity: 0, y: 22, scale: 0.985, rotateX: 6, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" },
+                show: (c) => ({
+                  opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)",
+                  transition: { duration: 0.58, ease: ease, delay: Math.min((c && c.i ? c.i : 0) * stagger, 0.48) }
+                }),
+                hide: (c) => ({
+                  opacity: 0, y: -18, scale: 0.975, rotateX: -4, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)",
+                  transition: { duration: 0.5, ease: ease, delay: Math.min(((c && c.total ? c.total : 0) - 1 - (c && c.i ? c.i : 0)) * stagger, 0.48) }
+                }),
+              };
+
+              return (
+                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                  {first.map((p) => (
+                    <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
+                      <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                        <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                        <div className="flex items-center justify-between p-3">
+                          <span className="text-sm font-medium">{p.title}</span>
+                          <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                        </div>
+                      </Link>
+                    </motion.div>
+                  ))}
+
+                  <AnimatePresence initial={false} mode="popLayout">
+                    {showAll ? extra.map((p, i) => (
+                      <motion.div key={p.id}
+                        layout
+                        variants={cardVariants}
+                        initial="hidden"
+                        animate="show"
+                        exit="hide"
+                        custom={{ i: i, total: extra.length }}
+                        style={{ transformPerspective: 1000 }}
+                      >
+                        <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                          <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                          <div className="flex items-center justify-between p-3">
+                            <span className="text-sm font-medium">{p.title}</span>
+                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                          </div>
+                        </Link>
+                      </motion.div>
+                    )) : null}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            }()}
+          </div>
+        </SectionRow>
+
