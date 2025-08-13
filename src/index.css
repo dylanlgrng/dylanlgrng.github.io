@@ -15,6 +15,6 @@ html, body, #root { height: 100%; }
   color: transparent;
 }
 
-/* Square photo, smaller, no hover animation */
+/* Photo: square, no shadow, no hover */
 .photo-square { width: 150px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; }
 @media (min-width: 640px) { .photo-square { width: 180px; } }
