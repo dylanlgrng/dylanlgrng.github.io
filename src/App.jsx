@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import i18n from "./content/site.json";
 
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
-
 const getInitialLang = () => (localStorage.getItem("lang") === "en" ? "en" : "fr");
 const getInitialTheme = () => { const s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; const h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; };
 
@@ -78,10 +77,7 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
   const tooltipRef = useRef(null);
 
   useEffect(() => {
-    const onDocClick = (e) => {
-      if (!tooltipRef.current) return;
-      if (!tooltipRef.current.contains(e.target)) setOpen(false);
-    };
+    const onDocClick = (e) => { if (!tooltipRef.current) return; if (!tooltipRef.current.contains(e.target)) setOpen(false); };
     document.addEventListener("click", onDocClick);
     return () => document.removeEventListener("click", onDocClick);
   }, []);
@@ -116,22 +112,6 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
   );
 }
 
-function ContactButtons({ about, t }) {
-  return (
-    <>
-      <button onClick={() => { try { const a = atob("bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20="); window.location.href = `mailto:${a}`; } catch {} }} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-        <Mail size={16} /> {t.labels.sayHello}
-      </button>
-      <a href={about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-        <Linkedin size={16} /> LinkedIn
-      </a>
-      <a href={`tel:+33${(about.contact.phone || "").replace(/\D/g,'')}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-        <Phone size={16} /> {about.contact.phone}
-      </a>
-    </>
-  );
-}
-
 function Home({ lang, setLang, theme, setTheme }) {
   const t = i18n[lang];
   const [open, setOpen] = useState(null);
@@ -151,10 +131,8 @@ function Home({ lang, setLang, theme, setTheme }) {
     const measure = () => {
       const systemStack = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif";
       const sizePx = (() => {
-        const h = heroTextRef.current;
-        if (!h) return 48;
-        const cs = window.getComputedStyle(h);
-        return Math.round(parseFloat(cs.fontSize) || 48);
+        const h = heroTextRef.current; if (!h) return 48;
+        const cs = window.getComputedStyle(h); return Math.round(parseFloat(cs.fontSize) || 48);
       })();
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
@@ -175,33 +153,26 @@ function Home({ lang, setLang, theme, setTheme }) {
 
   const about = t.about;
   const projectsData = t.projects || [];
-  const visibleProjects = useMemo(() => (showAll ? projectsData : projectsData.slice(0, 4)), [showAll, projectsData]);
 
   const onMouseMoveHero = (e) => {
-    const rect = heroWrapRef.current?.getBoundingClientRect();
-    if (!rect) return;
-    const x = (e.clientX - rect.left) / rect.width;
-    const clamped = Math.max(0, Math.min(1, x));
+    const rect = heroWrapRef.current?.getBoundingClientRect(); if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width; const clamped = Math.max(0, Math.min(1, x));
     setBgX(Math.round(clamped * 100));
   };
 
   const projSectionRef = useRef(null);
-  const firstNewRef = useRef(null);
   useEffect(() => {
     if (showAll) {
       requestAnimationFrame(() => {
-        const sec = projSectionRef.current;
-        if (!sec) return;
+        const sec = projSectionRef.current; if (!sec) return;
         const rect = sec.getBoundingClientRect();
         const overflow = rect.bottom - window.innerHeight;
-        if (overflow > 0) {
-          window.scrollBy({ top: overflow + 24, left: 0, behavior: "smooth" });
-        }
+        if (overflow > 0) window.scrollBy({ top: overflow + 24, behavior: "smooth" });
       });
     }
   }, [showAll]);
 
-  const revealTransition = { duration: 0.5, ease: [0.22, 1, 0.36, 1] };
+  const ease = [0.22, 1, 0.36, 1];
 
   return (
     <main className="flex min-h-dvh flex-col font-light" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}>
@@ -265,20 +236,14 @@ function Home({ lang, setLang, theme, setTheme }) {
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
           <div ref={projSectionRef}>
-            <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              <AnimatePresence initial={false} mode="popLayout">
-                {(visibleProjects || []).map((p, idx) => {
-                  const isNew = showAll && idx >= 4;
-                  return (
-                    <motion.div
-                      key={p.id}
-                      layout
-                      initial={isNew ? { opacity: 0, y: 16, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" } : false}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
-                      exit={{ opacity: 0, y: -10, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                      ref={isNew && idx === 4 ? firstNewRef : null}
-                    >
+            {(() => {
+              const first = (projectsData || []).slice(0, 4);
+              const extra = (projectsData || []).slice(4);
+              const total = extra.length;
+              return (
+                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                  {first.map((p) => (
+                    <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
                       <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                         <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
                         <div className="flex items-center justify-between p-3">
@@ -287,10 +252,45 @@ function Home({ lang, setLang, theme, setTheme }) {
                         </div>
                       </Link>
                     </motion.div>
-                  );
-                })}
-              </AnimatePresence>
-            </motion.div>
+                  ))}
+                  <AnimatePresence initial={false} mode="popLayout">
+                    {showAll && extra.map((p, idx) => (
+                      <motion.div
+                        key={p.id}
+                        layout
+                        custom={idx}
+                        initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
+                        exit={{ opacity: 0, y: -16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        transition={(state) => {
+                          // state is not provided by framer for this form; use closure
+                          return { duration: 0.55, ease, delay: Math.min(idx * 0.06, 0.48) };
+                        }}
+                      >
+                        <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                          <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                          <div className="flex items-center justify-between p-3">
+                            <span className="text-sm font-medium">{p.title}</span>
+                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                          </div>
+                        </Link>
+                      </motion.div>
+                    ))}
+                    {!showAll && extra.map((p, idx) => (
+                      <motion.div
+                        key={`out-${p.id}`}
+                        layout
+                        initial={false}
+                        animate={{}}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.001, delay: Math.min((total - 1 - idx) * 0.06, 0.48) }}
+                        style={{ display: "none" }}
+                      />
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+              );
+            })()}
           </div>
         </SectionRow>
       </div>
@@ -331,7 +331,6 @@ function ProjectPage({ lang }) {
 export default function App() {
   const [lang, setLang] = useState(getInitialLang());
   const [theme, setTheme] = useState(getInitialTheme());
-
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
   useEffect(() => { localStorage.setItem("theme", theme); const r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
 
@@ -345,81 +344,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-        
-        {/* Projets */}
-        <SectionRow
-          label={t.labels.projects}
-          rightAdornment={open === "projects" ? (
-            <button onClick={() => setShowAll(v => !v)} className="text-sm underline-offset-4 hover:underline">
-              {showAll ? t.labels.seeLess : t.labels.seeAll}
-            </button>
-          ) : null}
-          isOpen={open === "projects"}
-          onToggle={() => setOpen(open === "projects" ? null : "projects")}
-        >
-          <div ref={projSectionRef}>
-            {(() => {
-              const first = (projectsData || []).slice(0, 4);
-              const extra = (projectsData || []).slice(4);
-              const extraCount = extra.length;
-              const ease = [0.22, 1, 0.36, 1];
-              return (
-                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {first.map((p) => (
-                    <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
-                      <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                        <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
-                        <div className="flex items-center justify-between p-3">
-                          <span className="text-sm font-medium">{p.title}</span>
-                          <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                        </div>
-                      </Link>
-                    </motion.div>
-                  ))}
-                  <AnimatePresence initial={false} mode="popLayout">
-                    {showAll && extra.map((p, idx) => (
-                      <motion.div
-                        key={p.id}
-                        layout
-                        initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                        animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
-                        exit={{ opacity: 0, y: -16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                        transition={{
-                          duration: 0.55,
-                          ease,
-                          delay: Math.min(idx * 0.06, 0.48),
-                          // reversed delay for exit handled by closure of extraCount:
-                          // AnimatePresence uses the last values, so we compute here too:
-                          // but we can't set different delays for exit and animate in a single object,
-                          // framer-motion allows "transition" as object with "exit" specifics:
-                        }}
-                      >
-                        <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                          <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
-                          <div className="flex items-center justify-between p-3">
-                            <span className="text-sm font-medium">{p.title}</span>
-                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                          </div>
-                        </Link>
-                      </motion.div>
-                    ))}
-                    {/* Exit reverse-stagger: render hidden duplicates with only exit transition delays */}
-                    {!showAll && extra.map((p, idx) => (
-                      <motion.div
-                        key={`exit-${p.id}`}
-                        layout
-                        initial={false}
-                        animate={{}}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.001, delay: Math.min((extraCount - 1 - idx) * 0.06, 0.48) }}
-                        style={{ display: "none" }}
-                      />
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })()}
-          </div>
-        </SectionRow>
-</SectionRow>
-
