@@ -7,7 +7,8 @@
       "seeLess": "Voir moins",
       "sayHello": "Dire bonjour",
       "previousWork": "Expériences précédentes",
-      "back": "Retour"
+      "back": "Retour",
+      "info": "Ce site internet a été éco‑conçu par moi à Bordeaux en 2025, et il a été entièrement codé par GPT‑5."
     },
     "hero": {
       "hello": "Bonjour je suis Dylan,",
@@ -67,7 +68,8 @@
       "seeLess": "See less",
       "sayHello": "Say hello",
       "previousWork": "Previous work",
-      "back": "Back"
+      "back": "Back",
+      "info": "This website was eco‑designed by me in Bordeaux in 2025, and it was fully coded by GPT‑5."
     },
     "hero": {
       "hello": "Hi, I'm Dylan,",

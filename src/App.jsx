@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon } from "lucide-react";
+import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import i18n from "./content/site.json";
 
@@ -30,7 +30,7 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
             animate={{ height: "auto", opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{ height: 0, opacity: 0, y: 8, filter: "blur(6px)" }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            style={{ overflow: "visible" }}  // allow polaroid shadows to extend
+            style={{ overflow: "hidden" }}
           >
             <motion.div
               initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
@@ -78,8 +78,8 @@ function Home({ lang, setLang, theme, setTheme }) {
   const [open, setOpen] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
-  // Hit area strictly on hero text container
-  const heroTextWrapRef = useRef(null);
+  // Hover zone strictly on hero text
+  const heroWrapRef = useRef(null);
   const heroTextRef = useRef(null);
   const [bgX, setBgX] = useState(0);
   const [hovering, setHovering] = useState(false);
@@ -120,7 +120,7 @@ function Home({ lang, setLang, theme, setTheme }) {
   const visibleProjects = useMemo(() => (showAll ? projectsData : projectsData.slice(0, 4)), [showAll, projectsData]);
 
   const onMouseMoveHero = (e) => {
-    const rect = heroTextWrapRef.current?.getBoundingClientRect();
+    const rect = heroWrapRef.current?.getBoundingClientRect();
     if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width;
     const clamped = Math.max(0, Math.min(1, x));
@@ -129,21 +129,14 @@ function Home({ lang, setLang, theme, setTheme }) {
 
   return (
     <main className="flex min-h-dvh flex-col font-light" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}>
-      {/* top bar with toggles aligned with content */}
+      {/* top bar with toggles aligned with content + info */}
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 pt-4">
-        <div className="flex items-center justify-end gap-3 text-xs opacity-80 hover:opacity-100 transition">
-          <button onClick={() => setLang(lang === "fr" ? "en" : "fr")} className="rounded-full border border-black/10 dark:border-white/10 px-2 py-1 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
-            {lang === "fr" ? "EN" : "FR"}
-          </button>
-          <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
-            {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
-          </button>
-        </div>
+        <TopRightControls lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />
       </div>
 
-      {/* main content stuck to bottom */}
+      {/* main content pinned to bottom */}
       <div className="mx-auto mt-auto w-full max-w-6xl px-4 sm:px-6">
-        <div ref={heroTextWrapRef} className="pb-4 select-none" onMouseEnter={() => setHovering(true)} onMouseMove={onMouseMoveHero} onMouseLeave={() => setHovering(false)}>
+        <div ref={heroWrapRef} className="pb-4 select-none" onMouseEnter={() => setHovering(true)} onMouseMove={onMouseMoveHero} onMouseLeave={() => setHovering(false)}>
           <div ref={heroTextRef}>
             <IntroTitle lang={lang} hovering={hovering} bgX={bgX} dims={dims} spacePx={spacePx} heroRef={heroTextRef} />
           </div>
@@ -151,11 +144,9 @@ function Home({ lang, setLang, theme, setTheme }) {
 
         {/* À propos */}
         <SectionRow label={t.labels.about} isOpen={open === "about"} onToggle={() => setOpen(open === "about" ? null : "about")}>
-          <div className="grid grid-cols-1 items-start gap-12 sm:grid-cols-[minmax(200px,280px)_1fr]">
-            <div className="polaroid-frame">
-              <img src={about.photo} alt={`Portrait de ${about.name}`} className="polaroid-photo" />
-            </div>
-            <div className="space-y-8">
+          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(180px,260px)_1fr]">
+            <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-drop rounded-xl object-cover aspect-[3/4]" />
+            <div className="space-y-8 overflow-hidden">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{about.name}</h2>
                 <p className="mt-1 text-sm sm:text-base text-black/60 dark:text-white/60">{about.role}</p>
@@ -235,6 +226,59 @@ function ProjectPage({ lang }) {
       <img src={project.image} alt="aperçu" className="mt-8 aspect-[16/9] w-full rounded-2xl object-cover shadow-sm ring-1 ring-black/10 dark:ring-white/10" />
       <div className="prose prose-neutral dark:prose-invert max-w-none mt-6">
         <p>{project.description || ""}</p>
+      </div>
+    </div>
+  );
+}
+
+// Top-right controls aligned with container, with Info tooltip
+function TopRightControls({ lang, setLang, theme, setTheme }) {
+  const t = i18n[lang];
+  const [open, setOpen] = useState(false);
+  const tooltipRef = useRef(null);
+
+  useEffect(() => {
+    const onDocClick = (e) => {
+      if (!tooltipRef.current) return;
+      if (!tooltipRef.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
+
+  return (
+    <div className="relative flex items-center justify-end gap-3 text-xs opacity-80 hover:opacity-100 transition">
+      <button onClick={() => setLang(lang === "fr" ? "en" : "fr")} className="rounded-full border border-black/10 dark:border-white/10 px-2 py-1 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
+        {lang === "fr" ? "EN" : "FR"}
+      </button>
+      <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
+        {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+      </button>
+
+      {/* Info tooltip */}
+      <div ref={tooltipRef} className="relative">
+        <button
+          onClick={() => setOpen((v) => !v)}
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          aria-label="Info"
+          className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm"
+        >
+          <Info size={14} />
+        </button>
+        <AnimatePresence>
+          {open && (
+            <motion.div
+              initial={{ opacity: 0, y: -6, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -6, scale: 0.98 }}
+              transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute right-0 z-50 mt-2 max-w-xs rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 px-3 py-2 text-[11px] shadow-lg ring-1 ring-black/5 dark:ring-white/5"
+            >
+              {t.labels.info}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
