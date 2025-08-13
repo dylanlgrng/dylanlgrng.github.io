@@ -126,6 +126,21 @@ function Home({ lang, setLang, theme, setTheme }) {
     setBgX(Math.round(clamped * 100));
   };
 
+  // Scroll to first newly revealed project when showing all
+  const firstNewRef = useRef(null);
+  useEffect(() => {
+    if (showAll && firstNewRef.current) {
+      firstNewRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [showAll]);
+
+  // Anim variants for new cards
+  const itemV = {
+    hidden: { opacity: 0, y: 16, scale: 0.98 },
+    show:   { opacity: 1, y: 0,  scale: 1, transition: { duration: 0.28, ease: [0.22, 1, 0.36, 1] } },
+    exit:   { opacity: 0, y: 10, scale: 0.98, transition: { duration: 0.2 } }
+  };
+
   return (
     <main className="flex min-h-dvh flex-col font-light" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}>
       {/* top bar */}
@@ -143,9 +158,11 @@ function Home({ lang, setLang, theme, setTheme }) {
 
         {/* À propos */}
         <SectionRow label={t.labels.about} isOpen={open === "about"} onToggle={() => setOpen(open === "about" ? null : "about")}>
-          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(160px,200px)_1fr]">
-            <div className="pr-2">
-              <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-drop rounded-xl object-cover aspect-[3/4]" />
+          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(120px,140px)_1fr]">
+            <div className="pr-4">
+              <div className="rounded-[12px] p-1 overflow-hidden">
+                <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-square" />
+              </div>
             </div>
             <div className="space-y-8 overflow-hidden">
               <div>
@@ -158,15 +175,7 @@ function Home({ lang, setLang, theme, setTheme }) {
                 ))}
               </div>
               <div className="flex flex-wrap gap-4">
-                <button onClick={openMailto} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-                  <Mail size={16} /> {t.labels.sayHello}
-                </button>
-                <a href={about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-                  <Linkedin size={16} /> LinkedIn
-                </a>
-                <a href={`tel:+33${(about.contact.phone || "").replace(/\D/g,'')}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-                  <Phone size={16} /> {about.contact.phone}
-                </a>
+                <ContactButtons about={about} t={t} />
               </div>
               <div>
                 <h3 className="mb-2 text-base font-medium">{t.labels.previousWork}</h3>
@@ -181,24 +190,52 @@ function Home({ lang, setLang, theme, setTheme }) {
         {/* Projets */}
         <SectionRow
           label={t.labels.projects}
-          rightAdornment={open === "projects" ? (<button onClick={() => setShowAll((v) => !v)} className="text-sm underline-offset-4 hover:underline">{showAll ? t.labels.seeLess : t.labels.seeAll}</button>) : null}
+          rightAdornment={open === "projects" ? (<button onClick={() => setShowAll((v)=>!v)} className="text-sm underline-offset-4 hover:underline">{showAll ? t.labels.seeLess : t.labels.seeAll}</button>) : null}
           isOpen={open === "projects"}
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {(visibleProjects || []).map((p) => (
-              <Link key={p.id} to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition hover:shadow-md bg-white dark:bg-neutral-900">
-                <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
-                <div className="flex items-center justify-between p-3">
-                  <span className="text-sm font-medium">{p.title}</span>
-                  <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                </div>
-              </Link>
-            ))}
+            <AnimatePresence initial={false}>
+              {(visibleProjects || []).map((p, idx) => (
+                <motion.div
+                  key={p.id}
+                  variants={itemV}
+                  initial="hidden"
+                  animate="show"
+                  exit="exit"
+                  layout
+                  ref={showAll && idx === 4 ? firstNewRef : null}
+                >
+                  <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                    <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                    <div className="flex items-center justify-between p-3">
+                      <span className="text-sm font-medium">{p.title}</span>
+                      <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                    </div>
+                  </Link>
+                </motion.div>
+              ))}
+            </AnimatePresence>
           </div>
         </SectionRow>
       </div>
     </main>
+  );
+}
+
+function ContactButtons({ about, t }) {
+  return (
+    <>
+      <button onClick={() => { try { const a = atob("bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20="); window.location.href = `mailto:${a}`; } catch {} }} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+        <Mail size={16} /> {t.labels.sayHello}
+      </button>
+      <a href={about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+        <Linkedin size={16} /> LinkedIn
+      </a>
+      <a href={`tel:+33${(about.contact.phone || "").replace(/\D/g,'')}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+        <Phone size={16} /> {about.contact.phone}
+      </a>
+    </>
   );
 }
 
@@ -254,8 +291,6 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
       <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
         {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
       </button>
-
-      {/* Info tooltip (nowrap) */}
       <div ref={tooltipRef} className="relative">
         <button
           onClick={() => setOpen((v) => !v)}
