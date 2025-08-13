@@ -364,32 +364,12 @@ export default function App() {
           isOpen={openVal === "projects"}
           onToggle={function(){ setOpen(openVal === "projects" ? null : "projects"); }}
         >
-          <div ref={projSectionRef}>
-            {function(){
-              var first = (projectsData || []).slice(0,4);
-              var extra = (projectsData || []).slice(4);
-
-              // Variants for the extras container: animate height & stagger children
-              var extrasContainer = {
-                closed: {
-                  height: 0,
-                  opacity: 0,
-                  transition: { duration: 0.4, ease: ease, when: "afterChildren", staggerChildren: 0.06, staggerDirection: -1 }
-                },
-                open: {
-                  height: "auto",
-                  opacity: 1,
-                  transition: { duration: 0.5, ease: ease, when: "beforeChildren", staggerChildren: 0.06, staggerDirection: 1 }
-                }
-              };
-
-              // Variants for each extra card
-              var cardV = {
-                closed: { opacity: 0, y: 16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)", transition: { duration: 0.35, ease: ease } },
-                open:   { opacity: 1, y: 0,  scale: 1,     filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)", transition: { duration: 0.45, ease: ease } }
-              };
-
-              return (
+          {function(){
+            var first = (projectsData || []).slice(0,4);
+            var extra = (projectsData || []).slice(4);
+            return (
+              <div className="space-y-6">
+                {/* Grid des 4 premiers (toujours visible) */}
                 <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {first.map(function(p){
                     return (
@@ -404,20 +384,39 @@ export default function App() {
                       </motion.div>
                     );
                   })}
+                </motion.div>
 
-                  {/* Extras in a dedicated height-animated wrapper to avoid grid jank */}
-                  <motion.div layout className="col-span-full">
+                {/* Conteneur des extras (ouverture/fermeture ultra fluide) */}
+                <AnimatePresence initial={false} mode="wait">
+                  {showAllVal ? (
                     <motion.div
+                      key="extras"
                       layout
-                      initial={false}
-                      animate={showAllVal ? "open" : "closed"}
-                      variants={extrasContainer}
+                      initial={{ height: 0, opacity: 0, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                      animate={{ height: "auto", opacity: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
+                      exit={{ height: 0, opacity: 0, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                      transition={{ duration: 0.6, ease: ease }}
                       style={{ overflow: "hidden" }}
                     >
-                      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                      <motion.div
+                        initial="hidden"
+                        animate="show"
+                        variants={{
+                          hidden: { },
+                          show: { transition: { staggerChildren: 0.06 } }
+                        }}
+                        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-0"
+                      >
                         {extra.map(function(p){
                           return (
-                            <motion.div key={p.id} layout variants={cardV}>
+                            <motion.div
+                              key={p.id}
+                              variants={{
+                                hidden: { opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)" },
+                                show:   { opacity: 1, y: 0,  scale: 1,     filter: "blur(0px)" }
+                              }}
+                              transition={{ duration: 0.5, ease: ease }}
+                            >
                               <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                                 <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
                                 <div className="flex items-center justify-between p-3">
@@ -428,12 +427,12 @@ export default function App() {
                             </motion.div>
                           );
                         })}
-                      </div>
+                      </motion.div>
                     </motion.div>
-                  </motion.div>
-                </motion.div>
-              );
-            }()}
-          </div>
+                  ) : null}
+                </AnimatePresence>
+              </div>
+            );
+          }()}
         </SectionRow>
 
