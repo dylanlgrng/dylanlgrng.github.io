@@ -1,11 +1,56 @@
-import React, { useMemo, useState, useEffect, useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { HashRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon, Info } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import i18n from "./content/site.json";
 
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
 const ease = [0.22, 1, 0.36, 1];
+
+const CONTENT = {
+  fr: {
+    hero: { hello: "Bonjour je suis Dylan,", after: "UX Republic à Bordeaux." },
+    labels: {
+      about: "À propos", projects: "Projets", seeAll: "Voir tout", seeLess: "Voir moins",
+      previousWork: "Expériences récentes", sayHello: "Dire bonjour", back: "Retour",
+      info: "Ce site internet a été éco‑conçu par moi à Bordeaux en 2025, et il a été entièrement codé par GPT5."
+    },
+    about: {
+      name: "Dylan Lagrange",
+      role: "Product Designer",
+      photo: "/images/portrait.jpg",
+      bio: [
+        "Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF.",
+        "J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco‑conception, intelligence artificielle)."
+      ],
+      previousWork: ["Kairos Agency (2021–2024) — Product designer en agence digitale"],
+      contact: { linkedin: "https://www.linkedin.com/in/dylanlgrng", phone: "06.76.46.21.17" }
+    },
+    projects: []
+  },
+  en: {
+    hero: { hello: "Hi, I’m Dylan,", after: "UX Republic in Bordeaux." },
+    labels: {
+      about: "About me", projects: "Projects", seeAll: "See all", seeLess: "See less",
+      previousWork: "Previous work", sayHello: "Say hello", back: "Back",
+      info: "This website was eco‑designed by me in Bordeaux in 2025 and fully coded by GPT5."
+    },
+    about: {
+      name: "Dylan Lagrange",
+      role: "Product Designer",
+      photo: "/images/portrait.jpg",
+      bio: [
+        "Currently Product Designer at UX Republic in Bordeaux, on assignment with MAIF’s IT department.",
+        "I help evolve internal tools with project teams, contribute to the design system, and join discussions on our practices (accessibility, eco‑design, AI)."
+      ],
+      previousWork: ["Kairos Agency (2021–2024) — Product designer in a digital agency"],
+      contact: { linkedin: "https://www.linkedin.com/in/dylanlgrng", phone: "+33 6 76 46 21 17" }
+    },
+    projects: []
+  }
+};
+for (let i=1;i<=8;i++) {
+  CONTENT.fr.projects.push({ id:"p"+i, title:["Refonte Back‑Office","Design System interne","Tableau de bord produit","Outil de gestion des stocks","Portail support","Pilotage des commandes","KIT UI éco‑conçu","Expérimentation IA"][i-1], image:`https://picsum.photos/seed/ux${i}/800/600`, summary:"Aperçu rapide du projet.", description:"Page projet à venir." });
+  CONTENT.en.projects.push({ id:"p"+i, title:["Back‑office redesign","Internal design system","Product dashboard","Inventory management tool","Support portal","Order tracking","Eco‑designed UI kit","AI exploration"][i-1], image:`https://picsum.photos/seed/ux${i}/800/600`, summary:"Quick project overview.", description:"Project page coming soon." });
+}
 
 function getInitialLang(){ return (localStorage.getItem("lang") === "en") ? "en" : "fr"; }
 function getInitialTheme(){ var s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; var h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; }
@@ -23,34 +68,16 @@ function SectionRow(props) {
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </button>
       </header>
-      <AnimatePresence initial={false}>
-        {isOpen ? (
-          <motion.div
-            key="content"
-            initial={{ height: 0, opacity: 0, y: 8, filter: "blur(6px)" }}
-            animate={{ height: "auto", opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ height: 0, opacity: 0, y: 8, filter: "blur(6px)" }}
-            transition={{ duration: 0.45, ease: ease }}
-            style={{ overflow: "hidden" }}
-          >
-            <motion.div
-              initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
-              animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
-              exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
-              transition={{ duration: 0.5, ease: ease }}
-            >
-              <div className="pb-8">{children}</div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <div className={"transition-all"}>
+        {isOpen ? <div className="pb-8">{children}</div> : null}
+      </div>
     </section>
   );
 }
 
 function IntroTitle(props) {
   var dims = props.dims, spacePx = props.spacePx, heroRef = props.heroRef, bgX = props.bgX, hovering = props.hovering, lang = props.lang;
-  var t = i18n[lang];
+  var t = CONTENT[lang];
   var maxWidth = dims && dims.maxWidth; var maxHeight = dims && dims.maxHeight;
   return (
     <h1 ref={heroRef} className="text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.1] tracking-tight">
@@ -77,19 +104,14 @@ function IntroTitle(props) {
 
 function TopRightControls(props) {
   var lang = props.lang, setLang = props.setLang, theme = props.theme, setTheme = props.setTheme;
-  var t = i18n[lang];
-  var open = React.useRef(false);
-  var force = React.useState(0)[1];
+  var t = CONTENT[lang];
+  var [open, setOpen] = useState(false);
   var tooltipRef = useRef(null);
-
-  function setOpen(v){ open.current = v; force(function(x){ return x+1; }); }
-
   useEffect(function(){
     function onDocClick(e){ if (!tooltipRef.current) return; if (!tooltipRef.current.contains(e.target)) setOpen(false); }
     document.addEventListener("click", onDocClick);
     return function(){ document.removeEventListener("click", onDocClick); };
   }, []);
-
   return (
     <div className="relative flex items-center justify-end gap-3 text-xs opacity-80 hover:opacity-100 transition">
       <button onClick={function(){ setLang(lang === "fr" ? "en" : "fr"); }} className="rounded-full border border-black/10 dark:border-white/10 px-2 py-1 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
@@ -99,22 +121,14 @@ function TopRightControls(props) {
         {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
       </button>
       <div ref={tooltipRef} className="relative">
-        <button onClick={function(){ setOpen(!open.current); }} onMouseEnter={function(){ setOpen(true); }} onMouseLeave={function(){ setOpen(false); }} aria-label="Info" className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
+        <button onClick={function(){ setOpen(!open); }} onMouseEnter={function(){ setOpen(true); }} onMouseLeave={function(){ setOpen(false); }} aria-label="Info" className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
           <Info size={14} />
         </button>
-        <AnimatePresence>
-          {open.current ? (
-            <motion.div
-              initial={{ opacity: 0, y: -6, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -6, scale: 0.98 }}
-              transition={{ duration: 0.18, ease: ease }}
-              className="absolute right-0 z-50 mt-2 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 px-3 py-2 text-[11px] shadow-lg ring-1 ring-black/5 dark:ring-white/5 whitespace-nowrap"
-            >
-              {t.labels.info}
-            </motion.div>
-          ) : null}
-        </AnimatePresence>
+        {open ? (
+          <div className="absolute right-0 z-50 mt-2 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 px-3 py-2 text-[11px] shadow-lg ring-1 ring-black/5 dark:ring-white/5 whitespace-nowrap">
+            {t.labels.info}
+          </div>
+        ) : null}
       </div>
     </div>
   );
@@ -122,9 +136,10 @@ function TopRightControls(props) {
 
 function Home(props) {
   var lang = props.lang, setLang = props.setLang, theme = props.theme, setTheme = props.setTheme;
-  var t = i18n[lang];
+  var t = CONTENT[lang];
   var open = useState(null); var openVal = open[0]; var setOpen = open[1];
   var showAll = useState(false); var showAllVal = showAll[0]; var setShowAll = showAll[1];
+  var closing = useState(false); var closingVal = closing[0]; var setClosing = closing[1];
 
   var heroWrapRef = useRef(null);
   var heroTextRef = useRef(null);
@@ -168,19 +183,59 @@ function Home(props) {
     setBgX(Math.round(clamped * 100));
   }
 
-  var projSectionRef = useRef(null);
-  useEffect(function(){
-    if (showAllVal) {
-      requestAnimationFrame(function(){
-        var sec = projSectionRef.current; if (!sec) return;
-        var rect = sec.getBoundingClientRect();
-        var overflow = rect.bottom - window.innerHeight;
-        if (overflow > 0) window.scrollBy({ top: overflow + 24, behavior: "smooth" });
-      });
-    }
-  }, [showAllVal]);
+  var extrasRef = useRef(null);
+  var gridRef = useRef(null);
 
-  var stagger = 0.06;
+  function openExtras() {
+    setClosing(false);
+    setShowAll(true);
+    requestAnimationFrame(function(){
+      var el = extrasRef.current; if (!el) return;
+      el.classList.add("open");
+      el.style.height = el.scrollHeight + "px";
+      // After expansion, set to auto to maintain layout
+      setTimeout(function(){ if (!el) return; el.style.height = "auto"; }, 620);
+      // Animate child cards staggered
+      var grid = gridRef.current; if (grid) grid.classList.add("open"); 
+    });
+  }
+
+  function closeExtras() {
+    var el = extrasRef.current; var grid = gridRef.current;
+    if (!el) { setShowAll(false); return; }
+    setClosing(true);
+    if (grid) {
+      grid.classList.remove("open");
+      grid.classList.add("closing");
+      // compute reverse delays
+      var cards = grid.querySelectorAll(".card-enter");
+      var n = cards.length;
+      for (var i=0;i<n;i++){ var d = (n-1-i)*60; cards[i].style.setProperty("--delayClose", d + "ms"); }
+    }
+    // set fixed height then collapse
+    el.style.height = el.scrollHeight + "px";
+    requestAnimationFrame(function(){
+      el.classList.remove("open");
+      el.style.height = "0px";
+      el.style.clipPath = "inset(0% 0% 100% 0%)";
+      el.style.filter = "blur(6px)";
+      el.style.opacity = "0";
+    });
+    // After animations, actually unmount extras
+    var totalDelay = 400 + (grid ? (grid.querySelectorAll(".card-enter").length - 1) * 60 : 0);
+    setTimeout(function(){
+      setShowAll(false);
+      setClosing(false);
+      if (grid) grid.classList.remove("closing");
+      if (el) { el.style.height = "0px"; }
+    }, totalDelay + 80);
+  }
+
+  var seeAllButton = (
+    <button onClick={function(){ showAllVal ? closeExtras() : openExtras(); }} className="text-sm underline-offset-4 hover:underline">
+      {showAllVal ? t.labels.seeLess : t.labels.seeAll}
+    </button>
+  );
 
   return (
     <main className="flex min-h-dvh flex-col font-light" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}>
@@ -195,6 +250,7 @@ function Home(props) {
           </div>
         </div>
 
+        {/* À propos */}
         <SectionRow label={t.labels.about} isOpen={openVal === "about"} onToggle={function(){ setOpen(openVal === "about" ? null : "about"); }}>
           <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(150px,180px)_1fr]">
             <div className="pr-4">
@@ -233,47 +289,38 @@ function Home(props) {
           </div>
         </SectionRow>
 
+        {/* Projets */}
         <SectionRow
           label={t.labels.projects}
-          rightAdornment={openVal === "projects" ? (
-            <button onClick={function(){ setShowAll(!showAllVal); }} className="text-sm underline-offset-4 hover:underline">
-              {showAllVal ? t.labels.seeLess : t.labels.seeAll}
-            </button>
-          ) : null}
+          rightAdornment={openVal === "projects" ? seeAllButton : null}
           isOpen={openVal === "projects"}
           onToggle={function(){ setOpen(openVal === "projects" ? null : "projects"); }}
         >
-          <div ref={projSectionRef}>
-            {function(){
-              var first = (projectsData || []).slice(0,4);
-              var extra = (projectsData || []).slice(4);
-              var extraLen = extra.length;
-              return (
-                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {first.map(function(p){
-                    return (
-                      <motion.div key={p.id} layout transition={{ duration: 0.45, ease: ease }}>
-                        <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                          <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
-                          <div className="flex items-center justify-between p-3">
-                            <span className="text-sm font-medium">{p.title}</span>
-                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                          </div>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {(t.projects || []).slice(0,4).map(function(p){
+                return (
+                  <div key={p.id} className="block">
+                    <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                      <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
+                      <div className="flex items-center justify-between p-3">
+                        <span className="text-sm font-medium">{p.title}</span>
+                        <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
+            </div>
 
-                  <AnimatePresence initial={false} mode="popLayout">
-                    {showAllVal ? extra.map(function(p, i){
+            <div ref={extrasRef} className={"extras-container" + (showAllVal ? " open" : "")} style={{ height: "0px" }}>
+              {showAllVal ? (
+                <div ref={gridRef} className={"extras-grid" + (closingVal ? " closing" : " open")}>
+                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-6">
+                    {(t.projects || []).slice(4).map(function(p, i, arr){
+                      var delay = i * 60; var delayRev = (arr.length - 1 - i) * 60;
                       return (
-                        <motion.div key={p.id}
-                          layout
-                          initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                          animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
-                          exit={{ opacity: 0, y: -18, scale: 0.975, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                          transition={{ duration: 0.58, ease: ease, delay: Math.min(i * 0.06, 0.48) }}
-                        >
+                        <div key={p.id} className="card-enter" style={{ "--delay": delay + "ms", "--delayClose": delayRev + "ms" }}>
                           <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                             <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
                             <div className="flex items-center justify-between p-3">
@@ -281,23 +328,13 @@ function Home(props) {
                               <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
                             </div>
                           </Link>
-                        </motion.div>
-                      );
-                    }) : extra.map(function(p, i){
-                      return (
-                        <motion.div key={"exit-" + p.id}
-                          layout
-                          initial={false}
-                          animate={false}
-                          exit={{ opacity: 0, y: -18, scale: 0.975, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                          transition={{ duration: 0.5, ease: ease, delay: Math.min((extraLen - 1 - i) * 0.06, 0.48) }}
-                        />
+                        </div>
                       );
                     })}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            }()}
+                  </div>
+                </div>
+              ) : null}
+            </div>
           </div>
         </SectionRow>
       </div>
@@ -307,7 +344,7 @@ function Home(props) {
 
 function ProjectPage(props) {
   var lang = props.lang;
-  var t = i18n[lang];
+  var t = CONTENT[lang];
   var navigate = useNavigate();
   var params = useParams();
   var id = params.id;
@@ -353,86 +390,3 @@ export default function App() {
     </HashRouter>
   );
 }
-        {/* Projets */}
-        <SectionRow
-          label={t.labels.projects}
-          rightAdornment={openVal === "projects" ? (
-            <button onClick={function(){ setShowAll(!showAllVal); }} className="text-sm underline-offset-4 hover:underline">
-              {showAllVal ? t.labels.seeLess : t.labels.seeAll}
-            </button>
-          ) : null}
-          isOpen={openVal === "projects"}
-          onToggle={function(){ setOpen(openVal === "projects" ? null : "projects"); }}
-        >
-          {function(){
-            var first = (projectsData || []).slice(0,4);
-            var extra = (projectsData || []).slice(4);
-            return (
-              <div className="space-y-6">
-                {/* Grid des 4 premiers (toujours visible) */}
-                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {first.map(function(p){
-                    return (
-                      <motion.div key={p.id} layout transition={{ duration: 0.45, ease: ease }}>
-                        <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                          <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
-                          <div className="flex items-center justify-between p-3">
-                            <span className="text-sm font-medium">{p.title}</span>
-                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                          </div>
-                        </Link>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
-
-                {/* Conteneur des extras (ouverture/fermeture ultra fluide) */}
-                <AnimatePresence initial={false} mode="wait">
-                  {showAllVal ? (
-                    <motion.div
-                      key="extras"
-                      layout
-                      initial={{ height: 0, opacity: 0, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                      animate={{ height: "auto", opacity: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
-                      exit={{ height: 0, opacity: 0, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                      transition={{ duration: 0.6, ease: ease }}
-                      style={{ overflow: "hidden" }}
-                    >
-                      <motion.div
-                        initial="hidden"
-                        animate="show"
-                        variants={{
-                          hidden: { },
-                          show: { transition: { staggerChildren: 0.06 } }
-                        }}
-                        className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-0"
-                      >
-                        {extra.map(function(p){
-                          return (
-                            <motion.div
-                              key={p.id}
-                              variants={{
-                                hidden: { opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)" },
-                                show:   { opacity: 1, y: 0,  scale: 1,     filter: "blur(0px)" }
-                              }}
-                              transition={{ duration: 0.5, ease: ease }}
-                            >
-                              <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                                <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
-                                <div className="flex items-center justify-between p-3">
-                                  <span className="text-sm font-medium">{p.title}</span>
-                                  <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                                </div>
-                              </Link>
-                            </motion.div>
-                          );
-                        })}
-                      </motion.div>
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-              </div>
-            );
-          }()}
-        </SectionRow>
-
