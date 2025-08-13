@@ -2,10 +2,10 @@ import React, { useMemo, useState, useEffect, useRef } from "react";
 import { HashRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import i18nData from "./content/site.json";
-const i18n = (i18nData && i18nData.fr && i18nData.en) ? i18nData : { fr: { hero: { hello: "Bonjour je suis Dylan,", after: "UX Republic à Bordeaux." }, labels: { about: "À propos", projects: "Projets", seeAll: "Voir tout", seeLess: "Voir moins", previousWork: "Expériences récentes", sayHello: "Dire bonjour", back: "Retour", info: "Ce site internet a été éco‑conçu par moi à Bordeaux en 2025, et il a été entièrement codé par GPT5." }, about: { name: "Dylan Lagrange", role: "Product Designer", photo: "/images/portrait.jpg", bio: ["Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF.", "J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco‑conception, intelligence artificielle)."], previousWork: ["Kairos Agency (2021–2024) — Product designer en agence digitale"], contact: { linkedin: "https://www.linkedin.com/in/dylanlgrng", phone: "06.76.46.21.17" } }, projects: [] }, en: { hero: { hello: "Hi, I’m Dylan,", after: "UX Republic in Bordeaux." }, labels: { about: "About me", projects: "Projects", seeAll: "See all", seeLess: "See less", previousWork: "Previous work", sayHello: "Say hello", back: "Back", info: "This website was eco‑designed by me in Bordeaux in 2025 and fully coded by GPT5." }, about: { name: "Dylan Lagrange", role: "Product Designer", photo: "/images/portrait.jpg", bio: ["Currently Product Designer at UX Republic in Bordeaux, on assignment with MAIF’s IT department.", "I help evolve internal tools with project teams, contribute to the design system, and join discussions on our practices (accessibility, eco‑design, AI)."], previousWork: ["Kairos Agency (2021–2024) — Product designer in a digital agency"], contact: { linkedin: "https://www.linkedin.com/in/dylanlgrng", phone: "+33 6 76 46 21 17" } }, projects: [] } };
+import i18n from "./content/site.json";
 
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
+
 const getInitialLang = () => (localStorage.getItem("lang") === "en" ? "en" : "fr");
 const getInitialTheme = () => { const s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; const h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; };
 
@@ -48,7 +48,7 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
 
 function IntroTitle({ dims, spacePx, heroRef, bgX, hovering, lang }) {
   const t = i18n[lang];
-  const { maxWidth, maxHeight } = dims || {};
+  const maxWidth = dims && dims.maxWidth; const maxHeight = dims && dims.maxHeight;
   return (
     <h1 ref={heroRef} className="text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.1] tracking-tight text-balance">
       {t.hero.hello}
@@ -76,13 +76,11 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
   const t = i18n[lang];
   const [open, setOpen] = useState(false);
   const tooltipRef = useRef(null);
-
   useEffect(() => {
     const onDocClick = (e) => { if (!tooltipRef.current) return; if (!tooltipRef.current.contains(e.target)) setOpen(false); };
     document.addEventListener("click", onDocClick);
     return () => document.removeEventListener("click", onDocClick);
   }, []);
-
   return (
     <div className="relative flex items-center justify-end gap-3 text-xs opacity-80 hover:opacity-100 transition">
       <button onClick={() => setLang(lang === "fr" ? "en" : "fr")} className="rounded-full border border-black/10 dark:border-white/10 px-2 py-1 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
@@ -92,11 +90,11 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
         {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
       </button>
       <div ref={tooltipRef} className="relative">
-        <button onClick={() => setOpen((v) => !v)} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} aria-label="Info" className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
+        <button onClick={() => setOpen(!open)} onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)} aria-label="Info" className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
           <Info size={14} />
         </button>
         <AnimatePresence>
-          {open && (
+          {open ? (
             <motion.div
               initial={{ opacity: 0, y: -6, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -106,7 +104,7 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
             >
               {t.labels.info}
             </motion.div>
-          )}
+          ) : null}
         </AnimatePresence>
       </div>
     </div>
@@ -130,34 +128,33 @@ function Home({ lang, setLang, theme, setTheme }) {
     const phrasePD = "Product Designer";
     const word = lang === "fr" ? "chez" : "at";
     const measure = () => {
-      const systemStack = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif";
-      const sizePx = (() => {
-        const h = heroTextRef.current; if (!h) return 48;
-        const cs = window.getComputedStyle(h); return Math.round(parseFloat(cs.fontSize) || 48);
-      })();
+      const system = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif";
+      const h = heroTextRef.current;
+      const cs = h ? window.getComputedStyle(h) : null;
+      const sizePx = cs ? Math.round(parseFloat(cs.fontSize) || 48) : 48;
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-      ctx.font = `500 ${sizePx}px ${systemStack}`;
+      ctx.font = "500 " + sizePx + "px " + system;
       const wPD = ctx.measureText(phrasePD).width;
-      const hPD = (ctx.measureText(phrasePD).actualBoundingBoxAscent || sizePx * 0.8) + (ctx.measureText(phrasePD).actualBoundingBoxDescent || sizePx * 0.2);
-      const wWord = ctx.measureText(word).width;
-      const wAA = ctx.measureText("AA").width;
-      const wA_A = ctx.measureText("A A").width;
-      const space = Math.max(0, Math.round(wA_A - wAA));
+      const mAA = ctx.measureText("AA");
+      const mA_A = ctx.measureText("A A");
+      const space = Math.max(0, Math.round(mA_A.width - mAA.width));
       setSpacePx(space);
-      setDims({ maxWidth: Math.ceil(wPD + space + wWord), maxHeight: Math.ceil(hPD) });
+      const ascent = ctx.measureText(phrasePD).actualBoundingBoxAscent || sizePx * 0.8;
+      const descent = ctx.measureText(phrasePD).actualBoundingBoxDescent || sizePx * 0.2;
+      setDims({ maxWidth: Math.ceil(wPD + space + ctx.measureText(word).width), maxHeight: Math.ceil(ascent + descent) });
     };
-    measure();
-    window.addEventListener("resize", measure);
+    measure(); window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, [lang]);
 
-  const about = t.about;
   const projectsData = t.projects || [];
 
   const onMouseMoveHero = (e) => {
-    const rect = heroWrapRef.current?.getBoundingClientRect(); if (!rect) return;
-    const x = (e.clientX - rect.left) / rect.width; const clamped = Math.max(0, Math.min(1, x));
+    const rect = heroWrapRef.current && heroWrapRef.current.getBoundingClientRect();
+    if (!rect) return;
+    const x = (e.clientX - rect.left) / rect.width;
+    const clamped = Math.max(0, Math.min(1, x));
     setBgX(Math.round(clamped * 100));
   };
 
@@ -192,34 +189,34 @@ function Home({ lang, setLang, theme, setTheme }) {
           <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(150px,180px)_1fr]">
             <div className="pr-4">
               <div className="rounded-[12px] overflow-visible">
-                <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-square ring-1 ring-black/10 dark:ring-white/10" />
+                <img src={t.about.photo} alt={"Portrait de " + t.about.name} className="photo-square ring-1 ring-black/10 dark:ring-white/10" />
               </div>
             </div>
             <div className="space-y-8 overflow-hidden">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{about.name}</h2>
-                <p className="mt-1 text-sm sm:text-base text-black/60 dark:text-white/60">{about.role}</p>
+                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{t.about.name}</h2>
+                <p className="mt-1 text-sm sm:text-base text-black/60 dark:text-white/60">{t.about.role}</p>
               </div>
               <div className="space-y-4">
-                {about.bio.map((p, i) => (
+                {t.about.bio.map((p, i) => (
                   <p key={i} className="max-w-prose text-sm sm:text-[1.02rem] leading-relaxed text-black/80 dark:text-white/80">{p}</p>
                 ))}
               </div>
               <div className="flex flex-wrap gap-4">
-                <button onClick={() => { try { const a = atob(EMAIL_B64); window.location.href = `mailto:${a}`; } catch {} }} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+                <button onClick={function(){ try { var a = atob(EMAIL_B64); window.location.href = "mailto:" + a; } catch(e){} }} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
                   <Mail size={16} /> {t.labels.sayHello}
                 </button>
-                <a href={about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+                <a href={t.about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
                   <Linkedin size={16} /> LinkedIn
                 </a>
-                <a href={`tel:+33${(about.contact.phone || "").replace(/\D/g,'')}`} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-                  <Phone size={16} /> {about.contact.phone}
+                <a href={"tel:+33" + (t.about.contact.phone || "").replace(/\D/g,'')} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+                  <Phone size={16} /> {t.about.contact.phone}
                 </a>
               </div>
               <div>
                 <h3 className="mb-2 text-base font-medium">{t.labels.previousWork}</h3>
                 <ul className="space-y-1 text-sm text-black/70 dark:text-white/70">
-                  {(about.previousWork || []).map((line, idx) => (<li key={idx}>• {line}</li>))}
+                  {t.about.previousWork.map((line, idx) => (<li key={idx}>• {line}</li>))}
                 </ul>
               </div>
             </div>
@@ -229,7 +226,7 @@ function Home({ lang, setLang, theme, setTheme }) {
         <SectionRow
           label={t.labels.projects}
           rightAdornment={open === "projects" ? (
-            <button onClick={() => setShowAll(v => !v)} className="text-sm underline-offset-4 hover:underline">
+            <button onClick={() => setShowAll(!showAll)} className="text-sm underline-offset-4 hover:underline">
               {showAll ? t.labels.seeLess : t.labels.seeAll}
             </button>
           ) : null}
@@ -237,16 +234,16 @@ function Home({ lang, setLang, theme, setTheme }) {
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
           <div ref={projSectionRef}>
-            {(() => {
-              const first = (projectsData || []).slice(0, 4);
+            {function(){
+              const first = (projectsData || []).slice(0,4);
               const extra = (projectsData || []).slice(4);
-              const total = extra.length;
+              const extraLen = extra.length;
               return (
                 <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
                   {first.map((p) => (
                     <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
-                      <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                        <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                      <Link to={"/#/projects/" + p.id.replace(/^#/, '')} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                        <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
                         <div className="flex items-center justify-between p-3">
                           <span className="text-sm font-medium">{p.title}</span>
                           <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
@@ -255,43 +252,35 @@ function Home({ lang, setLang, theme, setTheme }) {
                     </motion.div>
                   ))}
                   <AnimatePresence initial={false} mode="popLayout">
-                    {showAll && extra.map((p, idx) => (
-                      <motion.div
-                        key={p.id}
+                    {showAll ? extra.map((p, i) => (
+                      <motion.div key={p.id}
                         layout
-                        custom={idx}
-                        initial={{ opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        initial={{ opacity: 0, y: 16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
                         animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)" }}
-                        exit={{ opacity: 0, y: -16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
-                        transition={(state) => {
-                          // state is not provided by framer for this form; use closure
-                          return { duration: 0.55, ease, delay: Math.min(idx * 0.06, 0.48) };
-                        }}
+                        exit={{ opacity: 0, y: -14, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        transition={{ duration: 0.54, ease, delay: Math.min(i * 0.06, 0.48) }}
                       >
-                        <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                          <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                        <Link to={"/#/projects/" + p.id.replace(/^#/, '')} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                          <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
                           <div className="flex items-center justify-between p-3">
                             <span className="text-sm font-medium">{p.title}</span>
                             <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
                           </div>
                         </Link>
                       </motion.div>
-                    ))}
-                    {!showAll && extra.map((p, idx) => (
-                      <motion.div
-                        key={`out-${p.id}`}
+                    )) : extra.map((p, i) => (
+                      <motion.div key={"exit-" + p.id}
                         layout
                         initial={false}
-                        animate={{}}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.001, delay: Math.min((total - 1 - idx) * 0.06, 0.48) }}
-                        style={{ display: "none" }}
+                        animate={false}
+                        exit={{ opacity: 0, y: -14, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" }}
+                        transition={{ duration: 0.5, ease, delay: Math.min((extraLen - 1 - i) * 0.06, 0.48) }}
                       />
                     ))}
                   </AnimatePresence>
                 </motion.div>
               );
-            })()}
+            }()}
           </div>
         </SectionRow>
       </div>
@@ -302,8 +291,9 @@ function Home({ lang, setLang, theme, setTheme }) {
 function ProjectPage({ lang }) {
   const t = i18n[lang];
   const navigate = useNavigate();
-  const { id } = useParams();
-  const project = (t.projects || []).find((p) => p.id === id);
+  const params = useParams();
+  const id = params.id;
+  const project = (t.projects || []).find(function(p){ return p.id === id; });
   if (!project) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-16">
@@ -330,10 +320,10 @@ function ProjectPage({ lang }) {
 }
 
 export default function App() {
-  const [lang, setLang] = useState(getInitialLang());
-  const [theme, setTheme] = useState(getInitialTheme());
-  useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
-  useEffect(() => { localStorage.setItem("theme", theme); const r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
+  const [lang, setLang] = useState((localStorage.getItem("lang") === "en") ? "en" : "fr");
+  const [theme, setTheme] = useState((function(){ const s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; const h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; })());
+  useEffect(function(){ localStorage.setItem("lang", lang); }, [lang]);
+  useEffect(function(){ localStorage.setItem("theme", theme); const r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
 
   return (
     <HashRouter>
@@ -345,74 +335,3 @@ export default function App() {
     </HashRouter>
   );
 }
-        {/* Projets */}
-        <SectionRow
-          label={t.labels.projects}
-          rightAdornment={open === "projects" ? (
-            <button onClick={() => setShowAll(v => !v)} className="text-sm underline-offset-4 hover:underline">
-              {showAll ? t.labels.seeLess : t.labels.seeAll}
-            </button>
-          ) : null}
-          isOpen={open === "projects"}
-          onToggle={() => setOpen(open === "projects" ? null : "projects")}
-        >
-          <div ref={projSectionRef}>
-            {(() => {
-              const first = (projectsData || []).slice(0, 4);
-              const extra = (projectsData || []).slice(4);
-              const ease = [0.22, 1, 0.36, 1];
-              const stagger = 0.06;
-
-              const cardVariants = {
-                hidden: { opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" },
-                show: (c) => ({
-                  opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)",
-                  transition: { duration: 0.55, ease, delay: Math.min((c?.i || 0) * stagger, 0.48) }
-                }),
-                hide: (c) => ({
-                  opacity: 0, y: -16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)",
-                  transition: { duration: 0.5, ease, delay: Math.min(((c?.total || 0) - 1 - (c?.i || 0)) * stagger, 0.48) }
-                }),
-              };
-
-              return (
-                <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                  {first.map((p) => (
-                    <motion.div key={p.id} layout transition={{ duration: 0.45, ease }}>
-                      <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                        <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
-                        <div className="flex items-center justify-between p-3">
-                          <span className="text-sm font-medium">{p.title}</span>
-                          <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                        </div>
-                      </Link>
-                    </motion.div>
-                  ))}
-
-                  <AnimatePresence initial={false} mode="popLayout">
-                    {showAll && extra.map((p, i) => (
-                      <motion.div
-                        key={p.id}
-                        layout
-                        variants={cardVariants}
-                        initial="hidden"
-                        animate="show"
-                        exit="hide"
-                        custom={{ i, total: extra.length }}
-                      >
-                        <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                          <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
-                          <div className="flex items-center justify-between p-3">
-                            <span className="text-sm font-medium">{p.title}</span>
-                            <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                          </div>
-                        </Link>
-                      </motion.div>
-                    ))}
-                  </AnimatePresence>
-                </motion.div>
-              );
-            })()}
-          </div>
-        </SectionRow>
-
