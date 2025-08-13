@@ -1,19 +1,19 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
-import { ArrowUpRight, Mail, Linkedin, Phone, ChevronLeft, Plus, Minus } from "lucide-react";
+import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import content from "./content/site.json";
 
-// Email obfuscated (base64), never rendered in clear text
+// Email obfuscation (base64)
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20="; // lagrangedylan@gmail.com
 const openMailto = () => {
   try {
     const addr = atob(EMAIL_B64);
     window.location.href = `mailto:${addr}`;
-  } catch (e) {
-    // fallback: do nothing
-  }
+  } catch {}
 };
 
+// ------------- Accordion Row (FR + animation) -------------
 function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
   return (
     <section className="border-t border-black/10">
@@ -28,18 +28,39 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
         <div className="mr-2 hidden sm:block">{rightAdornment}</div>
         <button
           onClick={onToggle}
-          aria-label={isOpen ? `${label} – réduire` : `${label} – développer`}
+          aria-label={isOpen ? `${label} — réduire` : `${label} — développer`}
           className="ml-auto inline-flex items-center justify-center p-1 opacity-70 transition hover:opacity-100 focus:outline-none"
         >
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </button>
       </header>
-      {isOpen && <div className="pb-8">{children}</div>}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={{ height: 0, opacity: 0, y: 8, filter: "blur(6px)" }}
+            animate={{ height: "auto", opacity: 1, y: 0, filter: "blur(0px)" }}
+            exit={{ height: 0, opacity: 0, y: 8, filter: "blur(6px)" }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            style={{ overflow: "hidden" }}
+          >
+            <motion.div
+              initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
+              animate={{ clipPath: "inset(0% 0% 0% 0%)" }}
+              exit={{ clipPath: "inset(0% 0% 100% 0%)" }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="pb-8">{children}</div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
 
-function IntroTitle({ designerFont, designerColor, dims, spacePx, heroRef }) {
+// ------------- Hero Title with gradient on hover -------------
+function IntroTitle({ gradientActive, dims, spacePx, heroRef }) {
   const { maxWidth, maxHeight } = dims || {};
   return (
     <h1 ref={heroRef} className="text-3xl sm:text-4xl md:text-5xl font-medium leading-[1.1] tracking-tight text-balance">
@@ -53,14 +74,7 @@ function IntroTitle({ designerFont, designerColor, dims, spacePx, heroRef }) {
           Product Designer chez
         </span>
         <span className="absolute left-0 top-0 whitespace-nowrap" style={{ lineHeight: "inherit" }}>
-          <span
-            style={{
-              fontFamily: designerFont
-                ? `${designerFont}, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif`
-                : undefined,
-              color: designerColor,
-            }}
-          >
+          <span className={gradientActive ? "gradient-text animate-gradient" : ""}>
             Product Designer
           </span>
           <span style={{ marginLeft: typeof spacePx === "number" ? `${spacePx}px` : undefined }}>chez</span>
@@ -72,61 +86,20 @@ function IntroTitle({ designerFont, designerColor, dims, spacePx, heroRef }) {
   );
 }
 
+// ------------- Pages -------------
 function Home() {
-  const [open, setOpen] = useState(null);
+  const [open, setOpen] = useState(null); // 'about' | 'projects' | null
   const [showAll, setShowAll] = useState(false);
-
-  const fontsMaster = useMemo(
-    () => [
-      "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif",
-      "system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
-      "'Helvetica Neue', Helvetica, Arial, 'Liberation Sans', sans-serif",
-      "'Segoe UI', Tahoma, Verdana, Arial, sans-serif",
-      "Verdana, Geneva, Tahoma, sans-serif",
-      "'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', Arial, sans-serif",
-      "'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Arial, sans-serif",
-      "'Times New Roman', Times, serif",
-      "Georgia, 'Times New Roman', serif",
-      "'Palatino Linotype', Palatino, serif",
-      "Baskerville, 'Times New Roman', Times, serif",
-      "Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace",
-      "'Courier New', Courier, monospace",
-      "'Brush Script MT', cursive",
-      "'Comic Sans MS', 'Comic Sans', cursive",
-    ],
-    []
-  );
-
-  const trendyColors = useMemo(
-    () => [
-      "#0ea5e9",
-      "#22c55e",
-      "#a78bfa",
-      "#f43f5e",
-      "#f59e0b",
-      "#06b6d4",
-      "#fb7185",
-      "#10b981",
-      "#f97316",
-      "#14b8a6",
-      "#8b5cf6",
-      "#e11d48",
-    ],
-    []
-  );
-
-  const [hoverFont, setHoverFont] = useState(undefined);
-  const [hoverColor, setHoverColor] = useState(undefined);
-  const cycleRef = useRef(null);
-
   const heroRef = useRef(null);
+  const [gradientActive, setGradientActive] = useState(false);
+
+  // Mesures anti-saut (sans changer de fonte)
   const [dims, setDims] = useState({ maxWidth: null, maxHeight: null });
   const [spacePx, setSpacePx] = useState(0);
 
   useEffect(() => {
     const phrasePD = "Product Designer";
     const phraseChezWord = "chez";
-
     const measure = () => {
       const systemStack = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif";
       const sizePx = (() => {
@@ -135,61 +108,22 @@ function Home() {
         const cs = window.getComputedStyle(h);
         return Math.round(parseFloat(cs.fontSize) || 48);
       })();
-
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
-      const wFor = (stack, text) => {
-        ctx.font = `500 ${sizePx}px ${stack}`;
-        const m = ctx.measureText(text);
-        const w = m.width;
-        const h = (m.actualBoundingBoxAscent || sizePx * 0.8) + (m.actualBoundingBoxDescent || sizePx * 0.2);
-        return { w, h };
-      };
-
-      let maxPDW = 0;
-      let maxPDH = 0;
-      fontsMaster.forEach((stack) => {
-        const m = wFor(stack, phrasePD);
-        if (m.w > maxPDW) maxPDW = m.w;
-        if (m.h > maxPDH) maxPDH = m.h;
-      });
-      const mChez = wFor(systemStack, phraseChezWord);
-      const aa = wFor(systemStack, "AA").w;
-      const a_a = wFor(systemStack, "A A").w;
-      const space = Math.max(0, Math.round(a_a - aa));
-
+      ctx.font = `500 ${sizePx}px ${systemStack}`;
+      const wPD = ctx.measureText(phrasePD).width;
+      const hPD = (ctx.measureText(phrasePD).actualBoundingBoxAscent || sizePx * 0.8) + (ctx.measureText(phrasePD).actualBoundingBoxDescent || sizePx * 0.2);
+      const wChez = ctx.measureText(phraseChezWord).width;
+      const wAA = ctx.measureText("AA").width;
+      const wA_A = ctx.measureText("A A").width;
+      const space = Math.max(0, Math.round(wA_A - wAA));
       setSpacePx(space);
-      setDims({ maxWidth: Math.ceil(maxPDW + space + mChez.w), maxHeight: Math.ceil(maxPDH) });
+      setDims({ maxWidth: Math.ceil(wPD + space + wChez), maxHeight: Math.ceil(hPD) });
     };
-
     measure();
     window.addEventListener("resize", measure);
-    return () => {
-      window.removeEventListener("resize", measure);
-      if (cycleRef.current) clearInterval(cycleRef.current);
-    };
-  }, [fontsMaster]);
-
-  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-  const onHeroEnter = () => {
-    if (cycleRef.current) clearInterval(cycleRef.current);
-    setHoverFont(pick(fontsMaster));
-    setHoverColor(pick(trendyColors));
-    cycleRef.current = setInterval(() => {
-      setHoverFont(pick(fontsMaster));
-      setHoverColor(pick(trendyColors));
-    }, 120);
-  };
-
-  const onHeroLeave = () => {
-    if (cycleRef.current) {
-      clearInterval(cycleRef.current);
-      cycleRef.current = null;
-    }
-    setHoverFont(undefined);
-    setHoverColor(undefined);
-  };
+    return () => window.removeEventListener("resize", measure);
+  }, []);
 
   const about = content.about;
   const projectsData = content.projects || [];
@@ -201,34 +135,47 @@ function Home() {
       style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}
     >
       <div className="mx-auto mt-auto w-full max-w-6xl px-4 sm:px-6">
-        <div className="pb-4" onMouseEnter={onHeroEnter} onMouseLeave={onHeroLeave}>
-          <IntroTitle designerFont={hoverFont} designerColor={hoverColor} dims={dims} spacePx={spacePx} heroRef={heroRef} />
+        <div className="pb-4" onMouseEnter={() => setGradientActive(true)} onMouseLeave={() => setGradientActive(false)}>
+          <IntroTitle gradientActive={gradientActive} dims={dims} spacePx={spacePx} heroRef={heroRef} />
         </div>
 
-        {/* About me */}
+        {/* À propos */}
         <SectionRow
-          label="About me"
+          label="À propos"
           isOpen={open === "about"}
           onToggle={() => setOpen(open === "about" ? null : "about")}
         >
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-[240px_1fr]">
-            <img
-              alt={`Portrait de ${about.name}`}
-              className="aspect-square w-60 rounded-xl object-cover shadow-sm ring-1 ring-black/10"
-              src={about.photo}
-            />
-            <div className="space-y-6 pr-2">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-[280px_1fr]">
+            {/* Photo card */}
+            <div className="rounded-2xl border border-black/10 p-2 shadow-sm ring-1 ring-black/5 bg-gradient-to-br from-black/[0.02] to-white">
+              <img
+                alt={`Portrait de ${about.name}`}
+                className="aspect-square w-full rounded-xl object-cover"
+                src={about.photo}
+              />
+              <div className="px-2 pb-2 pt-3">
+                <div className="text-sm font-medium">{about.name}</div>
+                <div className="text-xs text-black/60">{about.role}</div>
+              </div>
+            </div>
+
+            {/* Content card */}
+            <div className="rounded-2xl border border-black/10 p-5 shadow-sm ring-1 ring-black/5 bg-white/80 backdrop-blur-sm">
+              {/* Accent bar */}
+              <div className="h-1 w-16 rounded-full bg-gradient-to-r from-sky-500 via-violet-500 to-amber-500 mb-4"></div>
+
+              {/* Bio */}
               <div className="space-y-3">
                 {about.bio.map((p, i) => (
                   <p key={i} className="max-w-prose text-sm sm:text-base text-black/80">{p}</p>
                 ))}
               </div>
 
-              <div className="flex flex-wrap gap-3">
+              {/* Actions */}
+              <div className="mt-5 flex flex-wrap gap-3">
                 <button
                   onClick={openMailto}
-                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 hover:shadow transition"
-                  aria-label="Dire bonjour par e‑mail"
+                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 transition hover:shadow-md"
                 >
                   <Mail size={16} />
                   Dire bonjour
@@ -237,19 +184,23 @@ function Home() {
                   href={about.contact.linkedin}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 hover:shadow transition"
+                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 transition hover:shadow-md"
                 >
                   <Linkedin size={16} />
                   LinkedIn
                 </a>
-                <span className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5">
+                <a
+                  href={`tel:+33${about.contact.phone.replace(/\D/g,'')}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 transition hover:shadow-md"
+                >
                   <Phone size={16} />
                   {about.contact.phone}
-                </span>
+                </a>
               </div>
 
-              <div className="pt-2">
-                <h3 className="mb-2 text-base font-medium">Previous work</h3>
+              {/* Previous work */}
+              <div className="mt-6 rounded-xl border border-black/10 p-4 bg-black/[0.02]">
+                <h3 className="mb-2 text-base font-medium">Expériences précédentes</h3>
                 <ul className="list-disc pl-5 text-sm text-black/80">
                   {(about.previousWork || []).map((line, idx) => (
                     <li key={idx}>{line}</li>
@@ -260,9 +211,9 @@ function Home() {
           </div>
         </SectionRow>
 
-        {/* Projects */}
+        {/* Projets */}
         <SectionRow
-          label="Projects"
+          label="Projets"
           rightAdornment={
             open === "projects" ? (
               <button onClick={() => setShowAll((v) => !v)} className="text-sm underline-offset-4 hover:underline">
@@ -274,7 +225,7 @@ function Home() {
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {visibleProjects.map((p) => (
+            {(visibleProjects || []).map((p) => (
               <Link key={p.id} to={`/projects/${p.id}`} className="group block overflow-hidden rounded-xl border border-black/10 shadow-sm ring-1 ring-black/5 transition hover:shadow-md">
                 <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
                 <div className="flex items-center justify-between p-3">

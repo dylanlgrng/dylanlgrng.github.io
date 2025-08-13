@@ -1,13 +1,12 @@
-# Mon portfolio – v6
+# Mon portfolio – v7 (FR)
 
-- About me simplifié (photo, paragraphe, 3 actions, previous work)
-- Email protégé (Base64 → jamais affiché en clair)
-- Polices système + hover dynamique "Product Designer"
+- Interface en français (libellés, sections)
+- Accordéons animés (ouverture/fermeture) avec framer-motion
+- Effet "wow" sur "Product Designer" : gradient animé au survol
+- About modernisé (cartes, accent, actions)
+- Previous work corrigé : "Kairos Agency (2021–2024) — Product designer dans une agence digitale"
+- Email protégé (Base64)
 - GitHub Pages (master + main) + 404 SPA
 
-## Modifier les contenus
-- Paragraphe / liens / previous work : `src/content/site.json` (l’email n’y figure pas en clair)
-- Images : `public/images/` ou URLs externes
-
-## Déployer
-Uploadez tout dans `<username>.github.io` → commit sur master ou main → Actions → site en ligne.
+## Modifier le contenu
+`src/content/site.json` (photo, bio, LinkedIn, téléphone, expériences, projets).
