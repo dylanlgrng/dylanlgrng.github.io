@@ -187,6 +187,7 @@ function Home({ lang, setLang, theme, setTheme }) {
           </div>
         </SectionRow>
 
+        {
         {/* Projets */}
         <SectionRow
           label={t.labels.projects}
@@ -194,30 +195,34 @@ function Home({ lang, setLang, theme, setTheme }) {
           isOpen={open === "projects"}
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <AnimatePresence initial={false}>
-              {(visibleProjects || []).map((p, idx) => (
-                <motion.div
-                  key={p.id}
-                  variants={itemV}
-                  initial="hidden"
-                  animate="show"
-                  exit="exit"
-                  layout
-                  ref={showAll && idx === 4 ? firstNewRef : null}
-                >
-                  <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                    <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
-                    <div className="flex items-center justify-between p-3">
-                      <span className="text-sm font-medium">{p.title}</span>
-                      <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+          <div ref={projSectionRef}>
+            <motion.div layout className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {(visibleProjects || []).map((p, idx) => {
+                const isNew = showAll && idx >= 4;
+                return (
+                  <motion.div
+                    key={p.id}
+                    layout
+                    initial={isNew ? { opacity: 0, y: 14, filter: 'blur(6px)', clipPath: 'inset(0% 0% 100% 0%)' } : false}
+                    animate={{ opacity: 1, y: 0, filter: 'blur(0px)', clipPath: 'inset(0% 0% 0% 0%)' }}
+                    exit={{ opacity: 0, y: 10, filter: 'blur(6px)', clipPath: 'inset(0% 0% 100% 0%)' }}
+                    transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                    ref={isNew && idx === 4 ? firstNewRef : null}
+                  >
+                    <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                      <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
+                      <div className="flex items-center justify-between p-3">
+                        <span className="text-sm font-medium">{p.title}</span>
+                        <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                      </div>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
           </div>
         </SectionRow>
+</SectionRow>
       </div>
     </main>
   );

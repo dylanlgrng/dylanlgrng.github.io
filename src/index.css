@@ -16,5 +16,5 @@ html, body, #root { height: 100%; }
 }
 
 /* Square photo, smaller, no hover animation */
-.photo-square { width: 120px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 10px; }
-@media (min-width: 640px) { .photo-square { width: 140px; } }
+.photo-square { width: 150px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; }
+@media (min-width: 640px) { .photo-square { width: 180px; } }
