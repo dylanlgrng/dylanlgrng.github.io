@@ -57,6 +57,34 @@
         "image": "https://picsum.photos/seed/dylan-4/960/600",
         "summary": "Ateliers UX & co‑création.",
         "description": "Description en cours."
+      },
+      {
+        "id": "projet-5",
+        "title": "Projet 05",
+        "image": "https://picsum.photos/seed/dylan-5/960/600",
+        "summary": "Recherche utilisateur et cartographie.",
+        "description": "Description en cours."
+      },
+      {
+        "id": "projet-6",
+        "title": "Projet 06",
+        "image": "https://picsum.photos/seed/dylan-6/960/600",
+        "summary": "Prototype haute fidélité iOS.",
+        "description": "Description en cours."
+      },
+      {
+        "id": "projet-7",
+        "title": "Projet 07",
+        "image": "https://picsum.photos/seed/dylan-7/960/600",
+        "summary": "Mesure & analytics produit.",
+        "description": "Description en cours."
+      },
+      {
+        "id": "projet-8",
+        "title": "Projet 08",
+        "image": "https://picsum.photos/seed/dylan-8/960/600",
+        "summary": "Refonte back‑office métier.",
+        "description": "Description en cours."
       }
     ]
   },
@@ -103,21 +131,49 @@
         "title": "Project 02",
         "image": "https://picsum.photos/seed/dylan-2/960/600",
         "summary": "Modular design system for a B2B app.",
-        "description": "Description coming soon."
+        "description": "Project page under construction."
       },
       {
         "id": "projet-3",
         "title": "Project 03",
         "image": "https://picsum.photos/seed/dylan-3/960/600",
         "summary": "Accessibility improvements to AA.",
-        "description": "Description coming soon."
+        "description": "Project page under construction."
       },
       {
         "id": "projet-4",
         "title": "Project 04",
         "image": "https://picsum.photos/seed/dylan-4/960/600",
         "summary": "UX workshops & co‑creation.",
-        "description": "Description coming soon."
+        "description": "Project page under construction."
+      },
+      {
+        "id": "projet-5",
+        "title": "Project 05",
+        "image": "https://picsum.photos/seed/dylan-5/960/600",
+        "summary": "User research and mapping.",
+        "description": "Project page under construction."
+      },
+      {
+        "id": "projet-6",
+        "title": "Project 06",
+        "image": "https://picsum.photos/seed/dylan-6/960/600",
+        "summary": "High‑fidelity iOS prototype.",
+        "description": "Project page under construction."
+      },
+      {
+        "id": "projet-7",
+        "title": "Project 07",
+        "image": "https://picsum.photos/seed/dylan-7/960/600",
+        "summary": "Product metrics & analytics.",
+        "description": "Project page under construction."
+      },
+      {
+        "id": "projet-8",
+        "title": "Project 08",
+        "image": "https://picsum.photos/seed/dylan-8/960/600",
+        "summary": "Back‑office redesign for operations.",
+        "description": "Project page under construction."
       }
     ]
   }

@@ -78,7 +78,6 @@ function Home({ lang, setLang, theme, setTheme }) {
   const [open, setOpen] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
-  // Hover zone strictly on hero text
   const heroWrapRef = useRef(null);
   const heroTextRef = useRef(null);
   const [bgX, setBgX] = useState(0);
@@ -129,7 +128,7 @@ function Home({ lang, setLang, theme, setTheme }) {
 
   return (
     <main className="flex min-h-dvh flex-col font-light" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}>
-      {/* top bar with toggles aligned with content + info */}
+      {/* top bar */}
       <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 pt-4">
         <TopRightControls lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />
       </div>
@@ -144,8 +143,10 @@ function Home({ lang, setLang, theme, setTheme }) {
 
         {/* À propos */}
         <SectionRow label={t.labels.about} isOpen={open === "about"} onToggle={() => setOpen(open === "about" ? null : "about")}>
-          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(180px,260px)_1fr]">
-            <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-drop rounded-xl object-cover aspect-[3/4]" />
+          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(160px,200px)_1fr]">
+            <div className="pr-2">
+              <img src={about.photo} alt={`Portrait de ${about.name}`} className="photo-drop rounded-xl object-cover aspect-[3/4]" />
+            </div>
             <div className="space-y-8 overflow-hidden">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{about.name}</h2>
@@ -231,7 +232,6 @@ function ProjectPage({ lang }) {
   );
 }
 
-// Top-right controls aligned with container, with Info tooltip
 function TopRightControls({ lang, setLang, theme, setTheme }) {
   const t = i18n[lang];
   const [open, setOpen] = useState(false);
@@ -255,7 +255,7 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
         {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
       </button>
 
-      {/* Info tooltip */}
+      {/* Info tooltip (nowrap) */}
       <div ref={tooltipRef} className="relative">
         <button
           onClick={() => setOpen((v) => !v)}
@@ -273,7 +273,7 @@ function TopRightControls({ lang, setLang, theme, setTheme }) {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -6, scale: 0.98 }}
               transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
-              className="absolute right-0 z-50 mt-2 max-w-xs rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 px-3 py-2 text-[11px] shadow-lg ring-1 ring-black/5 dark:ring-white/5"
+              className="absolute right-0 z-50 mt-2 rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 px-3 py-2 text-[11px] shadow-lg ring-1 ring-black/5 dark:ring-white/5 whitespace-nowrap"
             >
               {t.labels.info}
             </motion.div>
