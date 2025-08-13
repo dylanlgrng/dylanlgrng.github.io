@@ -1,179 +1,183 @@
 {
   "fr": {
+    "hero": {
+      "hello": "Bonjour je suis Dylan,",
+      "after": "UX Republic à Bordeaux."
+    },
     "labels": {
       "about": "À propos",
       "projects": "Projets",
       "seeAll": "Voir tout",
       "seeLess": "Voir moins",
+      "previousWork": "Expériences récentes",
       "sayHello": "Dire bonjour",
-      "previousWork": "Expériences précédentes",
       "back": "Retour",
-      "info": "Ce site internet a été éco‑conçu par moi à Bordeaux en 2025, et il a été entièrement codé par GPT‑5."
-    },
-    "hero": {
-      "hello": "Bonjour je suis Dylan,",
-      "after": "UX Republic à Bordeaux."
+      "info": "Ce site internet a été éco‑conçu par moi à Bordeaux en 2025, et il a été entièrement codé par GPT5."
     },
     "about": {
       "name": "Dylan Lagrange",
-      "role": "Product designer",
+      "role": "Product Designer",
+      "photo": "/images/portrait.jpg",
       "bio": [
-        "Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF. J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco-conception, intelligence artificielle)."
+        "Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF.",
+        "J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco‑conception, intelligence artificielle)."
       ],
-      "photo": "images/portrait.jpg",
+      "previousWork": [
+        "Kairos Agency (2021–2024) — Product designer en agence digitale",
+        "Maison de négoce — Alternance, outils métiers & back‑office"
+      ],
       "contact": {
         "linkedin": "https://www.linkedin.com/in/dylanlgrng",
         "phone": "06.76.46.21.17"
-      },
-      "previousWork": [
-        "Kairos Agency (2021–2024) — Product designer dans une agence digitale"
-      ]
+      }
     },
     "projects": [
       {
-        "id": "projet-1",
-        "title": "Projet 01",
-        "image": "https://picsum.photos/seed/dylan-1/960/600",
-        "summary": "Refonte d’un tunnel d’achat mobile, +12% de conversion.",
-        "description": "Page projet en cours de construction."
+        "id": "p1",
+        "title": "Refonte Back‑Office",
+        "image": "https://picsum.photos/seed/ux1/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-2",
-        "title": "Projet 02",
-        "image": "https://picsum.photos/seed/dylan-2/960/600",
-        "summary": "Design system modulaire pour une app B2B.",
-        "description": "Description en cours."
+        "id": "p2",
+        "title": "Design System interne",
+        "image": "https://picsum.photos/seed/ux2/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-3",
-        "title": "Projet 03",
-        "image": "https://picsum.photos/seed/dylan-3/960/600",
-        "summary": "Amélioration de l’accessibilité AA.",
-        "description": "Description en cours."
+        "id": "p3",
+        "title": "Tableau de bord produit",
+        "image": "https://picsum.photos/seed/ux3/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-4",
-        "title": "Projet 04",
-        "image": "https://picsum.photos/seed/dylan-4/960/600",
-        "summary": "Ateliers UX & co‑création.",
-        "description": "Description en cours."
+        "id": "p4",
+        "title": "Outil de gestion des stocks",
+        "image": "https://picsum.photos/seed/ux4/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-5",
-        "title": "Projet 05",
-        "image": "https://picsum.photos/seed/dylan-5/960/600",
-        "summary": "Recherche utilisateur et cartographie.",
-        "description": "Description en cours."
+        "id": "p5",
+        "title": "Portail support",
+        "image": "https://picsum.photos/seed/ux5/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-6",
-        "title": "Projet 06",
-        "image": "https://picsum.photos/seed/dylan-6/960/600",
-        "summary": "Prototype haute fidélité iOS.",
-        "description": "Description en cours."
+        "id": "p6",
+        "title": "Pilotage des commandes",
+        "image": "https://picsum.photos/seed/ux6/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-7",
-        "title": "Projet 07",
-        "image": "https://picsum.photos/seed/dylan-7/960/600",
-        "summary": "Mesure & analytics produit.",
-        "description": "Description en cours."
+        "id": "p7",
+        "title": "KIT UI éco‑conçu",
+        "image": "https://picsum.photos/seed/ux7/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       },
       {
-        "id": "projet-8",
-        "title": "Projet 08",
-        "image": "https://picsum.photos/seed/dylan-8/960/600",
-        "summary": "Refonte back‑office métier.",
-        "description": "Description en cours."
+        "id": "p8",
+        "title": "Expérimentation IA",
+        "image": "https://picsum.photos/seed/ux8/800/600",
+        "summary": "Aperçu rapide du projet.",
+        "description": "Page projet à venir."
       }
     ]
   },
   "en": {
+    "hero": {
+      "hello": "Hi, I’m Dylan,",
+      "after": "UX Republic in Bordeaux."
+    },
     "labels": {
-      "about": "About",
+      "about": "About me",
       "projects": "Projects",
       "seeAll": "See all",
       "seeLess": "See less",
-      "sayHello": "Say hello",
       "previousWork": "Previous work",
+      "sayHello": "Say hello",
       "back": "Back",
-      "info": "This website was eco‑designed by me in Bordeaux in 2025, and it was fully coded by GPT‑5."
-    },
-    "hero": {
-      "hello": "Hi, I'm Dylan,",
-      "after": "UX Republic in Bordeaux."
+      "info": "This website was eco‑designed by me in Bordeaux in 2025 and fully coded by GPT5."
     },
     "about": {
       "name": "Dylan Lagrange",
-      "role": "Product designer",
+      "role": "Product Designer",
+      "photo": "/images/portrait.jpg",
       "bio": [
-        "Currently a Product Designer at UX Republic in Bordeaux, on assignment with MAIF’s IT department. I help evolve internal tools with project teams, contribute to the design system, and take part in discussions on our practices (accessibility, eco‑design, and AI)."
+        "Currently Product Designer at UX Republic in Bordeaux, on assignment with MAIF’s IT department.",
+        "I help evolve internal tools with project teams, contribute to the design system, and join discussions on our practices (accessibility, eco‑design, AI)."
       ],
-      "photo": "images/portrait.jpg",
+      "previousWork": [
+        "Kairos Agency (2021–2024) — Product designer in a digital agency",
+        "Wine trading company — Apprenticeship, internal tools & back‑office"
+      ],
       "contact": {
         "linkedin": "https://www.linkedin.com/in/dylanlgrng",
         "phone": "+33 6 76 46 21 17"
-      },
-      "previousWork": [
-        "Kairos Agency (2021–2024) — Product designer in a digital agency"
-      ]
+      }
     },
     "projects": [
       {
-        "id": "projet-1",
-        "title": "Project 01",
-        "image": "https://picsum.photos/seed/dylan-1/960/600",
-        "summary": "Mobile checkout redesign, +12% conversion.",
-        "description": "Project page under construction."
+        "id": "p1",
+        "title": "Back‑office redesign",
+        "image": "https://picsum.photos/seed/ux1/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-2",
-        "title": "Project 02",
-        "image": "https://picsum.photos/seed/dylan-2/960/600",
-        "summary": "Modular design system for a B2B app.",
-        "description": "Project page under construction."
+        "id": "p2",
+        "title": "Internal design system",
+        "image": "https://picsum.photos/seed/ux2/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-3",
-        "title": "Project 03",
-        "image": "https://picsum.photos/seed/dylan-3/960/600",
-        "summary": "Accessibility improvements to AA.",
-        "description": "Project page under construction."
+        "id": "p3",
+        "title": "Product dashboard",
+        "image": "https://picsum.photos/seed/ux3/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-4",
-        "title": "Project 04",
-        "image": "https://picsum.photos/seed/dylan-4/960/600",
-        "summary": "UX workshops & co‑creation.",
-        "description": "Project page under construction."
+        "id": "p4",
+        "title": "Inventory management tool",
+        "image": "https://picsum.photos/seed/ux4/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-5",
-        "title": "Project 05",
-        "image": "https://picsum.photos/seed/dylan-5/960/600",
-        "summary": "User research and mapping.",
-        "description": "Project page under construction."
+        "id": "p5",
+        "title": "Support portal",
+        "image": "https://picsum.photos/seed/ux5/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-6",
-        "title": "Project 06",
-        "image": "https://picsum.photos/seed/dylan-6/960/600",
-        "summary": "High‑fidelity iOS prototype.",
-        "description": "Project page under construction."
+        "id": "p6",
+        "title": "Order tracking",
+        "image": "https://picsum.photos/seed/ux6/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-7",
-        "title": "Project 07",
-        "image": "https://picsum.photos/seed/dylan-7/960/600",
-        "summary": "Product metrics & analytics.",
-        "description": "Project page under construction."
+        "id": "p7",
+        "title": "Eco‑designed UI kit",
+        "image": "https://picsum.photos/seed/ux7/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       },
       {
-        "id": "projet-8",
-        "title": "Project 08",
-        "image": "https://picsum.photos/seed/dylan-8/960/600",
-        "summary": "Back‑office redesign for operations.",
-        "description": "Project page under construction."
+        "id": "p8",
+        "title": "AI exploration",
+        "image": "https://picsum.photos/seed/ux8/800/600",
+        "summary": "Quick project overview.",
+        "description": "Project page coming soon."
       }
     ]
   }
