@@ -3,7 +3,6 @@ import { HashRouter, Routes, Route, Link, useParams, useNavigate } from "react-r
 import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon, Info } from "lucide-react";
 
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
-const ease = [0.22, 1, 0.36, 1];
 
 const CONTENT = {
   fr: {
@@ -47,16 +46,78 @@ const CONTENT = {
     projects: []
   }
 };
-for (let i=1;i<=8;i++) {
-  CONTENT.fr.projects.push({ id:"p"+i, title:["Refonte Back‑Office","Design System interne","Tableau de bord produit","Outil de gestion des stocks","Portail support","Pilotage des commandes","KIT UI éco‑conçu","Expérimentation IA"][i-1], image:`https://picsum.photos/seed/ux${i}/800/600`, summary:"Aperçu rapide du projet.", description:"Page projet à venir." });
-  CONTENT.en.projects.push({ id:"p"+i, title:["Back‑office redesign","Internal design system","Product dashboard","Inventory management tool","Support portal","Order tracking","Eco‑designed UI kit","AI exploration"][i-1], image:`https://picsum.photos/seed/ux${i}/800/600`, summary:"Quick project overview.", description:"Project page coming soon." });
-}
+
+// Explicit project list (MAIF first)
+CONTENT.fr.projects = [
+  {
+    id: "maif",
+    title: "MAIF — Outils métiers & design system",
+    image: "/images/maif-logo.svg",
+    summary: "Évolution des outils métiers au sein de la DSI de la MAIF.",
+    description: "Mission en cours au sein de la DSI de la MAIF (via UX Republic). Travail centré sur l’optimisation d’outils métiers : co-construction avec les équipes projet, contribution au design system, attention continue à l’accessibilité et à l’éco-conception, participation aux réflexions collectives (pratiques, outillage, IA)."
+  },
+  { id:"engagenow", title:"EngageNow — E-learning & back-office", image:"https://picsum.photos/seed/ux1/800/600", summary:"Refonte pour engager, simplifier et harmoniser.", description:"Plateforme e-learning WeNow/Kairos (BtoBtoU). Enjeux : faible rétention, complexité d’arborescence, wording, abandon en cours et incohérences (absence de DS). Solutions : simplification de l’interface, design system, contenus pédagogiques enrichis, gamification, vocabulaire clarifié; refonte accueil/fiches/suivi progression." },
+  { id:"ninjae", title:"Ninjaé — Plateforme micro-entreprises (BPCE)", image:"https://picsum.photos/seed/ux2/800/600", summary:"Du cadrage à l’UI, un SaaS accessible et efficace.", description:"SaaS pour micro-entreprises. Recherche et ateliers, design system, UI desktop & mobile. Fonctionnalités clés : connexion bancaire, connexion URSSAF, partie commerciale (devis/factures/clients), pilotage (achats/recettes)." },
+  { id:"kairos-blue", title:"Kairos Blue — CMS/LMS/EMS & Back-office", image:"https://picsum.photos/seed/ux3/800/600", summary:"Plateforme unifiée, éco-conçue et versionnée.", description:"Plateforme tout-en-un pour centraliser des fonctions agence. Design system robuste; collaboration dev/DA/commercial. Impacts : versionnage, réduction des temps de conception/développement, cohérence multi-supports; déploiements multiples." },
+  { id:"mon-service-rh", title:"Mon Service RH — Plateforme & back-office", image:"https://picsum.photos/seed/ux4/800/600", summary:"Une solution RH pour TPE/PME, pensée durable.", description:"Plateforme financée par la Région NA pour WeJob : plateforme principale, espace prestataires/institutions, tunnel de paiement, BO sur-mesure. Parcours conçus avec une forte attention accessibilité (RGAA) et éco-conception." },
+  { id:"ffbad", title:"FFBaD — Site fédéral & back-office", image:"https://picsum.photos/seed/ux5/800/600", summary:"Refonte pour Paris 2024, DS sur-mesure, BO éco-conçu.", description:"Objectifs : porte d’entrée de l’écosystème digital, attirer de nouveaux licenciés. Travail sur cibles/objectifs, parcours, structure, design system avec DA; back-office éco-conçu; nombreuses fonctionnalités (licenciés, clubs, boutique, presse…)." },
+  { id:"pacte-onu", title:"Pacte mondial des Nations Unies — Site & espace membre", image:"https://picsum.photos/seed/ux6/800/600", summary:"Informer le public et outiller les membres.", description:"Conception d’un espace membre complet : partage de documents, annuaire, blog; travail sur l’accessibilité du site vitrine; forte collaboration marketing/dev." },
+  { id:"finaqui", title:"Finaqui — Extranet & back-office", image:"https://picsum.photos/seed/ux7/800/600", summary:"Automatiser des workflows et fluidifier la collaboration.", description:"Extranet pour un fonds d’investissement régional : suivi de projets, candidatures, pitchs/décisions, permissions d’accès. Interviews/ateliers, wireframes/protos, UI; développement sur Kairos Blue." }
+];
+
+CONTENT.en.projects = [
+  {
+    id: "maif",
+    title: "MAIF — Internal tools & design system",
+    image: "/images/maif-logo.svg",
+    summary: "Evolving internal tools within MAIF’s IT department.",
+    description: "Ongoing assignment via UX Republic. Focus on internal tools, co-design with project teams, design-system contributions, accessibility & eco-design, and collective practice/AI discussions."
+  },
+  { id:"engagenow", title:"EngageNow — E-learning & back-office", image:"https://picsum.photos/seed/ux1/800/600", summary:"Refocus the experience to drive engagement.", description:"Simplified UI, design system, better pedagogy, gamification, clearer wording; redesigned home, course pages and progress." },
+  { id:"ninjae", title:"Ninjaé — Micro-business platform (BPCE)", image:"https://picsum.photos/seed/ux2/800/600", summary:"From research to UI.", description:"Bank connection, URSSAF integration, quotes/invoices/CRM, finances & ledger." },
+  { id:"kairos-blue", title:"Kairos Blue — CMS/LMS/EMS & admin", image:"https://picsum.photos/seed/ux3/800/600", summary:"Unified, eco-designed, versioned.", description:"Robust DS, faster delivery, coherent UX across clients." },
+  { id:"mon-service-rh", title:"Mon Service RH — Platform & admin", image:"https://picsum.photos/seed/ux4/800/600", summary:"HR for SMBs with accessibility.", description:"Main platform, providers area, payment flow, custom back-office." },
+  { id:"ffbad", title:"FFBaD — Federation site & admin", image:"https://picsum.photos/seed/ux5/800/600", summary:"Paris 2024 momentum + DS.", description:"User journeys, structure, DS; eco-designed back-office and rich features." },
+  { id:"pacte-onu", title:"UN Global Compact — Site & member area", image:"https://picsum.photos/seed/ux6/800/600", summary:"Public info & member tools.", description:"Docs sharing, directory, blog; accessibility improvements." },
+  { id:"finaqui", title:"Finaqui — Extranet & admin", image:"https://picsum.photos/seed/ux7/800/600", summary:"Automated workflows.", description:"Projects tracking, applications, pitches, permissions; built on Kairos Blue." }
+];
 
 function getInitialLang(){ return (localStorage.getItem("lang") === "en") ? "en" : "fr"; }
 function getInitialTheme(){ var s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; var h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; }
 
 function SectionRow(props) {
   var label = props.label, rightAdornment = props.rightAdornment, isOpen = props.isOpen, onToggle = props.onToggle, children = props.children;
+  var boxRef = React.useRef(null);
+  var innerRef = React.useRef(null);
+  var mountedState = useState(isOpen); var mounted = mountedState[0]; var setMounted = mountedState[1];
+  var openClassState = useState(isOpen ? "open" : ""); var openClass = openClassState[0]; var setOpenClass = openClassState[1];
+  var hState = useState(isOpen ? "auto" : 0); var h = hState[0]; var setH = hState[1];
+
+  useEffect(function(){
+    if (isOpen) {
+      if (!mounted) setMounted(true);
+      requestAnimationFrame(function(){
+        var el = boxRef.current, inner = innerRef.current; if (!el || !inner) return;
+        el.classList.add("open");
+        setOpenClass("open");
+        el.style.height = "0px";
+        var target = inner.scrollHeight;
+        setH(target + "px");
+        setTimeout(function(){ if (!boxRef.current) return; setH("auto"); }, 560);
+      });
+    } else {
+      var el2 = boxRef.current, inner2 = innerRef.current; if (!el2 || !inner2) { setMounted(false); setOpenClass(""); setH(0); return; }
+      var current = inner2.offsetHeight;
+      setH(current + "px");
+      requestAnimationFrame(function(){
+        el2.classList.remove("open");
+        setOpenClass("");
+        setH("0px");
+      });
+      setTimeout(function(){ setMounted(false); }, 580);
+    }
+  }, [isOpen]);
+
   return (
     <section className="border-t border-black/10 dark:border-white/10">
       <header className="flex items-center gap-4 py-3 text-base sm:text-lg">
@@ -68,8 +129,10 @@ function SectionRow(props) {
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </button>
       </header>
-      <div className={"transition-all"}>
-        {isOpen ? <div className="pb-8">{children}</div> : null}
+      <div ref={boxRef} className={"accordion " + openClass} style={{ height: h }}>
+        <div ref={innerRef}>
+          {mounted ? <div className="pb-8">{children}</div> : null}
+        </div>
       </div>
     </section>
   );
@@ -105,7 +168,7 @@ function IntroTitle(props) {
 function TopRightControls(props) {
   var lang = props.lang, setLang = props.setLang, theme = props.theme, setTheme = props.setTheme;
   var t = CONTENT[lang];
-  var [open, setOpen] = useState(false);
+  var openState = useState(false); var open = openState[0]; var setOpen = openState[1];
   var tooltipRef = useRef(null);
   useEffect(function(){
     function onDocClick(e){ if (!tooltipRef.current) return; if (!tooltipRef.current.contains(e.target)) setOpen(false); }
@@ -137,17 +200,17 @@ function TopRightControls(props) {
 function Home(props) {
   var lang = props.lang, setLang = props.setLang, theme = props.theme, setTheme = props.setTheme;
   var t = CONTENT[lang];
-  var open = useState(null); var openVal = open[0]; var setOpen = open[1];
-  var showAll = useState(false); var showAllVal = showAll[0]; var setShowAll = showAll[1];
-  var closing = useState(false); var closingVal = closing[0]; var setClosing = closing[1];
+  var openState = useState(null); var openVal = openState[0]; var setOpen = openState[1];
+  var showAllState = useState(false); var showAllVal = showAllState[0]; var setShowAll = showAllState[1];
+  var closingState = useState(false); var closingVal = closingState[0]; var setClosing = closingState[1];
 
   var heroWrapRef = useRef(null);
   var heroTextRef = useRef(null);
-  var bgX = useState(0); var bgXVal = bgX[0]; var setBgX = bgX[1];
-  var hovering = useState(false); var hoveringVal = hovering[0]; var setHovering = hovering[1];
+  var bgXState = useState(0); var bgX = bgXState[0]; var setBgX = bgXState[1];
+  var hoveringState = useState(false); var hovering = hoveringState[0]; var setHovering = hoveringState[1];
 
-  var dims = useState({ maxWidth: null, maxHeight: null }); var dimsVal = dims[0]; var setDims = dims[1];
-  var spacePx = useState(0); var spacePxVal = spacePx[0]; var setSpacePx = spacePx[1];
+  var dimsState = useState({ maxWidth: null, maxHeight: null }); var dims = dimsState[0]; var setDims = dimsState[1];
+  var spacePxState = useState(0); var spacePx = spacePxState[0]; var setSpacePx = spacePxState[1];
 
   useEffect(function(){
     var phrasePD = "Product Designer";
@@ -173,8 +236,6 @@ function Home(props) {
     return function(){ window.removeEventListener("resize", measure); };
   }, [lang]);
 
-  var projectsData = t.projects || [];
-
   function onMouseMoveHero(e){
     var rect = heroWrapRef.current && heroWrapRef.current.getBoundingClientRect();
     if (!rect) return;
@@ -193,9 +254,7 @@ function Home(props) {
       var el = extrasRef.current; if (!el) return;
       el.classList.add("open");
       el.style.height = el.scrollHeight + "px";
-      // After expansion, set to auto to maintain layout
       setTimeout(function(){ if (!el) return; el.style.height = "auto"; }, 620);
-      // Animate child cards staggered
       var grid = gridRef.current; if (grid) grid.classList.add("open"); 
     });
   }
@@ -207,12 +266,10 @@ function Home(props) {
     if (grid) {
       grid.classList.remove("open");
       grid.classList.add("closing");
-      // compute reverse delays
       var cards = grid.querySelectorAll(".card-enter");
       var n = cards.length;
       for (var i=0;i<n;i++){ var d = (n-1-i)*60; cards[i].style.setProperty("--delayClose", d + "ms"); }
     }
-    // set fixed height then collapse
     el.style.height = el.scrollHeight + "px";
     requestAnimationFrame(function(){
       el.classList.remove("open");
@@ -221,7 +278,6 @@ function Home(props) {
       el.style.filter = "blur(6px)";
       el.style.opacity = "0";
     });
-    // After animations, actually unmount extras
     var totalDelay = 400 + (grid ? (grid.querySelectorAll(".card-enter").length - 1) * 60 : 0);
     setTimeout(function(){
       setShowAll(false);
@@ -233,7 +289,7 @@ function Home(props) {
 
   var seeAllButton = (
     <button onClick={function(){ showAllVal ? closeExtras() : openExtras(); }} className="text-sm underline-offset-4 hover:underline">
-      {showAllVal ? t.labels.seeLess : t.labels.seeAll}
+      {showAllVal ? CONTENT[lang].labels.seeLess : CONTENT[lang].labels.seeAll}
     </button>
   );
 
@@ -246,59 +302,57 @@ function Home(props) {
       <div className="mx-auto mt-auto w-full max-w-6xl px-4 sm:px-6">
         <div ref={heroWrapRef} className="pb-4 select-none" onMouseEnter={function(){ setHovering(true); }} onMouseMove={onMouseMoveHero} onMouseLeave={function(){ setHovering(false); }}>
           <div ref={heroTextRef}>
-            <IntroTitle lang={lang} hovering={hoveringVal} bgX={bgXVal} dims={dimsVal} spacePx={spacePxVal} heroRef={heroTextRef} />
+            <IntroTitle lang={lang} hovering={hovering} bgX={bgX} dims={dims} spacePx={spacePx} heroRef={heroTextRef} />
           </div>
         </div>
 
-        {/* À propos */}
-        <SectionRow label={t.labels.about} isOpen={openVal === "about"} onToggle={function(){ setOpen(openVal === "about" ? null : "about"); }}>
+        <SectionRow label={CONTENT[lang].labels.about} isOpen={openVal === "about"} onToggle={function(){ setOpen(openVal === "about" ? null : "about"); }}>
           <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(150px,180px)_1fr]">
             <div className="pr-4">
               <div className="rounded-[12px] overflow-visible">
-                <img src={t.about.photo} alt={"Portrait de " + t.about.name} className="photo-square ring-1 ring-black/10 dark:ring-white/10" />
+                <img src={CONTENT[lang].about.photo} alt={"Portrait de " + CONTENT[lang].about.name} className="photo-square ring-1 ring-black/10 dark:ring-white/10" />
               </div>
             </div>
             <div className="space-y-8 overflow-hidden">
               <div>
-                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{t.about.name}</h2>
-                <p className="mt-1 text-sm sm:text-base text-black/60 dark:text-white/60">{t.about.role}</p>
+                <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{CONTENT[lang].about.name}</h2>
+                <p className="mt-1 text-sm sm:text-base text-black/60 dark:text-white/60">{CONTENT[lang].about.role}</p>
               </div>
               <div className="space-y-4">
-                {t.about.bio.map(function(p, i){ return (
+                {CONTENT[lang].about.bio.map(function(p, i){ return (
                   <p key={i} className="max-w-prose text-sm sm:text-[1.02rem] leading-relaxed text-black/80 dark:text-white/80">{p}</p>
                 );})}
               </div>
               <div className="flex flex-wrap gap-4">
                 <button onClick={function(){ try { var a = atob(EMAIL_B64); window.location.href = "mailto:" + a; } catch(e){} }} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-                  <Mail size={16} /> {t.labels.sayHello}
+                  <Mail size={16} /> {CONTENT[lang].labels.sayHello}
                 </button>
-                <a href={t.about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+                <a href={CONTENT[lang].about.contact.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
                   <Linkedin size={16} /> LinkedIn
                 </a>
-                <a href={"tel:+33" + (t.about.contact.phone || "").replace(/\D/g,'')} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
-                  <Phone size={16} /> {t.about.contact.phone}
+                <a href={"tel:+33" + (CONTENT[lang].about.contact.phone || "").replace(/\D/g,'')} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
+                  <Phone size={16} /> {CONTENT[lang].about.contact.phone}
                 </a>
               </div>
               <div>
-                <h3 className="mb-2 text-base font-medium">{t.labels.previousWork}</h3>
+                <h3 className="mb-2 text-base font-medium">{CONTENT[lang].labels.previousWork}</h3>
                 <ul className="space-y-1 text-sm text-black/70 dark:text-white/70">
-                  {t.about.previousWork.map(function(line, idx){ return (<li key={idx}>• {line}</li>); })}
+                  {CONTENT[lang].about.previousWork.map(function(line, idx){ return (<li key={idx}>• {line}</li>); })}
                 </ul>
               </div>
             </div>
           </div>
         </SectionRow>
 
-        {/* Projets */}
         <SectionRow
-          label={t.labels.projects}
+          label={CONTENT[lang].labels.projects}
           rightAdornment={openVal === "projects" ? seeAllButton : null}
           isOpen={openVal === "projects"}
           onToggle={function(){ setOpen(openVal === "projects" ? null : "projects"); }}
         >
           <div className="space-y-6">
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {(t.projects || []).slice(0,4).map(function(p){
+              {(CONTENT[lang].projects || []).slice(0,4).map(function(p){
                 return (
                   <div key={p.id} className="block">
                     <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
@@ -313,32 +367,73 @@ function Home(props) {
               })}
             </div>
 
-            <div ref={extrasRef} className={"extras-container" + (showAllVal ? " open" : "")} style={{ height: "0px" }}>
-              {showAllVal ? (
-                <div ref={gridRef} className={"extras-grid" + (closingVal ? " closing" : " open")}>
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-6">
-                    {(t.projects || []).slice(4).map(function(p, i, arr){
-                      var delay = i * 60; var delayRev = (arr.length - 1 - i) * 60;
-                      return (
-                        <div key={p.id} className="card-enter" style={{ "--delay": delay + "ms", "--delayClose": delayRev + "ms" }}>
-                          <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                            <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
-                            <div className="flex items-center justify-between p-3">
-                              <span className="text-sm font-medium">{p.title}</span>
-                              <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
-                            </div>
-                          </Link>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              ) : null}
-            </div>
+            <Extras showAll={showAllVal} setShowAll={setShowAll} closing={closingVal} setClosing={setClosing} projects={(CONTENT[lang].projects || []).slice(4)} />
           </div>
         </SectionRow>
       </div>
     </main>
+  );
+}
+
+function Extras(props){
+  var showAll = props.showAll, setShowAll = props.setShowAll, closing = props.closing, setClosing = props.setClosing, projects = props.projects;
+  var extrasRef = useRef(null);
+  var gridRef = useRef(null);
+
+  useEffect(function(){
+    var el = extrasRef.current, grid = gridRef.current;
+    if (!el) return;
+    if (showAll) {
+      el.classList.add("open");
+      el.style.height = el.scrollHeight + "px";
+      setTimeout(function(){ if (!el) return; el.style.height = "auto"; }, 620);
+      if (grid) grid.classList.add("open");
+    } else {
+      if (!grid) return;
+      // trigger reverse-stagger then collapse
+      grid.classList.remove("open");
+      grid.classList.add("closing");
+      var cards = grid.querySelectorAll(".card-enter");
+      var n = cards.length;
+      for (var i=0;i<n;i++){ var d = (n-1-i)*60; cards[i].style.setProperty("--delayClose", d + "ms"); }
+      el.style.height = el.scrollHeight + "px";
+      requestAnimationFrame(function(){
+        el.classList.remove("open");
+        el.style.height = "0px";
+        el.style.clipPath = "inset(0% 0% 100% 0%)";
+        el.style.filter = "blur(6px)";
+        el.style.opacity = "0";
+      });
+      var totalDelay = 400 + (n > 0 ? (n-1)*60 : 0);
+      setTimeout(function(){
+        if (grid) grid.classList.remove("closing");
+      }, totalDelay + 80);
+    }
+  }, [showAll]);
+
+  return (
+    <div ref={extrasRef} className={"extras-container" + (showAll ? " open" : "")} style={{ height: "0px" }}>
+      {showAll ? (
+        <div ref={gridRef} className={"extras-grid" + (closing ? " closing" : " open")}>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-6">
+            {projects.map(function(p, i, arr){
+              var delay = i * 60; var delayRev = (arr.length - 1 - i) * 60;
+              return (
+                <div key={p.id} className="card-enter" style={{ "--delay": delay + "ms", "--delayClose": delayRev + "ms" }}>
+                  <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                    <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
+                    <div className="flex items-center justify-between p-3">
+                      <span className="text-sm font-medium">{p.title}</span>
+                      <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                    </div>
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }
 
@@ -375,17 +470,17 @@ function ProjectPage(props) {
 }
 
 export default function App() {
-  var lang = useState(getInitialLang()); var langVal = lang[0]; var setLang = lang[1];
-  var theme = useState(getInitialTheme()); var themeVal = theme[0]; var setTheme = theme[1];
-  useEffect(function(){ localStorage.setItem("lang", langVal); }, [langVal]);
-  useEffect(function(){ localStorage.setItem("theme", themeVal); var r = document.documentElement; if (themeVal === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [themeVal]);
+  var langState = useState((localStorage.getItem("lang") === "en") ? "en" : "fr"); var lang = langState[0]; var setLang = langState[1];
+  var themeState = useState((function(){ var s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; var h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; })()); var theme = themeState[0]; var setTheme = themeState[1];
+  useEffect(function(){ localStorage.setItem("lang", lang); }, [lang]);
+  useEffect(function(){ localStorage.setItem("theme", theme); var r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
 
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Home lang={langVal} setLang={setLang} theme={themeVal} setTheme={setTheme} />} />
-        <Route path="/projects/:id" element={<ProjectPage lang={langVal} />} />
-        <Route path="*" element={<Home lang={langVal} setLang={setLang} theme={themeVal} setTheme={setTheme} />} />
+        <Route path="/" element={<Home lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />} />
+        <Route path="/projects/:id" element={<ProjectPage lang={lang} />} />
+        <Route path="*" element={<Home lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />} />
       </Routes>
     </HashRouter>
   );
