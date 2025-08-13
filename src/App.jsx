@@ -1,8 +1,9 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
-import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon, Info } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import i18n from "./content/site.json";
+import i18nData from "./content/site.json";
+const i18n = (i18nData && i18nData.fr && i18nData.en) ? i18nData : { fr: { hero: { hello: "Bonjour je suis Dylan,", after: "UX Republic à Bordeaux." }, labels: { about: "À propos", projects: "Projets", seeAll: "Voir tout", seeLess: "Voir moins", previousWork: "Expériences récentes", sayHello: "Dire bonjour", back: "Retour", info: "Ce site internet a été éco‑conçu par moi à Bordeaux en 2025, et il a été entièrement codé par GPT5." }, about: { name: "Dylan Lagrange", role: "Product Designer", photo: "/images/portrait.jpg", bio: ["Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF.", "J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco‑conception, intelligence artificielle)."], previousWork: ["Kairos Agency (2021–2024) — Product designer en agence digitale"], contact: { linkedin: "https://www.linkedin.com/in/dylanlgrng", phone: "06.76.46.21.17" } }, projects: [] }, en: { hero: { hello: "Hi, I’m Dylan,", after: "UX Republic in Bordeaux." }, labels: { about: "About me", projects: "Projects", seeAll: "See all", seeLess: "See less", previousWork: "Previous work", sayHello: "Say hello", back: "Back", info: "This website was eco‑designed by me in Bordeaux in 2025 and fully coded by GPT5." }, about: { name: "Dylan Lagrange", role: "Product Designer", photo: "/images/portrait.jpg", bio: ["Currently Product Designer at UX Republic in Bordeaux, on assignment with MAIF’s IT department.", "I help evolve internal tools with project teams, contribute to the design system, and join discussions on our practices (accessibility, eco‑design, AI)."], previousWork: ["Kairos Agency (2021–2024) — Product designer in a digital agency"], contact: { linkedin: "https://www.linkedin.com/in/dylanlgrng", phone: "+33 6 76 46 21 17" } }, projects: [] } };
 
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
 const getInitialLang = () => (localStorage.getItem("lang") === "en" ? "en" : "fr");
@@ -335,13 +336,13 @@ export default function App() {
   useEffect(() => { localStorage.setItem("theme", theme); const r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />} />
         <Route path="/projects/:id" element={<ProjectPage lang={lang} />} />
         <Route path="*" element={<Home lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
         {/* Projets */}
