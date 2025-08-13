@@ -1,9 +1,19 @@
 import React, { useMemo, useState, useEffect, useRef } from "react";
 import { BrowserRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
-import { Plus, Minus, ArrowUpRight, ChevronLeft } from "lucide-react";
+import { ArrowUpRight, Mail, Linkedin, Phone, ChevronLeft, Plus, Minus } from "lucide-react";
 import content from "./content/site.json";
 
-// ---------- Helpers ----------
+// Email obfuscated (base64), never rendered in clear text
+const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20="; // lagrangedylan@gmail.com
+const openMailto = () => {
+  try {
+    const addr = atob(EMAIL_B64);
+    window.location.href = `mailto:${addr}`;
+  } catch (e) {
+    // fallback: do nothing
+  }
+};
+
 function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
   return (
     <section className="border-t border-black/10">
@@ -29,7 +39,6 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
   );
 }
 
-// Titre principal avec mot-clé dynamique : cycle pendant le survol (sans fade)
 function IntroTitle({ designerFont, designerColor, dims, spacePx, heroRef }) {
   const { maxWidth, maxHeight } = dims || {};
   return (
@@ -63,12 +72,10 @@ function IntroTitle({ designerFont, designerColor, dims, spacePx, heroRef }) {
   );
 }
 
-// ---------- Pages ----------
 function Home() {
-  const [open, setOpen] = useState(null); // 'about' | 'projects' | null
+  const [open, setOpen] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
-  // Système de fontes : Mac + Windows (zéro webfont)
   const fontsMaster = useMemo(
     () => [
       "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif",
@@ -90,31 +97,28 @@ function Home() {
     []
   );
 
-  // Couleurs tendance
   const trendyColors = useMemo(
     () => [
-      "#0ea5e9", // sky-500
-      "#22c55e", // green-500
-      "#a78bfa", // violet-400
-      "#f43f5e", // rose-500
-      "#f59e0b", // amber-500
-      "#06b6d4", // cyan-500
-      "#fb7185", // rose-400
-      "#10b981", // emerald-500
-      "#f97316", // orange-500
-      "#14b8a6", // teal-500
-      "#8b5cf6", // violet-500
-      "#e11d48", // rose-600
+      "#0ea5e9",
+      "#22c55e",
+      "#a78bfa",
+      "#f43f5e",
+      "#f59e0b",
+      "#06b6d4",
+      "#fb7185",
+      "#10b981",
+      "#f97316",
+      "#14b8a6",
+      "#8b5cf6",
+      "#e11d48",
     ],
     []
   );
 
-  // État dynamique survol
   const [hoverFont, setHoverFont] = useState(undefined);
   const [hoverColor, setHoverColor] = useState(undefined);
   const cycleRef = useRef(null);
 
-  // Mesures (évite les sauts)
   const heroRef = useRef(null);
   const [dims, setDims] = useState({ maxWidth: null, maxHeight: null });
   const [spacePx, setSpacePx] = useState(0);
@@ -132,7 +136,6 @@ function Home() {
         return Math.round(parseFloat(cs.fontSize) || 48);
       })();
 
-      // Canvas measure
       const canvas = document.createElement("canvas");
       const ctx = canvas.getContext("2d");
       const wFor = (stack, text) => {
@@ -170,12 +173,9 @@ function Home() {
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
   const onHeroEnter = () => {
-    // si un timer existe déjà, on le nettoie
     if (cycleRef.current) clearInterval(cycleRef.current);
-    // tick immédiat
     setHoverFont(pick(fontsMaster));
     setHoverColor(pick(trendyColors));
-    // cycle toutes les 120ms pendant le survol
     cycleRef.current = setInterval(() => {
       setHoverFont(pick(fontsMaster));
       setHoverColor(pick(trendyColors));
@@ -191,13 +191,9 @@ function Home() {
     setHoverColor(undefined);
   };
 
-  const projectsData = content.projects || [];
   const about = content.about;
-
-  const visibleProjects = useMemo(
-    () => (showAll ? projectsData : projectsData.slice(0, 4)),
-    [showAll, projectsData]
-  );
+  const projectsData = content.projects || [];
+  const visibleProjects = useMemo(() => (showAll ? projectsData : projectsData.slice(0, 4)), [showAll, projectsData]);
 
   return (
     <main
@@ -222,43 +218,42 @@ function Home() {
               src={about.photo}
             />
             <div className="space-y-6 pr-2">
-              <div>
-                <h2 className="text-2xl font-medium tracking-tight">{about.name}</h2>
-                <p className="text-sm text-black/60">{about.role}</p>
+              <div className="space-y-3">
                 {about.bio.map((p, i) => (
-                  <p key={i} className="mt-3 max-w-prose text-sm sm:text-base text-black/80">{p}</p>
+                  <p key={i} className="max-w-prose text-sm sm:text-base text-black/80">{p}</p>
                 ))}
-                <a
-                  href="#"
-                  className="mt-3 inline-flex items-center gap-2 border-b border-transparent pb-0.5 text-sm font-medium hover:border-black/50"
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  onClick={openMailto}
+                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 hover:shadow transition"
+                  aria-label="Dire bonjour par e‑mail"
                 >
-                  Mon CV <ArrowUpRight size={16} />
+                  <Mail size={16} />
+                  Dire bonjour
+                </button>
+                <a
+                  href={about.contact.linkedin}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5 hover:shadow transition"
+                >
+                  <Linkedin size={16} />
+                  LinkedIn
                 </a>
+                <span className="inline-flex items-center gap-2 rounded-xl border border-black/10 px-3 py-2 text-sm font-medium shadow-sm ring-1 ring-black/5">
+                  <Phone size={16} />
+                  {about.contact.phone}
+                </span>
               </div>
 
-              <div>
-                <h3 className="mb-2 text-base font-medium">Mes compétences</h3>
-                <p className="max-w-prose text-sm text-black/80">
-                  Mon Master en UX Design et mon expérience en agence m'ont permis d'être un designer polyvalent.
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {about.skills.map((s) => (
-                    <span key={s} className="rounded-full bg-black/[0.06] px-3 py-1 text-xs font-medium">{s}</span>
+              <div className="pt-2">
+                <h3 className="mb-2 text-base font-medium">Previous work</h3>
+                <ul className="list-disc pl-5 text-sm text-black/80">
+                  {(about.previousWork || []).map((line, idx) => (
+                    <li key={idx}>{line}</li>
                   ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="mb-2 text-base font-medium">Mon objectif</h3>
-                <p className="max-w-prose text-sm text-black/80">{about.objective}</p>
-              </div>
-
-              <div>
-                <h3 className="mb-2 text-base font-medium">Contact</h3>
-                <ul className="flex flex-wrap gap-4 text-sm">
-                  <li><a href={`mailto:${about.contact.email}`} className="underline-offset-4 hover:underline">{about.contact.email}</a></li>
-                  <li><a href={`tel:+33${about.contact.phone.replace(/\D/g,'')}`} className="underline-offset-4 hover:underline">{about.contact.phone}</a></li>
-                  <li><a href={about.contact.linkedin} target="_blank" rel="noreferrer" className="underline-offset-4 hover:underline">LinkedIn</a></li>
                 </ul>
               </div>
             </div>
@@ -284,7 +279,7 @@ function Home() {
                 <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
                 <div className="flex items-center justify-between p-3">
                   <span className="text-sm font-medium">{p.title}</span>
-                  <span className="text-xs text-black/60">{p.summary || ""}</span>
+                  <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
                 </div>
               </Link>
             ))}

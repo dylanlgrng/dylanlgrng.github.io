@@ -1,14 +1,13 @@
-# Mon portfolio – GitHub Pages (v5)
+# Mon portfolio – v6
 
-- Dynamic cycling de police/couleur **pendant le survol** (Chrome/Safari/Windows OK)
-- Polices **système uniquement** (aucune webfont) pour compatibilité
-- Contenus faciles dans `src/content/site.json`
-- Workflow Pages sur **master + main** et fallback `404.html`
+- About me simplifié (photo, paragraphe, 3 actions, previous work)
+- Email protégé (Base64 → jamais affiché en clair)
+- Polices système + hover dynamique "Product Designer"
+- GitHub Pages (master + main) + 404 SPA
 
 ## Modifier les contenus
-- Profil / contacts / compétences / photo : `src/content/site.json` → `about`
-- Projets : dans `projects` (id, title, image, summary, description)
-- Images locales : placez-les dans `public/images/` puis référencez `images/nom.jpg`
+- Paragraphe / liens / previous work : `src/content/site.json` (l’email n’y figure pas en clair)
+- Images : `public/images/` ou URLs externes
 
 ## Déployer
-Uploadez tout le dossier dans votre repo `<username>.github.io` (branche master ou main). L'action GitHub build et publie.
+Uploadez tout dans `<username>.github.io` → commit sur master ou main → Actions → site en ligne.

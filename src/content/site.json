@@ -3,25 +3,16 @@
     "name": "Dylan Lagrange",
     "role": "Product Designer",
     "bio": [
-      "Je crée des interfaces au design soigné et réfléchi, en mettant les utilisateurs au premier plan dans les équipes de développeurs et de créatifs.",
-      "Mon Master en UX Design et mon expérience en agence m'ont permis d'être un designer polyvalent. Passionné et autonome, j'ai développé une expertise complète, de la recherche à la réalisation."
+      "Actuellement Product Designer chez UX Republic à Bordeaux, en mission à la DSI de la MAIF. J’accompagne l’évolution des outils métiers avec les équipes projet, contribue au design system et participe aux réflexions sur nos pratiques (accessibilité, éco-conception, intelligence artificielle)."
     ],
-    "objective": "Concevoir des produits qui répondent aux attentes des utilisateurs et qui soutiennent les objectifs des entreprises.",
-    "skills": [
-      "Product Design",
-      "UX Design",
-      "UI Design",
-      "Accessibilité",
-      "Design System",
-      "Éco‑conception",
-      "Workshop"
-    ],
+    "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop",
     "contact": {
-      "email": "lagrangedylan@gmail.com",
-      "phone": "06.76.46.21.17",
-      "linkedin": "https://www.linkedin.com/"
+      "linkedin": "https://www.linkedin.com/in/dylanlgrng",
+      "phone": "06.76.46.21.17"
     },
-    "photo": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=600&auto=format&fit=crop"
+    "previousWork": [
+      "Koiros Agency 2021-2024 - PRoduct designer dans une agence digital"
+    ]
   },
   "projects": [
     {
