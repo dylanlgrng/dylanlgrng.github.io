@@ -4,17 +4,11 @@ import { ChevronLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moo
 import { motion, AnimatePresence } from "framer-motion";
 import i18n from "./content/site.json";
 
-// Email obfuscation (base64)
-const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20="; // lagrangedylan@gmail.com
-const openMailto = () => {
-  try { const addr = atob(EMAIL_B64); window.location.href = `mailto:${addr}`; } catch {}
-};
+const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
+const openMailto = () => { try { const a = atob(EMAIL_B64); window.location.href = `mailto:${a}`; } catch {} };
 
 const getInitialLang = () => (localStorage.getItem("lang") === "en" ? "en" : "fr");
-const getInitialTheme = () => {
-  const saved = localStorage.getItem("theme");
-  return saved === "dark" || saved === "light" ? saved : "light";
-};
+const getInitialTheme = () => { const s = localStorage.getItem("theme"); return s === "dark" || s === "light" ? s : "light"; };
 
 function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
   return (
@@ -36,7 +30,7 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
             animate={{ height: "auto", opacity: 1, y: 0, filter: "blur(0px)" }}
             exit={{ height: 0, opacity: 0, y: 8, filter: "blur(6px)" }}
             transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            style={{ overflow: "hidden" }}
+            style={{ overflow: "visible" }}  // allow polaroid shadows to extend
           >
             <motion.div
               initial={{ clipPath: "inset(0% 0% 100% 0%)" }}
@@ -53,7 +47,6 @@ function SectionRow({ label, rightAdornment, isOpen, onToggle, children }) {
   );
 }
 
-// Hero Title with gradient only on hover of the text
 function IntroTitle({ dims, spacePx, heroRef, bgX, hovering, lang }) {
   const t = i18n[lang];
   const { maxWidth, maxHeight } = dims || {};
@@ -80,13 +73,13 @@ function IntroTitle({ dims, spacePx, heroRef, bgX, hovering, lang }) {
   );
 }
 
-function Home({ lang }) {
+function Home({ lang, setLang, theme, setTheme }) {
   const t = i18n[lang];
-  const [open, setOpen] = useState(null); // 'about' | 'projects' | null
+  const [open, setOpen] = useState(null);
   const [showAll, setShowAll] = useState(false);
 
-  // Mouse-driven gradient limited to hero text only
-  const heroHitRef = useRef(null);
+  // Hit area strictly on hero text container
+  const heroTextWrapRef = useRef(null);
   const heroTextRef = useRef(null);
   const [bgX, setBgX] = useState(0);
   const [hovering, setHovering] = useState(false);
@@ -127,7 +120,7 @@ function Home({ lang }) {
   const visibleProjects = useMemo(() => (showAll ? projectsData : projectsData.slice(0, 4)), [showAll, projectsData]);
 
   const onMouseMoveHero = (e) => {
-    const rect = heroHitRef.current?.getBoundingClientRect();
+    const rect = heroTextWrapRef.current?.getBoundingClientRect();
     if (!rect) return;
     const x = (e.clientX - rect.left) / rect.width;
     const clamped = Math.max(0, Math.min(1, x));
@@ -136,47 +129,42 @@ function Home({ lang }) {
 
   return (
     <main className="flex min-h-dvh flex-col font-light" style={{ fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans', sans-serif" }}>
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
-        {/* Tiny toggles align with container right */}
-        <div className="flex items-center justify-end gap-3 pt-4 text-xs opacity-80 hover:opacity-100 transition">
-          <LangAndThemeToggles />
+      {/* top bar with toggles aligned with content */}
+      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 pt-4">
+        <div className="flex items-center justify-end gap-3 text-xs opacity-80 hover:opacity-100 transition">
+          <button onClick={() => setLang(lang === "fr" ? "en" : "fr")} className="rounded-full border border-black/10 dark:border-white/10 px-2 py-1 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
+            {lang === "fr" ? "EN" : "FR"}
+          </button>
+          <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
+            {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
+          </button>
         </div>
       </div>
 
-      <div ref={heroHitRef} className="mx-auto mt-8 w-full max-w-6xl px-4 sm:px-6 select-none"
-           onMouseEnter={() => setHovering(true)}
-           onMouseMove={onMouseMoveHero}
-           onMouseLeave={() => { setHovering(false); }}>
-        <div ref={heroTextRef} className="pb-4">
-          <IntroTitle lang={lang} hovering={hovering} bgX={bgX} dims={dims} spacePx={spacePx} heroRef={heroTextRef} />
+      {/* main content stuck to bottom */}
+      <div className="mx-auto mt-auto w-full max-w-6xl px-4 sm:px-6">
+        <div ref={heroTextWrapRef} className="pb-4 select-none" onMouseEnter={() => setHovering(true)} onMouseMove={onMouseMoveHero} onMouseLeave={() => setHovering(false)}>
+          <div ref={heroTextRef}>
+            <IntroTitle lang={lang} hovering={hovering} bgX={bgX} dims={dims} spacePx={spacePx} heroRef={heroTextRef} />
+          </div>
         </div>
 
-        {/* À propos — airy, Apple-like */}
-        <SectionRow
-          label={t.labels.about}
-          isOpen={open === "about"}
-          onToggle={() => setOpen(open === "about" ? null : "about")}
-        >
-          <div className="grid grid-cols-1 items-start gap-12 sm:grid-cols-[minmax(220px,320px)_1fr]">
-            {/* Polaroid photo */}
-            <div className="polaroid">
-              <img src={about.photo} alt={`Portrait de ${about.name}`} className="aspect-square w-full rounded-lg object-cover" />
-              <div className="caption">{about.name}</div>
+        {/* À propos */}
+        <SectionRow label={t.labels.about} isOpen={open === "about"} onToggle={() => setOpen(open === "about" ? null : "about")}>
+          <div className="grid grid-cols-1 items-start gap-12 sm:grid-cols-[minmax(200px,280px)_1fr]">
+            <div className="polaroid-frame">
+              <img src={about.photo} alt={`Portrait de ${about.name}`} className="polaroid-photo" />
             </div>
-
-            {/* Text column: name + role on top, then bio, actions, previous work */}
             <div className="space-y-8">
               <div>
                 <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">{about.name}</h2>
                 <p className="mt-1 text-sm sm:text-base text-black/60 dark:text-white/60">{about.role}</p>
               </div>
-
               <div className="space-y-4">
                 {about.bio.map((p, i) => (
                   <p key={i} className="max-w-prose text-sm sm:text-[1.02rem] leading-relaxed text-black/80 dark:text-white/80">{p}</p>
                 ))}
               </div>
-
               <div className="flex flex-wrap gap-4">
                 <button onClick={openMailto} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 px-4 py-2 text-sm font-medium shadow-sm hover:shadow-md transition bg-white/90 dark:bg-white/5 backdrop-blur">
                   <Mail size={16} /> {t.labels.sayHello}
@@ -188,13 +176,10 @@ function Home({ lang }) {
                   <Phone size={16} /> {about.contact.phone}
                 </a>
               </div>
-
               <div>
                 <h3 className="mb-2 text-base font-medium">{t.labels.previousWork}</h3>
                 <ul className="space-y-1 text-sm text-black/70 dark:text-white/70">
-                  {(about.previousWork || []).map((line, idx) => (
-                    <li key={idx}>• {line}</li>
-                  ))}
+                  {(about.previousWork || []).map((line, idx) => (<li key={idx}>• {line}</li>))}
                 </ul>
               </div>
             </div>
@@ -204,11 +189,7 @@ function Home({ lang }) {
         {/* Projets */}
         <SectionRow
           label={t.labels.projects}
-          rightAdornment={open === "projects" ? (
-            <button onClick={() => setShowAll((v) => !v)} className="text-sm underline-offset-4 hover:underline">
-              {showAll ? t.labels.seeLess : t.labels.seeAll}
-            </button>
-          ) : null}
+          rightAdornment={open === "projects" ? (<button onClick={() => setShowAll((v) => !v)} className="text-sm underline-offset-4 hover:underline">{showAll ? t.labels.seeLess : t.labels.seeAll}</button>) : null}
           isOpen={open === "projects"}
           onToggle={() => setOpen(open === "projects" ? null : "projects")}
         >
@@ -259,47 +240,19 @@ function ProjectPage({ lang }) {
   );
 }
 
-// Header toggles aligned with container
-function LangAndThemeToggles() {
-  const [lang, setLang] = useState(localStorage.getItem("lang") === "en" ? "en" : "fr");
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-  useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-    const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-  }, [theme]);
-  return (
-    <div className="flex items-center gap-3">
-      <button onClick={() => setLang(lang === "fr" ? "en" : "fr")} className="rounded-full border border-black/10 dark:border-white/10 px-2 py-1 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
-        {lang === "fr" ? "EN" : "FR"}
-      </button>
-      <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")} className="rounded-full border border-black/10 dark:border-white/10 p-1.5 bg-white/70 dark:bg-white/10 backdrop-blur-sm">
-        {theme === "dark" ? <Sun size={14} /> : <Moon size={14} />}
-      </button>
-    </div>
-  );
-}
-
 export default function App() {
   const [lang, setLang] = useState(getInitialLang());
   const [theme, setTheme] = useState(getInitialTheme());
 
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
-  useEffect(() => {
-    localStorage.setItem("theme", theme);
-    const root = document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
-  }, [theme]);
+  useEffect(() => { localStorage.setItem("theme", theme); const r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home lang={lang} />} />
+        <Route path="/" element={<Home lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />} />
         <Route path="/projects/:id" element={<ProjectPage lang={lang} />} />
-        <Route path="*" element={<Home lang={lang} />} />
+        <Route path="*" element={<Home lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} />} />
       </Routes>
     </BrowserRouter>
   );
