@@ -360,16 +360,17 @@ export default function App() {
               const first = (projectsData || []).slice(0, 4);
               const extra = (projectsData || []).slice(4);
               const ease = [0.22, 1, 0.36, 1];
+              const stagger = 0.06;
 
               const cardVariants = {
-                hidden: { opacity: 0, y: 20, scale: 0.985, rotateX: 6, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" },
-                enter: (c) => ({
-                  opacity: 1, y: 0, scale: 1, rotateX: 0, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)",
-                  transition: { duration: 0.55, ease, delay: Math.min((c?.i || 0) * 0.06, 0.48) }
+                hidden: { opacity: 0, y: 18, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)" },
+                show: (c) => ({
+                  opacity: 1, y: 0, scale: 1, filter: "blur(0px)", clipPath: "inset(0% 0% 0% 0%)",
+                  transition: { duration: 0.55, ease, delay: Math.min((c?.i || 0) * stagger, 0.48) }
                 }),
-                exit: (c) => ({
-                  opacity: 0, y: -18, scale: 0.985, rotateX: 6, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)",
-                  transition: { duration: 0.5, ease, delay: Math.min(((c?.total || 0) - 1 - (c?.i || 0)) * 0.06, 0.48) }
+                hide: (c) => ({
+                  opacity: 0, y: -16, scale: 0.985, filter: "blur(6px)", clipPath: "inset(0% 0% 100% 0%)",
+                  transition: { duration: 0.5, ease, delay: Math.min(((c?.total || 0) - 1 - (c?.i || 0)) * stagger, 0.48) }
                 }),
               };
 
@@ -394,10 +395,9 @@ export default function App() {
                         layout
                         variants={cardVariants}
                         initial="hidden"
-                        animate="enter"
-                        exit="exit"
+                        animate="show"
+                        exit="hide"
                         custom={{ i, total: extra.length }}
-                        style={{ transformPerspective: 1000 }}
                       >
                         <Link to={`/projects/${p.id}`} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
                           <img src={p.image} alt={`aperçu ${p.title}`} className="aspect-[4/3] w-full object-cover" />
