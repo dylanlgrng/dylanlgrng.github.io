@@ -77,37 +77,49 @@ function SectionRow(props) {
   var boxRef = useRef(null);
   var innerRef = useRef(null);
   var [height, setHeight] = useState(isOpen ? "auto" : "0px");
-  var animId = useRef(0);
+  var roRef = useRef(null);
 
   useEffect(() => {
-    var el = boxRef.current, inner = innerRef.current;
+    const el = boxRef.current, inner = innerRef.current;
     if (!el || !inner) return;
-    var id = ++animId.current;
+
+    if (roRef.current) { try { roRef.current.disconnect(); } catch(e){} }
+    if (isOpen) {
+      const ro = new ResizeObserver(() => {
+        if (!boxRef.current || !innerRef.current) return;
+        const target = inner.scrollHeight;
+        if (el.style.height !== "auto") setHeight(target + "px");
+      });
+      ro.observe(inner);
+      roRef.current = ro;
+    }
+
+    function onEnd(e){
+      if (e.target !== el || e.propertyName !== "height") return;
+      if (isOpen) setHeight("auto");
+    }
+    el.addEventListener("transitionend", onEnd);
+    return () => {
+      if (roRef.current) { try { roRef.current.disconnect(); } catch(e){} roRef.current = null; }
+      el.removeEventListener("transitionend", onEnd);
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
+    const el = boxRef.current, inner = innerRef.current;
+    if (!el || !inner) return;
 
     if (isOpen) {
-      // prepare
       el.classList.add("open");
-      el.style.height = "0px";
-      // next frame, expand to scrollHeight
       requestAnimationFrame(() => {
-        if (animId.current !== id) return;
-        setHeight(inner.scrollHeight + "px");
+        el.style.height = "0px";
+        requestAnimationFrame(() => { setHeight(inner.scrollHeight + "px"); });
       });
-      // after transition, set to auto
-      const t = setTimeout(() => {
-        if (animId.current !== id) return;
-        setHeight("auto");
-      }, 600);
-      return () => clearTimeout(t);
     } else {
-      // collapse from current height
       const current = inner.offsetHeight;
       setHeight(current + "px");
       el.classList.remove("open");
-      requestAnimationFrame(() => {
-        if (animId.current !== id) return;
-        setHeight("0px");
-      });
+      requestAnimationFrame(() => { setHeight("0px"); });
     }
   }, [isOpen]);
 
@@ -123,7 +135,7 @@ function SectionRow(props) {
         </button>
       </header>
       <div ref={boxRef} className={"accordion" + (isOpen ? " open" : "")} style={{ height }}>
-        <div ref={innerRef}><div className="pb-8">{children}</div></div>
+        <div ref={innerRef} className="accordion-inner"><div className="pb-8">{children}</div></div>
       </div>
     </section>
   );
@@ -243,9 +255,8 @@ function Home({ lang, setLang, theme, setTheme }) {
           </div>
         </div>
 
-        {/* À propos */}
         <SectionRow label={t.labels.about} isOpen={open === "about"} onToggle={() => setOpen(open === "about" ? null : "about")}>
-          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(150px,180px)_1fr]">
+          <div className="grid grid-cols-1 items-start gap-10 sm:grid-cols-[minmax(150px,200px)_1fr]">
             <div className="pr-4">
               <img src={t.about.photo} alt={"Portrait de " + t.about.name} className="photo-square ring-1 ring-black/10 dark:ring-white/10" />
             </div>
@@ -280,7 +291,6 @@ function Home({ lang, setLang, theme, setTheme }) {
           </div>
         </SectionRow>
 
-        {/* Projets */}
         <SectionRow
           label={t.labels.projects}
           rightAdornment={open === "projects" ? (
@@ -321,26 +331,39 @@ function Extras({ show, items }){
   useEffect(() => {
     const el = ref.current, g = grid.current;
     if (!el) return;
+
     if (show) {
       el.classList.add("open");
-      el.style.height = el.scrollHeight + "px";
-      setTimeout(() => { if (el) el.style.height = "auto"; }, 620);
-      if (g) g.classList.add("open");
-      if (g) g.classList.remove("closing");
-      // set stagger
       if (g) {
+        g.classList.add("open");
+        g.classList.remove("closing");
         const cards = g.querySelectorAll(".card");
         for (let i=0;i<cards.length;i++) cards[i].style.setProperty("--d", (i*60)+"ms");
       }
+      requestAnimationFrame(() => {
+        el.style.height = "0px";
+        requestAnimationFrame(() => {
+          const inner = el.firstElementChild;
+          const target = inner ? inner.scrollHeight : 0;
+          el.style.height = target + "px";
+          function onEnd(e){
+            if (e.target !== el || e.propertyName !== "height") return;
+            el.style.height = "auto";
+            el.removeEventListener("transitionend", onEnd);
+          }
+          el.addEventListener("transitionend", onEnd);
+        });
+      });
     } else {
-      // reverse stagger then collapse
       if (g) {
         g.classList.remove("open");
         g.classList.add("closing");
         const cards = g.querySelectorAll(".card");
         for (let i=0;i<cards.length;i++) cards[i].style.setProperty("--dc", ((cards.length-1-i)*60)+"ms");
       }
-      el.style.height = el.scrollHeight + "px";
+      const inner = el.firstElementChild;
+      const cur = inner ? inner.scrollHeight : 0;
+      el.style.height = cur + "px";
       requestAnimationFrame(() => {
         el.classList.remove("open");
         el.style.height = "0px";
@@ -348,10 +371,17 @@ function Extras({ show, items }){
         el.style.filter = "blur(6px)";
         el.style.opacity = "0";
       });
-      const total = (g && g.querySelectorAll(".card").length) ? (g.querySelectorAll(".card").length - 1) * 60 : 0;
-      setTimeout(() => { if (g) g.classList.remove("closing"); }, 400 + total + 80);
     }
-  }, [show]);
+  }, [show, items && items.length]);
+
+  function onImgLoad(){
+    const el = ref.current; if (!el) return;
+    if (el.classList.contains("open") && el.style.height !== "auto") {
+      const inner = el.firstElementChild;
+      const target = inner ? inner.scrollHeight : 0;
+      el.style.height = target + "px";
+    }
+  }
 
   return (
     <div ref={ref} className={"extras" + (show ? " open" : "")} style={{ height: "0px" }}>
@@ -360,8 +390,8 @@ function Extras({ show, items }){
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4 pt-6">
             {items.map((p,i) => (
               <div key={p.id} className="card">
-                <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
-                  <img src={p.image} alt={"aperçu " + p.title} className="aspect-[4/3] w-full object-cover" />
+                <Link to={"/projects/" + p.id} className="group block overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900">
+                  <img src={p.image} alt={"aperçu " + p.title} onLoad={onImgLoad} className="aspect-[4/3] w-full object-cover" />
                   <div className="flex items-center justify-between p-3">
                     <span className="text-sm font-medium">{p.title}</span>
                     <ArrowUpRight className="opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
@@ -412,9 +442,6 @@ export default function App() {
   var [theme, setTheme] = useState(getInitialTheme());
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
   useEffect(() => { localStorage.setItem("theme", theme); var r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
-
-  function getInitialLang(){ return (localStorage.getItem("lang") === "en") ? "en" : "fr"; }
-  function getInitialTheme(){ var s = localStorage.getItem("theme"); if (s === "dark" || s === "light") return s; var h = new Date().getHours(); return (h >= 7 && h < 19) ? "light" : "dark"; }
 
   return (
     <HashRouter>
