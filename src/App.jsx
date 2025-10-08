@@ -328,11 +328,16 @@ function Extras({ show, items }){
   const ref = useRef(null);
   const grid = useRef(null);
 
-  useEffect(() => {
+    useEffect(() => {
     const el = ref.current, g = grid.current;
     if (!el) return;
 
     if (show) {
++     // 🔧 IMPORTANT : enlever les styles inline qui masquent le contenu
++     el.style.removeProperty('clip-path');
++     el.style.removeProperty('filter');
++     el.style.removeProperty('opacity');
+
       el.classList.add("open");
       if (g) {
         g.classList.add("open");
