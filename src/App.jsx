@@ -129,7 +129,7 @@ function SectionRow(props) {
         <button className="flex-1 text-left font-medium tracking-tight focus:outline-none" aria-expanded={isOpen} onClick={onToggle}>
           {label}
         </button>
-        <div className="mr-2 hidden sm:block">{rightAdornment}</div>
+        <div className="mr-2">{rightAdornment}</div>
         <button onClick={onToggle} aria-label={isOpen ? (label + " — réduire") : (label + " — développer")} className="ml-auto inline-flex items-center justify-center p-1 opacity-70 transition hover:opacity-100 focus:outline-none">
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </button>
