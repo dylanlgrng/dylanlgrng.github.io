@@ -9,7 +9,7 @@ import { ChevronLeft, ChevronRight, ArrowLeft, Plus, Minus, Mail, Linkedin, Phon
 // transition layer and could stack in front of the one actually morphing.
 var pendingHomeCardId = null;
 
-function withViewTransition(navigate, to, activeEl) {
+function withViewTransition(navigate, to, activeEls) {
   if (document.startViewTransition) {
     // Mark the transition as active so the arriving page can skip its own
     // generic entrance fade (see .page-content usage below) — otherwise that
@@ -21,12 +21,25 @@ function withViewTransition(navigate, to, activeEl) {
     });
     transition.finished.finally(function () {
       document.documentElement.classList.remove("vt-active");
-      if (activeEl) activeEl.style.viewTransitionName = "";
+      (Array.isArray(activeEls) ? activeEls : [activeEls]).forEach(function (el) {
+        if (el) el.style.viewTransitionName = "";
+      });
       pendingHomeCardId = null;
     });
   } else {
     navigate(to);
   }
+}
+
+// Prev/next between two project pages deliberately skips the View Transitions API:
+// while a view transition plays, the browser suspends hit-testing on the live page
+// (it shows an animated snapshot instead), so buttons stay unclickable until it ends.
+// A plain navigation + a CSS entrance animation on the real DOM keeps the arrows
+// clickable the whole time, at the cost of only animating the incoming page in.
+var pendingSlideDirection = null;
+function navigateSlide(navigate, to, direction) {
+  pendingSlideDirection = direction;
+  navigate(to);
 }
 function isPlainClick(e) {
   return !(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
@@ -507,21 +520,24 @@ function Home({ lang, setLang, theme, setTheme, open, setOpen }) {
                   onClick={(e) => {
                     if (!isPlainClick(e)) return;
                     e.preventDefault();
-                    var imgEl = e.currentTarget.querySelector("img");
+                    var cardEl = e.currentTarget;
+                    var imgEl = cardEl.querySelector("img");
+                    cardEl.style.viewTransitionName = "project-card-" + p.id;
                     if (imgEl) imgEl.style.viewTransitionName = "project-img-" + p.id;
-                    withViewTransition(navigate, "/projects/" + p.id, imgEl);
+                    withViewTransition(navigate, "/projects/" + p.id, [cardEl, imgEl]);
                   }}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition bg-white dark:bg-neutral-900"
+                  style={p.id === activeCardIdRef.current ? { viewTransitionName: "project-card-" + p.id } : undefined}
+                  className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition hover:shadow-md bg-white dark:bg-neutral-900"
                 >
                   <img
                     src={p.image}
                     alt={"aperçu " + p.title}
                     style={p.id === activeCardIdRef.current ? { viewTransitionName: "project-img-" + p.id } : undefined}
-                    className="aspect-[4/3] w-full object-cover"
+                    className="aspect-[4/3] w-full rounded-t-[1.75rem] object-cover"
                   />
-                  <div className="flex flex-1 items-start justify-between gap-2 p-3">
-                    <span className="line-clamp-2 min-h-[2.75rem] text-sm font-medium leading-snug">{p.title}</span>
-                    <ArrowUpRight className="mt-0.5 shrink-0 opacity-60 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                  <div className="flex items-center justify-between gap-3 px-4 py-3.5">
+                    <span className="truncate text-[0.95rem] font-medium tracking-tight">{p.title}</span>
+                    <ArrowUpRight className="shrink-0 opacity-50 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
                   </div>
                 </Link>
               </div>
@@ -542,6 +558,12 @@ function ProjectPage({ lang }) {
   var index = list.findIndex(p => p.id === id);
   var project = index >= 0 ? list[index] : null;
   var skipEntranceRef = useRef(document.documentElement.classList.contains("vt-active"));
+  // Read once per mount. Cleared in an effect rather than inline here: StrictMode
+  // calls the render body twice for the same commit to catch impure renders, and
+  // clearing this module flag inline would let the throwaway first call consume
+  // it, leaving the render that actually gets committed with nothing to read.
+  var slideDirRef = useRef(pendingSlideDirection);
+  useEffect(function () { pendingSlideDirection = null; }, []);
 
   if (!project) {
     return (
@@ -560,9 +582,10 @@ function ProjectPage({ lang }) {
   return (
     <div
       key={id}
-      className="min-h-dvh w-full border border-white bg-white dark:border-neutral-950 dark:bg-neutral-950"
+      className="min-h-dvh w-full rounded-[1.75rem] border border-white bg-white dark:border-neutral-950 dark:bg-neutral-950"
+      style={{ viewTransitionName: "project-card-" + project.id }}
     >
-      <div className={skipEntranceRef.current ? "" : "page-content"}>
+      <div className={slideDirRef.current === "next" ? "slide-in-next" : slideDirRef.current === "prev" ? "slide-in-prev" : (skipEntranceRef.current ? "" : "page-content")}>
         <div className="mx-auto max-w-4xl px-4 pt-16">
           <div className="mb-6 flex items-center justify-between">
             <button onClick={() => { pendingHomeCardId = project.id; withViewTransition(navigate, "/"); }} className="inline-flex items-center gap-2 rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 px-4 py-2 text-sm font-medium backdrop-blur-sm">
@@ -571,7 +594,7 @@ function ProjectPage({ lang }) {
             <div className="flex items-center gap-3">
               <Link
                 to={"/projects/" + prev.id}
-                onClick={(e) => { if (!isPlainClick(e)) return; e.preventDefault(); withViewTransition(navigate, "/projects/" + prev.id); }}
+                onClick={(e) => { if (!isPlainClick(e)) return; e.preventDefault(); navigateSlide(navigate, "/projects/" + prev.id, "prev"); }}
                 aria-label={t.labels.prevProject}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 backdrop-blur-sm"
               >
@@ -579,7 +602,7 @@ function ProjectPage({ lang }) {
               </Link>
               <Link
                 to={"/projects/" + next.id}
-                onClick={(e) => { if (!isPlainClick(e)) return; e.preventDefault(); withViewTransition(navigate, "/projects/" + next.id); }}
+                onClick={(e) => { if (!isPlainClick(e)) return; e.preventDefault(); navigateSlide(navigate, "/projects/" + next.id, "next"); }}
                 aria-label={t.labels.nextProject}
                 className="flex h-8 w-8 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white/70 dark:bg-white/10 backdrop-blur-sm"
               >
@@ -663,6 +686,17 @@ function ProjectPage({ lang }) {
   );
 }
 
+// React Router doesn't remount an element just because its :id param changed —
+// navigating between two project pages re-renders the same ProjectPage instance,
+// which would leave any useRef-frozen-at-mount value (like the slide direction)
+// stuck on whatever it was the very first time this route ever matched. Reading
+// the param here, one level up, and keying ProjectPage with it forces a real
+// remount on every project-to-project navigation.
+function ProjectPageRoute({ lang }) {
+  var params = useParams();
+  return <ProjectPage key={params.id} lang={lang} />;
+}
+
 export default function App() {
   var [lang, setLang] = useState(getInitialLang());
   var [theme, setTheme] = useState(getInitialTheme());
@@ -676,7 +710,7 @@ export default function App() {
     <HashRouter>
       <Routes>
         <Route path="/" element={<Home key={contentKey} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
-        <Route path="/projects/:id" element={<ProjectPage key={contentKey} lang={lang} />} />
+        <Route path="/projects/:id" element={<ProjectPageRoute key={contentKey} lang={lang} />} />
         <Route path="*" element={<Home key={contentKey} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
       </Routes>
     </HashRouter>

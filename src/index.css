@@ -58,17 +58,34 @@ html, body, #root { height: 100%; }
   .tooltip-in, .page-content { animation: none !important; }
 }
 
-/* View transitions: the card grows to cover the page and become the project page.
-   A fixed pixel border-radius on the snapshot pair (rather than the source element's
-   own radius, which would get stretched/distorted by the scale animation) keeps the
-   corners crisp and consistent throughout the whole grow animation. */
+/* View transitions: both the card and its image grow to become the project page (and
+   shrink back on close). Deliberately no forced border-radius override here: every
+   element that carries a view-transition-name (the card link, its image) already has
+   its own matching rounded-[1.75rem] in both places it can appear — letting the
+   browser use each element's real, own-property radius avoids the corner "popping"
+   that a blanket override caused whenever it didn't match every shape exactly. */
 ::view-transition-group(*) {
   animation-duration: 480ms;
   animation-timing-function: cubic-bezier(.32,.72,0,1);
 }
-::view-transition-image-pair(*) {
-  border-radius: 16px;
+/* The animated snapshot overlay sits above the whole page while it plays and would
+   otherwise swallow clicks — let them fall through to the real (already up to date)
+   page underneath, so buttons like prev/next stay clickable throughout the animation. */
+::view-transition,
+::view-transition-group(*),
+::view-transition-image-pair(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  pointer-events: none;
 }
+
+/* Prev/next between two project pages: a plain CSS entrance animation on the real
+   DOM (no View Transitions API here — see navigateSlide in App.jsx), so the arrows
+   stay clickable the whole time instead of freezing while a transition plays. */
+@keyframes slide-in-right { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slide-in-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
+.slide-in-next { animation: slide-in-right 380ms cubic-bezier(.32,.72,0,1); }
+.slide-in-prev { animation: slide-in-left 380ms cubic-bezier(.32,.72,0,1); }
 
 /* Magnetic/liquid hover on "Product Designer": letters pulled toward the cursor
    on proximity (see MagneticWord component). Text stays the normal theme color
@@ -85,4 +102,5 @@ html, body, #root { height: 100%; }
 @media (prefers-reduced-motion: reduce) {
   .magnetic-letter { transition: none !important; }
   ::view-transition-group(*) { animation: none !important; }
+  .slide-in-next, .slide-in-prev { animation: none !important; }
 }
