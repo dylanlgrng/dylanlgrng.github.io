@@ -4,87 +4,85 @@
 
 html, body, #root { height: 100%; }
 
-.gradient-text {
-  background-image: linear-gradient(90deg, #0ea5e9, #a78bfa, #f472b6, #f59e0b, #10b981, #0ea5e9);
-  background-size: 200% 100%;
-  background-repeat: no-repeat;
-  background-position: 0% 50%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
 .photo-square { width: 170px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; }
 @media (min-width: 640px) { .photo-square { width: 200px; } }
 
-/* Accordion container transition */
+/* Accordion: grid-template-rows animates smoothly from 0 to the content's natural height */
 .accordion {
-  overflow: hidden;
-  height: 0;
-  opacity: 0;
-  filter: blur(6px);
-  clip-path: inset(0% 0% 100% 0%);
-  transition:
-    height 600ms cubic-bezier(.16,1,.3,1),
-    opacity 420ms cubic-bezier(.16,1,.3,1),
-    filter 420ms cubic-bezier(.16,1,.3,1),
-    clip-path 600ms cubic-bezier(.16,1,.3,1);
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 500ms cubic-bezier(.32,.72,0,1);
 }
 .accordion.open {
-  opacity: 1;
-  filter: blur(0);
-  clip-path: inset(0% 0% 0% 0%);
+  grid-template-rows: 1fr;
 }
-/* Inner subtle entrance for elegance */
 .accordion-inner {
-  opacity: 0;
-  transform: translateY(8px) scale(0.995);
-  transition:
-    opacity 360ms cubic-bezier(.16,1,.3,1),
-    transform 360ms cubic-bezier(.16,1,.3,1);
-}
-.accordion.open .accordion-inner {
-  opacity: 1;
-  transform: translateY(0) scale(1);
-}
-
-/* Extras container + stagger */
-.extras {
   overflow: hidden;
-  height: 0;
-  opacity: 0;
-  filter: blur(6px);
-  clip-path: inset(0% 0% 100% 0%);
-  transition:
-    height 650ms cubic-bezier(.16,1,.3,1),
-    opacity 500ms cubic-bezier(.16,1,.3,1),
-    filter 500ms cubic-bezier(.16,1,.3,1),
-    clip-path 650ms cubic-bezier(.16,1,.3,1);
+  min-height: 0;
 }
-.extras.open { opacity: 1; filter: none; clip-path: inset(0% 0% 0% 0%); }
-.extras-grid .card { opacity: 0; transform: translateY(18px) scale(0.985); filter: blur(6px); }
-.extras-grid.open .card {
+.accordion-content {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 280ms cubic-bezier(.32,.72,0,1), transform 280ms cubic-bezier(.32,.72,0,1);
+}
+.accordion.open .accordion-content {
   opacity: 1;
-  transform: translateY(0) scale(1);
-  filter: none;
-  transition:
-    opacity 500ms cubic-bezier(.16,1,.3,1) var(--d,0ms),
-    transform 500ms cubic-bezier(.16,1,.3,1) var(--d,0ms),
-    filter 500ms cubic-bezier(.16,1,.3,1) var(--d,0ms);
-}
-.extras-grid.closing .card {
-  opacity: 0;
-  transform: translateY(-18px) scale(0.975);
-  filter: blur(6px);
-  transition:
-    opacity 420ms cubic-bezier(.16,1,.3,1) var(--dc,0ms),
-    transform 420ms cubic-bezier(.16,1,.3,1) var(--dc,0ms),
-    filter 420ms cubic-bezier(.16,1,.3,1) var(--dc,0ms);
+  transform: translateY(0);
+  transition-delay: 120ms;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .accordion, .extras { transition: none !important; height: auto !important; clip-path: none !important; filter: none !important; opacity: 1 !important; }
-  .accordion-inner { transition: none !important; opacity: 1 !important; transform: none !important; }
-  .extras-grid .card, .extras-grid.closing .card { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+  .accordion { transition: none !important; }
+  .accordion-content { transition: none !important; opacity: 1 !important; transform: none !important; }
+}
+
+@keyframes tooltip-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.tooltip-in {
+  transform-origin: top right;
+  animation: tooltip-in 220ms cubic-bezier(.32,.72,0,1);
+}
+
+/* Page content: replayed whenever the route mounts, or lang/theme changes (via key) */
+@keyframes content-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.page-content {
+  animation: content-in 420ms cubic-bezier(.32,.72,0,1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tooltip-in, .page-content { animation: none !important; }
+}
+
+/* View transitions: the card grows to cover the page and become the project page.
+   A fixed pixel border-radius on the snapshot pair (rather than the source element's
+   own radius, which would get stretched/distorted by the scale animation) keeps the
+   corners crisp and consistent throughout the whole grow animation. */
+::view-transition-group(*) {
+  animation-duration: 480ms;
+  animation-timing-function: cubic-bezier(.32,.72,0,1);
+}
+::view-transition-image-pair(*) {
+  border-radius: 16px;
+}
+
+/* Magnetic/liquid hover on "Product Designer": letters pulled toward the cursor
+   on proximity (see MagneticWord component). Text stays the normal theme color
+   (black in light mode, white in dark mode) — only the shape moves. */
+.magnetic-word {
+  display: inline-flex;
+}
+.magnetic-letter {
+  display: inline-block;
+  transition: transform 500ms cubic-bezier(.34,1.56,.64,1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .magnetic-letter { transition: none !important; }
+  ::view-transition-group(*) { animation: none !important; }
 }
