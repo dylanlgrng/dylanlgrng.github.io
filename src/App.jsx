@@ -45,6 +45,73 @@ function isPlainClick(e) {
   return !(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
 }
 
+// Language-switch "split-flap" effect, like a station departure board: every
+// visible text churns through random characters and settles on its translated
+// value left to right. Runs directly on the DOM's text nodes right after the
+// lang change remounts the page (see the [lang] effect in App), so no component
+// needs to know about it. Returns a cancel function that snaps texts to final.
+var SCRAMBLE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+function scrambleAllTexts(root, onDone) {
+  if (!root) { if (onDone) onDone(); return null; }
+  var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: function (node) {
+      if (!node.nodeValue || !node.nodeValue.trim()) return NodeFilter.FILTER_REJECT;
+      var el = node.parentElement;
+      if (!el || el.tagName === "SCRIPT" || el.tagName === "STYLE") return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  var items = [];
+  var origin = performance.now();
+  var node;
+  while ((node = walker.nextNode())) {
+    var finalText = node.nodeValue;
+    items.push({
+      node: node,
+      finalText: finalText,
+      // Small random start offset per node so the whole page doesn't tick in
+      // lockstep; per-char delay clamped so long paragraphs still finish fast.
+      start: origin + Math.random() * 160,
+      perChar: Math.min(28, Math.max(6, 1100 / finalText.length)),
+      lastChurn: -1
+    });
+  }
+  if (!items.length) { if (onDone) onDone(); return null; }
+
+  var rafId = null;
+  function frame(t) {
+    var allDone = true;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var resolved = Math.floor((t - it.start) / it.perChar);
+      if (resolved < 0) resolved = 0;
+      if (resolved >= it.finalText.length) {
+        if (it.node.nodeValue !== it.finalText) it.node.nodeValue = it.finalText;
+        continue;
+      }
+      allDone = false;
+      // Throttle the random churn (~flap rate); the resolved prefix still advances.
+      if (t - it.lastChurn < 45) continue;
+      it.lastChurn = t;
+      var out = it.finalText.slice(0, resolved);
+      for (var j = resolved; j < it.finalText.length; j++) {
+        var ch = it.finalText[j];
+        out += (ch === " " || ch === "\u00A0" || ch === "\n") ? ch : SCRAMBLE_CHARS[(Math.random() * SCRAMBLE_CHARS.length) | 0];
+      }
+      it.node.nodeValue = out;
+    }
+    if (allDone) { rafId = null; if (onDone) onDone(); return; }
+    rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+
+  return function cancel() {
+    if (rafId != null) cancelAnimationFrame(rafId);
+    for (var i = 0; i < items.length; i++) items[i].node.nodeValue = items[i].finalText;
+  };
+}
+
 const EMAIL_B64 = "bGFncmFuZ2VkeWxhbkBnbWFpbC5jb20=";
 
 const CONTENT = {
@@ -455,7 +522,7 @@ function Home({ lang, setLang, theme, setTheme, open, setOpen }) {
   // navigation, skip the generic page-content entrance fade (the browser's own
   // shared-element morph already handles the arrival, and playing both at once
   // is what causes the other cards to flicker/move).
-  var skipEntranceRef = useRef(document.documentElement.classList.contains("vt-active"));
+  var skipEntranceRef = useRef(document.documentElement.classList.contains("vt-active") || document.documentElement.classList.contains("lang-scramble"));
   // Read once at mount: which card (if any) we're arriving from when coming
   // back from a project page — only that one gets the shared transition name.
   var activeCardIdRef = useRef(pendingHomeCardId);
@@ -527,17 +594,19 @@ function Home({ lang, setLang, theme, setTheme, open, setOpen }) {
                     withViewTransition(navigate, "/projects/" + p.id, [cardEl, imgEl]);
                   }}
                   style={p.id === activeCardIdRef.current ? { viewTransitionName: "project-card-" + p.id } : undefined}
-                  className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-black/10 dark:border-white/10 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition hover:shadow-md bg-white dark:bg-neutral-900"
+                  className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition-shadow duration-300 hover:shadow-xl hover:shadow-black/[0.07] dark:hover:shadow-black/40"
                 >
                   <img
                     src={p.image}
                     alt={"aperçu " + p.title}
                     style={p.id === activeCardIdRef.current ? { viewTransitionName: "project-img-" + p.id } : undefined}
-                    className="aspect-[4/3] w-full rounded-t-[1.75rem] object-cover"
+                    className="aspect-[4/3] w-full rounded-t-[1.75rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
                   />
-                  <div className="flex items-center justify-between gap-3 px-4 py-3.5">
+                  <div className="relative flex items-center justify-between gap-3 bg-white px-5 py-4 dark:bg-neutral-900">
                     <span className="truncate text-[0.95rem] font-medium tracking-tight">{p.title}</span>
-                    <ArrowUpRight className="shrink-0 opacity-50 transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100" size={16} />
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/[0.05] text-black/60 transition-colors duration-300 group-hover:bg-black group-hover:text-white dark:bg-white/10 dark:text-white/60 dark:group-hover:bg-white dark:group-hover:text-black">
+                      <ArrowUpRight size={14} />
+                    </span>
                   </div>
                 </Link>
               </div>
@@ -557,7 +626,7 @@ function ProjectPage({ lang }) {
   var list = t.projects || [];
   var index = list.findIndex(p => p.id === id);
   var project = index >= 0 ? list[index] : null;
-  var skipEntranceRef = useRef(document.documentElement.classList.contains("vt-active"));
+  var skipEntranceRef = useRef(document.documentElement.classList.contains("vt-active") || document.documentElement.classList.contains("lang-scramble"));
   // Read once per mount. Cleared in an effect rather than inline here: StrictMode
   // calls the render body twice for the same commit to catch impure renders, and
   // clearing this module flag inline would let the throwaway first call consume
@@ -704,14 +773,42 @@ export default function App() {
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
   useEffect(() => { localStorage.setItem("theme", theme); var r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
 
+  // Split-flap text animation on language change. The lang-scramble class is set
+  // in changeLang BEFORE the state update so the remounting page reads it and
+  // skips its entrance fade; this effect then runs after the new-language DOM is
+  // committed and churns every text into place. Compared against the previous
+  // lang (not a "mounted" boolean) so StrictMode's double-invoked mount effect
+  // can't trigger a scramble on initial load.
+  var prevLangRef = useRef(lang);
+  useEffect(function () {
+    if (prevLangRef.current === lang) return;
+    prevLangRef.current = lang;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      document.documentElement.classList.remove("lang-scramble");
+      return;
+    }
+    var cancel = scrambleAllTexts(document.getElementById("root"), function () {
+      document.documentElement.classList.remove("lang-scramble");
+    });
+    return function () {
+      if (cancel) cancel();
+      document.documentElement.classList.remove("lang-scramble");
+    };
+  }, [lang]);
+
+  function changeLang(next) {
+    document.documentElement.classList.add("lang-scramble");
+    setLang(next);
+  }
+
   var contentKey = lang + "-" + theme;
 
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Home key={contentKey} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
+        <Route path="/" element={<Home key={contentKey} lang={lang} setLang={changeLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
         <Route path="/projects/:id" element={<ProjectPageRoute key={contentKey} lang={lang} />} />
-        <Route path="*" element={<Home key={contentKey} lang={lang} setLang={setLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
+        <Route path="*" element={<Home key={contentKey} lang={lang} setLang={changeLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
       </Routes>
     </HashRouter>
   );
