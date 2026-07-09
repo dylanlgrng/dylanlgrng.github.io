@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* One easing for the whole site (Apple-like decelerate) — every animation and
+   transition below uses it so motion feels like a single, coherent system.
+   The only exception is --ease-spring, reserved for the magnetic letters. */
+:root {
+  --ease-out: cubic-bezier(.32, .72, 0, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+}
+
 html, body, #root { height: 100%; }
 
 .photo-square { width: 170px; aspect-ratio: 1 / 1; object-fit: cover; border-radius: 12px; }
@@ -11,7 +19,7 @@ html, body, #root { height: 100%; }
 .accordion {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 500ms cubic-bezier(.32,.72,0,1);
+  transition: grid-template-rows 500ms var(--ease-out);
 }
 .accordion.open {
   grid-template-rows: 1fr;
@@ -23,17 +31,12 @@ html, body, #root { height: 100%; }
 .accordion-content {
   opacity: 0;
   transform: translateY(6px);
-  transition: opacity 280ms cubic-bezier(.32,.72,0,1), transform 280ms cubic-bezier(.32,.72,0,1);
+  transition: opacity 320ms var(--ease-out), transform 320ms var(--ease-out);
 }
 .accordion.open .accordion-content {
   opacity: 1;
   transform: translateY(0);
-  transition-delay: 120ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .accordion { transition: none !important; }
-  .accordion-content { transition: none !important; opacity: 1 !important; transform: none !important; }
+  transition-delay: 100ms;
 }
 
 @keyframes tooltip-in {
@@ -42,7 +45,7 @@ html, body, #root { height: 100%; }
 }
 .tooltip-in {
   transform-origin: top right;
-  animation: tooltip-in 220ms cubic-bezier(.32,.72,0,1);
+  animation: tooltip-in 240ms var(--ease-out);
 }
 
 /* Page content: replayed whenever the route mounts, or lang/theme changes (via key) */
@@ -51,22 +54,18 @@ html, body, #root { height: 100%; }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 .page-content {
-  animation: content-in 420ms cubic-bezier(.32,.72,0,1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tooltip-in, .page-content { animation: none !important; }
+  animation: content-in 450ms var(--ease-out);
 }
 
 /* View transitions: both the card and its image grow to become the project page (and
    shrink back on close). Deliberately no forced border-radius override here: every
    element that carries a view-transition-name (the card link, its image) already has
-   its own matching rounded-[1.75rem] in both places it can appear — letting the
-   browser use each element's real, own-property radius avoids the corner "popping"
-   that a blanket override caused whenever it didn't match every shape exactly. */
+   its own matching rounded-2xl in both places it can appear — letting the browser use
+   each element's real, own-property radius avoids the corner "popping" that a blanket
+   override caused whenever it didn't match every shape exactly. */
 ::view-transition-group(*) {
-  animation-duration: 480ms;
-  animation-timing-function: cubic-bezier(.32,.72,0,1);
+  animation-duration: 450ms;
+  animation-timing-function: var(--ease-out);
 }
 /* The animated snapshot overlay sits above the whole page while it plays and would
    otherwise swallow clicks — let them fall through to the real (already up to date)
@@ -82,10 +81,10 @@ html, body, #root { height: 100%; }
 /* Prev/next between two project pages: a plain CSS entrance animation on the real
    DOM (no View Transitions API here — see navigateSlide in App.jsx), so the arrows
    stay clickable the whole time instead of freezing while a transition plays. */
-@keyframes slide-in-right { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
-@keyframes slide-in-left { from { opacity: 0; transform: translateX(-24px); } to { opacity: 1; transform: translateX(0); } }
-.slide-in-next { animation: slide-in-right 380ms cubic-bezier(.32,.72,0,1); }
-.slide-in-prev { animation: slide-in-left 380ms cubic-bezier(.32,.72,0,1); }
+@keyframes slide-in-right { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes slide-in-left { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+.slide-in-next { animation: slide-in-right 420ms var(--ease-out); }
+.slide-in-prev { animation: slide-in-left 420ms var(--ease-out); }
 
 /* Magnetic/liquid hover on "Product Designer": letters pulled toward the cursor
    on proximity (see MagneticWord component). Text stays the normal theme color
@@ -95,12 +94,39 @@ html, body, #root { height: 100%; }
 }
 .magnetic-letter {
   display: inline-block;
-  transition: transform 500ms cubic-bezier(.34,1.56,.64,1);
+  transition: transform 500ms var(--ease-spring);
   will-change: transform;
 }
 
+/* Apple tvOS-style project cards: the tile tilts toward the cursor and a soft
+   specular highlight tracks the pointer. Driven by --mx/--my (shine position)
+   and --rx/--ry (tilt), set on mousemove in the ProjectCard component. The short
+   transition makes the tilt "follow" the cursor with a premium lag, and springs
+   back on leave. */
+.tv-card {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 350ms var(--ease-out), box-shadow 500ms var(--ease-out);
+  will-change: transform;
+}
+.tv-shine {
+  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 60%);
+  opacity: 0;
+  mix-blend-mode: soft-light;
+  transition: opacity 300ms var(--ease-out);
+}
+.tv-card:hover .tv-shine {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .accordion { transition: none !important; }
+  .accordion-content { transition: none !important; opacity: 1 !important; transform: none !important; }
+  .tooltip-in, .page-content { animation: none !important; }
   .magnetic-letter { transition: none !important; }
   ::view-transition-group(*) { animation: none !important; }
   .slide-in-next, .slide-in-prev { animation: none !important; }
+  .tv-card { transform: none !important; transition: box-shadow 500ms var(--ease-out) !important; }
+  .tv-shine { display: none; }
 }

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { flushSync } from "react-dom";
 import { HashRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, ArrowLeft, Plus, Minus, Mail, Linkedin, Phone, ArrowUpRight, Sun, Moon, Info } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowLeft, Plus, Minus, Mail, Linkedin, Phone, Sun, Moon, Info } from "lucide-react";
 
 // Set right before navigating back to "/" so Home knows which single card's
 // image should carry the shared view-transition-name (see Home below) — the
@@ -43,6 +43,18 @@ function navigateSlide(navigate, to, direction) {
 }
 function isPlainClick(e) {
   return !(e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
+}
+
+// Placeholder card visual for projects that don't have a screenshot yet
+// (Skywise + the three to-be-filled cards). A soft diagonal gradient as a data
+// URI, so it plugs into the exact same <img> the real screenshots use and rides
+// the view transition unchanged. Swap for a real /images/*.webp when available.
+function gradientImg(from, to) {
+  var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">' +
+    '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0" stop-color="' + from + '"/><stop offset="1" stop-color="' + to + '"/>' +
+    '</linearGradient></defs><rect width="800" height="600" fill="url(#g)"/></svg>';
+  return "data:image/svg+xml," + encodeURIComponent(svg);
 }
 
 // Language-switch "split-flap" effect, like a station departure board: every
@@ -163,8 +175,18 @@ const CONTENT = {
   }
 };
 
-// Projects (MAIF first)
+// Projects (Skywise first)
 CONTENT.fr.projects = [
+  { id:"skywise", title:"Skywise", tags:["Airbus","Opérations sol"], image:gradientImg("#e0f2fe", "#2563eb"), summary:"Design d’une solution de gestion des opérations sol.", description:"Mission en cours chez Skywise, la filiale digitale d’Airbus, en tant que Product Designer via UX Republic. Conception d’une solution de gestion des opérations sol.",
+    eyebrow:"Mission UX Republic · Airbus",
+    tagline:"Fluidifier les opérations au sol, pour la filiale digitale d’Airbus.",
+    stats: [ { value:"Airbus", label:"Filiale digitale" }, { value:"2026", label:"Mission en cours" }, { value:"Opérations sol", label:"Domaine métier" } ],
+    sections: [
+      { heading:"Contexte", text:"Mission en cours chez Skywise, la filiale digitale d’Airbus, via UX Republic. Product design sur une solution de gestion des opérations sol." },
+      { heading:"Ma contribution", text:"À compléter — conception d’interfaces, recherche utilisateur et contribution continue au produit." },
+      { heading:"Résultats", text:"À compléter." }
+    ],
+    closing:"Une mission au cœur des opérations aériennes." },
   { id:"maif", title:"MAIF", tags:["Outils métiers","Design system"], image:"/images/logomaif.webp", summary:"Évolution des outils métiers au sein de la DSI de la MAIF.", description:"Mission en cours au sein de la DSI de la MAIF (via UX Republic). Travail centré sur l’optimisation d’outils métiers : co-construction avec les équipes projet, contribution au design system, attention continue à l’accessibilité et à l’éco-conception, participation aux réflexions collectives (pratiques, outillage, IA).",
     eyebrow:"Mission UX Republic",
     tagline:"Des outils du quotidien, repensés pour les équipes qui les utilisent chaque jour.",
@@ -244,9 +266,37 @@ CONTENT.fr.projects = [
       { heading:"Approche", text:"Interviews et ateliers avec les parties prenantes, wireframes et prototypes, UI finale." },
       { heading:"Résultats", text:"Développement sur la plateforme Kairos Blue, pour des workflows automatisés et une collaboration fluidifiée." }
     ],
-    closing:"Des workflows automatisés, une collaboration fluidifiée." }
+    closing:"Des workflows automatisés, une collaboration fluidifiée." },
+  { id:"projet-1", title:"Projet 1", tags:["À compléter"], image:gradientImg("#fce7f3", "#db2777"), summary:"Description à compléter.", description:"Contenu à compléter.",
+    eyebrow:"À compléter",
+    tagline:"Un nouveau projet à présenter bientôt.",
+    stats: [],
+    sections: [ { heading:"À compléter", text:"Contenu à venir." } ],
+    closing:"" },
+  { id:"projet-2", title:"Projet 2", tags:["À compléter"], image:gradientImg("#dcfce7", "#16a34a"), summary:"Description à compléter.", description:"Contenu à compléter.",
+    eyebrow:"À compléter",
+    tagline:"Un nouveau projet à présenter bientôt.",
+    stats: [],
+    sections: [ { heading:"À compléter", text:"Contenu à venir." } ],
+    closing:"" },
+  { id:"projet-3", title:"Projet 3", tags:["À compléter"], image:gradientImg("#fef3c7", "#ea580c"), summary:"Description à compléter.", description:"Contenu à compléter.",
+    eyebrow:"À compléter",
+    tagline:"Un nouveau projet à présenter bientôt.",
+    stats: [],
+    sections: [ { heading:"À compléter", text:"Contenu à venir." } ],
+    closing:"" }
 ];
 CONTENT.en.projects = [
+  { id:"skywise", title:"Skywise", tags:["Airbus","Ground ops"], image:gradientImg("#e0f2fe", "#2563eb"), summary:"Designing a ground operations management solution.", description:"Ongoing assignment at Skywise, Airbus’ digital services company, as a Product Designer via UX Republic. Designing a ground operations management solution.",
+    eyebrow:"UX Republic assignment · Airbus",
+    tagline:"Streamlining ground operations for Airbus’ digital company.",
+    stats: [ { value:"Airbus", label:"Digital company" }, { value:"2026", label:"Ongoing assignment" }, { value:"Ground ops", label:"Domain" } ],
+    sections: [
+      { heading:"Context", text:"Ongoing assignment at Skywise, Airbus’ digital company, via UX Republic. Product design on a ground operations management solution." },
+      { heading:"My contribution", text:"To be completed — interface design, user research and ongoing product contribution." },
+      { heading:"Results", text:"To be completed." }
+    ],
+    closing:"A mission at the heart of ground operations." },
   { id:"maif", title:"MAIF", tags:["Internal tools","Design system"], image:"/images/logomaif.webp", summary:"Evolving internal tools within MAIF’s IT department.", description:"Ongoing assignment via UX Republic. Focus on internal tools, co-design with project teams, design-system contributions, accessibility & eco-design, and collective practice/AI discussions.",
     eyebrow:"UX Republic assignment",
     tagline:"Everyday tools, rebuilt for the teams who rely on them every day.",
@@ -326,7 +376,25 @@ CONTENT.en.projects = [
       { heading:"Approach", text:"Stakeholder interviews and workshops, wireframes and prototypes, final UI." },
       { heading:"Results", text:"Built on the Kairos Blue platform, for automated workflows and smoother collaboration." }
     ],
-    closing:"Automated workflows, smoother collaboration." }
+    closing:"Automated workflows, smoother collaboration." },
+  { id:"projet-1", title:"Project 1", tags:["To be filled"], image:gradientImg("#fce7f3", "#db2777"), summary:"Description to be filled.", description:"Content to be filled.",
+    eyebrow:"To be filled",
+    tagline:"A new project to showcase soon.",
+    stats: [],
+    sections: [ { heading:"To be filled", text:"Content coming soon." } ],
+    closing:"" },
+  { id:"projet-2", title:"Project 2", tags:["To be filled"], image:gradientImg("#dcfce7", "#16a34a"), summary:"Description to be filled.", description:"Content to be filled.",
+    eyebrow:"To be filled",
+    tagline:"A new project to showcase soon.",
+    stats: [],
+    sections: [ { heading:"To be filled", text:"Content coming soon." } ],
+    closing:"" },
+  { id:"projet-3", title:"Project 3", tags:["To be filled"], image:gradientImg("#fef3c7", "#ea580c"), summary:"Description to be filled.", description:"Content to be filled.",
+    eyebrow:"To be filled",
+    tagline:"A new project to showcase soon.",
+    stats: [],
+    sections: [ { heading:"To be filled", text:"Content coming soon." } ],
+    closing:"" }
 ];
 
 function getInitialLang(){ return (localStorage.getItem("lang") === "en") ? "en" : "fr"; }
@@ -337,7 +405,7 @@ function getInitialTheme(){
 }
 
 function SectionRow(props) {
-  var { label, rightAdornment, isOpen, onToggle, children } = props;
+  var { label, isOpen, onToggle, children } = props;
 
   return (
     <section className="border-t border-black/10 dark:border-white/10">
@@ -345,7 +413,6 @@ function SectionRow(props) {
         <button className="flex-1 text-left font-medium tracking-tight focus:outline-none" aria-expanded={isOpen} onClick={onToggle}>
           {label}
         </button>
-        <div className="mr-2">{rightAdornment}</div>
         <button onClick={onToggle} aria-label={isOpen ? (label + " — réduire") : (label + " — développer")} className="ml-auto inline-flex items-center justify-center p-1 opacity-70 transition hover:opacity-100 focus:outline-none">
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </button>
@@ -484,6 +551,68 @@ function IntroTitle({ lang }) {
   );
 }
 
+// Project card with an Apple tvOS-style hover: the card tilts slightly toward the
+// cursor and a soft specular highlight tracks the pointer across it. Pointer
+// position is written to CSS custom properties (--mx/--my for the shine, --rx/--ry
+// for the tilt) so the actual animation stays on the compositor (see .tv-card /
+// .tv-shine in index.css). The tilt is zeroed right before a view transition is
+// captured, so the growing card snapshot is never frozen mid-tilt.
+function ProjectCard({ p, navigate, isActive }) {
+  var ref = useRef(null);
+
+  function onMove(e) {
+    var el = ref.current;
+    if (!el) return;
+    var r = el.getBoundingClientRect();
+    var px = (e.clientX - r.left) / r.width;
+    var py = (e.clientY - r.top) / r.height;
+    el.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
+    el.style.setProperty("--my", (py * 100).toFixed(1) + "%");
+    el.style.setProperty("--rx", ((0.5 - py) * 5).toFixed(2) + "deg");
+    el.style.setProperty("--ry", ((px - 0.5) * 5).toFixed(2) + "deg");
+  }
+  function resetTilt() {
+    var el = ref.current;
+    if (!el) return;
+    el.style.setProperty("--rx", "0deg");
+    el.style.setProperty("--ry", "0deg");
+  }
+
+  return (
+    <div className="h-full [perspective:1000px]">
+      <Link
+        ref={ref}
+        to={"/projects/" + p.id}
+        onMouseMove={onMove}
+        onMouseLeave={resetTilt}
+        onClick={(e) => {
+          if (!isPlainClick(e)) return;
+          e.preventDefault();
+          resetTilt();
+          var cardEl = e.currentTarget;
+          var imgEl = cardEl.querySelector("img");
+          cardEl.style.viewTransitionName = "project-card-" + p.id;
+          if (imgEl) imgEl.style.viewTransitionName = "project-img-" + p.id;
+          withViewTransition(navigate, "/projects/" + p.id, [cardEl, imgEl]);
+        }}
+        style={isActive ? { viewTransitionName: "project-card-" + p.id } : undefined}
+        className="tv-card group relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-black/5 dark:ring-white/5 hover:shadow-xl hover:shadow-black/[0.08] dark:hover:shadow-black/40"
+      >
+        <img
+          src={p.image}
+          alt={"aperçu " + p.title}
+          style={isActive ? { viewTransitionName: "project-img-" + p.id } : undefined}
+          className="aspect-[4/3] w-full rounded-t-2xl object-cover transition-transform duration-700 ease-[cubic-bezier(.32,.72,0,1)] group-hover:scale-[1.03]"
+        />
+        <div className="flex items-center bg-white px-5 py-4 dark:bg-neutral-900">
+          <span className="truncate text-[0.95rem] font-medium tracking-tight">{p.title}</span>
+        </div>
+        <span aria-hidden="true" className="tv-shine pointer-events-none absolute inset-0 rounded-2xl" />
+      </Link>
+    </div>
+  );
+}
+
 function TopRightControls({ lang, setLang, theme, setTheme }) {
   var t = CONTENT[lang];
   var [open, setOpen] = useState(false);
@@ -581,35 +710,7 @@ function Home({ lang, setLang, theme, setTheme, open, setOpen }) {
         >
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {(t.projects || []).map((p) => (
-              <div key={p.id} className="h-full">
-                <Link
-                  to={"/projects/" + p.id}
-                  onClick={(e) => {
-                    if (!isPlainClick(e)) return;
-                    e.preventDefault();
-                    var cardEl = e.currentTarget;
-                    var imgEl = cardEl.querySelector("img");
-                    cardEl.style.viewTransitionName = "project-card-" + p.id;
-                    if (imgEl) imgEl.style.viewTransitionName = "project-img-" + p.id;
-                    withViewTransition(navigate, "/projects/" + p.id, [cardEl, imgEl]);
-                  }}
-                  style={p.id === activeCardIdRef.current ? { viewTransitionName: "project-card-" + p.id } : undefined}
-                  className="group flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-black/10 dark:border-white/10 bg-white dark:bg-neutral-900 shadow-sm ring-1 ring-black/5 dark:ring-white/5 transition-shadow duration-300 hover:shadow-xl hover:shadow-black/[0.07] dark:hover:shadow-black/40"
-                >
-                  <img
-                    src={p.image}
-                    alt={"aperçu " + p.title}
-                    style={p.id === activeCardIdRef.current ? { viewTransitionName: "project-img-" + p.id } : undefined}
-                    className="aspect-[4/3] w-full rounded-t-[1.75rem] object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                  />
-                  <div className="relative flex items-center justify-between gap-3 bg-white px-5 py-4 dark:bg-neutral-900">
-                    <span className="truncate text-[0.95rem] font-medium tracking-tight">{p.title}</span>
-                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-black/[0.05] text-black/60 transition-colors duration-300 group-hover:bg-black group-hover:text-white dark:bg-white/10 dark:text-white/60 dark:group-hover:bg-white dark:group-hover:text-black">
-                      <ArrowUpRight size={14} />
-                    </span>
-                  </div>
-                </Link>
-              </div>
+              <ProjectCard key={p.id} p={p} navigate={navigate} isActive={p.id === activeCardIdRef.current} />
             ))}
           </div>
         </SectionRow>
@@ -651,7 +752,7 @@ function ProjectPage({ lang }) {
   return (
     <div
       key={id}
-      className="min-h-dvh w-full rounded-[1.75rem] border border-white bg-white dark:border-neutral-950 dark:bg-neutral-950"
+      className="min-h-dvh w-full rounded-2xl border border-white bg-white dark:border-neutral-950 dark:bg-neutral-950"
       style={{ viewTransitionName: "project-card-" + project.id }}
     >
       <div className={slideDirRef.current === "next" ? "slide-in-next" : slideDirRef.current === "prev" ? "slide-in-prev" : (skipEntranceRef.current ? "" : "page-content")}>
@@ -690,12 +791,12 @@ function ProjectPage({ lang }) {
 
           {/* Hero image, floating on a soft backdrop */}
           <div className="relative">
-            <div className="absolute inset-6 -z-10 rounded-[2.5rem] bg-black/[0.03] blur-2xl dark:bg-white/[0.04]" aria-hidden="true" />
+            <div className="absolute inset-6 -z-10 rounded-3xl bg-black/[0.03] blur-2xl dark:bg-white/[0.04]" aria-hidden="true" />
             <img
               src={project.image}
               alt="aperçu"
               style={{ viewTransitionName: "project-img-" + project.id }}
-              className="aspect-[16/10] w-full rounded-[1.75rem] object-cover shadow-2xl shadow-black/10 ring-1 ring-black/5 dark:shadow-black/40 dark:ring-white/10"
+              className="aspect-[16/10] w-full rounded-2xl object-cover shadow-2xl shadow-black/10 ring-1 ring-black/5 dark:shadow-black/40 dark:ring-white/10"
             />
           </div>
 
@@ -747,7 +848,7 @@ function ProjectPage({ lang }) {
           <img
             src={project.image}
             alt="aperçu"
-            className="aspect-[21/9] w-full rounded-[1.75rem] object-cover ring-1 ring-black/5 dark:ring-white/10"
+            className="aspect-[21/9] w-full rounded-2xl object-cover ring-1 ring-black/5 dark:ring-white/10"
           />
         </div>
       </div>
