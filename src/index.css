@@ -28,6 +28,11 @@ html, body, #root { height: 100%; }
   overflow: hidden;
   min-height: 0;
 }
+/* Once fully open, stop clipping so hover shadows/tilt on the edge cards aren't
+   cut into a hard line at the container edge (see SectionRow's `settled` state). */
+.accordion.settled .accordion-inner {
+  overflow: visible;
+}
 .accordion-content {
   opacity: 0;
   transform: translateY(6px);
@@ -104,14 +109,20 @@ html, body, #root { height: 100%; }
    transition makes the tilt "follow" the cursor with a premium lag, and springs
    back on leave. */
 .tv-card {
-  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
   transition: transform 350ms var(--ease-out), box-shadow 500ms var(--ease-out);
-  will-change: transform;
+}
+/* Tilt is applied only while hovered so the card's resting transform is `none`.
+   A persistent (even identity) transform + preserve-3d/will-change on an element
+   that also carries a view-transition-name makes Safari's snapshot glitch, so we
+   keep the resting state completely flat. Parent has `perspective` for the 3D. */
+.tv-card:hover {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 .tv-shine {
-  background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 60%);
+  /* `circle 480px` (shape then size) is the widely-supported order — Safari
+     rejects the reversed `480px circle` form and drops the whole gradient. */
+  background: radial-gradient(circle 480px at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1) 45%, rgba(255, 255, 255, 0) 80%);
   opacity: 0;
   mix-blend-mode: soft-light;
   transition: opacity 300ms var(--ease-out);

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useLayoutEffect } from "react";
 import { flushSync } from "react-dom";
 import { HashRouter, Routes, Route, Link, useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, ArrowLeft, Plus, Minus, Mail, Linkedin, Phone, Sun, Moon, Info } from "lucide-react";
@@ -398,14 +398,26 @@ CONTENT.en.projects = [
 ];
 
 function getInitialLang(){ return (localStorage.getItem("lang") === "en") ? "en" : "fr"; }
-function getInitialTheme(){
-  var s = localStorage.getItem("theme");
-  if (s === "dark" || s === "light") return s;
+// Theme always defaults to the device's color scheme (no persistence): the site
+// follows the OS light/dark setting, and the toggle is only a per-session override.
+function getDeviceTheme(){
   return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
 }
 
 function SectionRow(props) {
   var { label, isOpen, onToggle, children } = props;
+  // The accordion clips (overflow:hidden) so its height can animate. But that
+  // also cuts the project cards' hover shadow/tilt at the container's edge,
+  // leaving a hard line on the outermost cards. So we only clip while the
+  // open/close height transition is running, then let content overflow freely
+  // once the section has settled open.
+  var [settled, setSettled] = useState(isOpen);
+  useEffect(function () {
+    if (!isOpen) setSettled(false);
+  }, [isOpen]);
+  function onTransitionEnd(e) {
+    if (e.propertyName === "grid-template-rows" && isOpen) setSettled(true);
+  }
 
   return (
     <section className="border-t border-black/10 dark:border-white/10">
@@ -417,7 +429,7 @@ function SectionRow(props) {
           {isOpen ? <Minus size={18} /> : <Plus size={18} />}
         </button>
       </header>
-      <div className={"accordion" + (isOpen ? " open" : "")}>
+      <div className={"accordion" + (isOpen ? " open" : "") + (settled ? " settled" : "")} onTransitionEnd={onTransitionEnd}>
         <div className="accordion-inner">
           <div className="accordion-content pb-8">{children}</div>
         </div>
@@ -568,8 +580,8 @@ function ProjectCard({ p, navigate, isActive }) {
     var py = (e.clientY - r.top) / r.height;
     el.style.setProperty("--mx", (px * 100).toFixed(1) + "%");
     el.style.setProperty("--my", (py * 100).toFixed(1) + "%");
-    el.style.setProperty("--rx", ((0.5 - py) * 5).toFixed(2) + "deg");
-    el.style.setProperty("--ry", ((px - 0.5) * 5).toFixed(2) + "deg");
+    el.style.setProperty("--rx", ((0.5 - py) * 11).toFixed(2) + "deg");
+    el.style.setProperty("--ry", ((px - 0.5) * 11).toFixed(2) + "deg");
   }
   function resetTilt() {
     var el = ref.current;
@@ -588,9 +600,15 @@ function ProjectCard({ p, navigate, isActive }) {
         onClick={(e) => {
           if (!isPlainClick(e)) return;
           e.preventDefault();
-          resetTilt();
           var cardEl = e.currentTarget;
           var imgEl = cardEl.querySelector("img");
+          var shineEl = cardEl.querySelector(".tv-shine");
+          // Clean up the card before the browser snapshots it for the view
+          // transition: no leftover tilt and no blended shine baked into the
+          // captured image (both make Safari's snapshot flicker or ghost).
+          resetTilt();
+          cardEl.style.transform = "none";
+          if (shineEl) shineEl.style.opacity = "0";
           cardEl.style.viewTransitionName = "project-card-" + p.id;
           if (imgEl) imgEl.style.viewTransitionName = "project-img-" + p.id;
           withViewTransition(navigate, "/projects/" + p.id, [cardEl, imgEl]);
@@ -602,7 +620,7 @@ function ProjectCard({ p, navigate, isActive }) {
           src={p.image}
           alt={"aperçu " + p.title}
           style={isActive ? { viewTransitionName: "project-img-" + p.id } : undefined}
-          className="aspect-[4/3] w-full rounded-t-2xl object-cover transition-transform duration-700 ease-[cubic-bezier(.32,.72,0,1)] group-hover:scale-[1.03]"
+          className="aspect-[4/3] w-full rounded-t-2xl object-cover"
         />
         <div className="flex items-center bg-white px-5 py-4 dark:bg-neutral-900">
           <span className="truncate text-[0.95rem] font-medium tracking-tight">{p.title}</span>
@@ -734,6 +752,11 @@ function ProjectPage({ lang }) {
   // it, leaving the render that actually gets committed with nothing to read.
   var slideDirRef = useRef(pendingSlideDirection);
   useEffect(function () { pendingSlideDirection = null; }, []);
+  // Each project page (re)mounts keyed by id, so this fires on every open and on
+  // prev/next. Reset scroll to the top synchronously (before paint, and before the
+  // view transition captures the incoming snapshot) so the page never appears
+  // pre-scrolled from wherever the home grid was.
+  useLayoutEffect(function () { window.scrollTo(0, 0); }, []);
 
   if (!project) {
     return (
@@ -869,10 +892,34 @@ function ProjectPageRoute({ lang }) {
 
 export default function App() {
   var [lang, setLang] = useState(getInitialLang());
-  var [theme, setTheme] = useState(getInitialTheme());
+  var [theme, setTheme] = useState(getDeviceTheme());
   var [open, setOpen] = useState(null);
   useEffect(() => { localStorage.setItem("lang", lang); }, [lang]);
-  useEffect(() => { localStorage.setItem("theme", theme); var r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
+  useEffect(() => { var r = document.documentElement; if (theme === "dark") r.classList.add("dark"); else r.classList.remove("dark"); }, [theme]);
+
+  // Follow the device's color scheme live: if the OS flips light↔dark while the
+  // site is open, the theme flips too — unless the user has manually toggled this
+  // session (changeTheme sets manualThemeRef), in which case their choice stands.
+  var manualThemeRef = useRef(false);
+  useEffect(function () {
+    if (!window.matchMedia) return;
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    function onChange(e) {
+      if (manualThemeRef.current) return;
+      setTheme(e.matches ? "dark" : "light");
+    }
+    if (mq.addEventListener) mq.addEventListener("change", onChange);
+    else if (mq.addListener) mq.addListener(onChange);
+    return function () {
+      if (mq.removeEventListener) mq.removeEventListener("change", onChange);
+      else if (mq.removeListener) mq.removeListener(onChange);
+    };
+  }, []);
+
+  function changeTheme(next) {
+    manualThemeRef.current = true;
+    setTheme(next);
+  }
 
   // Split-flap text animation on language change. The lang-scramble class is set
   // in changeLang BEFORE the state update so the remounting page reads it and
@@ -907,9 +954,9 @@ export default function App() {
   return (
     <HashRouter>
       <Routes>
-        <Route path="/" element={<Home key={contentKey} lang={lang} setLang={changeLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
+        <Route path="/" element={<Home key={contentKey} lang={lang} setLang={changeLang} theme={theme} setTheme={changeTheme} open={open} setOpen={setOpen} />} />
         <Route path="/projects/:id" element={<ProjectPageRoute key={contentKey} lang={lang} />} />
-        <Route path="*" element={<Home key={contentKey} lang={lang} setLang={changeLang} theme={theme} setTheme={setTheme} open={open} setOpen={setOpen} />} />
+        <Route path="*" element={<Home key={contentKey} lang={lang} setLang={changeLang} theme={theme} setTheme={changeTheme} open={open} setOpen={setOpen} />} />
       </Routes>
     </HashRouter>
   );
